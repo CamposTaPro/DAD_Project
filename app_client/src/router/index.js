@@ -146,13 +146,13 @@ router.beforeEach((to, from, next) => {
     return
   }
   if (to.name == 'Reports') {
-    if (userStore.user.type != 'A') {
+    if (userStore.user.type != 'EM') {
       next({ name: 'home' })
       return
     }
   }
   if (to.name == 'User') {
-    if ((userStore.user.type == 'A') || (userStore.user.id == to.params.id)) {
+    if ((userStore.user.type == 'EM') || (userStore.user.id == to.params.id)) {
       next()
       return
     }

@@ -19,7 +19,6 @@ const emit = defineEmits(["save", "cancel"]);
 const editingUser = ref(props.user);
 
 watch(
-  console.log(props.user),
   () => props.user,
   (newUser) => {
     editingUser.value = newUser
