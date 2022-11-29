@@ -23,10 +23,6 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
-  showGender: {
-    type: Boolean,
-    default: false,
-  },
   showPhoto: {
     type: Boolean,
     default: true,
@@ -47,13 +43,14 @@ const photoFullUrl = (user) => {
 
 const editClick = (user) => {
   emit("edit", user)
+  console.log( user)
 }
 
 const canViewUserDetail  = (userId) => {
   if (!userStore.user) {
     return false
   }
-  return userStore.user.type == 'A' || userStore.user.id == userId
+  return userStore.user.type == 'EM' || userStore.user.id == userId
 }
 </script>
 
@@ -66,7 +63,6 @@ const canViewUserDetail  = (userId) => {
         <th class="align-middle">Name</th>
         <th v-if="showEmail" class="align-middle">Email</th>
         <th v-if="showAdmin" class="align-middle">Admin?</th>
-        <th v-if="showGender" class="align-middle">Gender</th>
       </tr>
     </thead>
     <tbody>
@@ -77,8 +73,7 @@ const canViewUserDetail  = (userId) => {
         </td>
         <td class="align-middle">{{ user.name }}</td>
         <td v-if="showEmail" class="align-middle">{{ user.email }}</td>
-        <td v-if="showAdmin" class="align-middle">{{ user.type == "A" ? "Sim" : "" }}</td>
-        <td v-if="showGender" class="align-middle">{{ user.gender_name }}</td>
+        <td v-if="showAdmin" class="align-middle">{{ user.type == "EM" ? "Sim" : "" }}</td>
         <td class="text-end align-middle" v-if="showEditButton">
           <div class="d-flex justify-content-end" v-if="canViewUserDetail(user.id)">
             <button class="btn btn-xs btn-light" @click="editClick(user)" v-if="showEditButton">

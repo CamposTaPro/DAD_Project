@@ -4,7 +4,7 @@ import avatarNoneUrl from '@/assets/avatar-none.png'
 import { useProjectsStore } from "./projects.js"
 
 export const useUserStore = defineStore('user', () => {
-    const projectsStore = useProjectsStore()
+    //const projectsStore = useProjectsStore()
     const axios = inject('axios')
     const serverBaseUrl = inject('serverBaseUrl')
     
@@ -43,12 +43,12 @@ export const useUserStore = defineStore('user', () => {
             axios.defaults.headers.common.Authorization = "Bearer " + response.data.access_token
             sessionStorage.setItem('token', response.data.access_token)
             await loadUser()
-            await projectsStore.loadProjects()
+            //await projectsStore.loadProjects()
             return true       
         } 
         catch(error) {
             clearUser()
-            projectsStore.clearProjects()
+           // projectsStore.clearProjects()
             return false
         }
     }
@@ -57,7 +57,7 @@ export const useUserStore = defineStore('user', () => {
         try {
             await axios.post('logout')
             clearUser()
-            projectsStore.clearProjects()
+            //projectsStore.clearProjects()
             return true
         } catch (error) {
             return false
@@ -69,11 +69,11 @@ export const useUserStore = defineStore('user', () => {
         if (storedToken) {
             axios.defaults.headers.common.Authorization = "Bearer " + storedToken
             await loadUser()
-            await projectsStore.loadProjects()
+            //await projectsStore.loadProjects()
             return true
         }
         clearUser()
-        projectsStore.clearProjects()
+        //projectsStore.clearProjects()
         return false
     }
     

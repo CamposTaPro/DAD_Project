@@ -24,7 +24,8 @@
     }
 
   const editUser = (user) => {
-    router.push({ name: 'User', params: { id: user.id } })
+    console.log(user)
+    router.push({ name: 'User', params: { id: user.id} })
   }
 
   onMounted (() => {
@@ -33,7 +34,7 @@
 </script>
 
 <template>
-  <h3 class="mt-5 mb-3">Team Members</h3>
+  <h3 class="mt-5 mb-3">Users</h3>
   <hr>
   <user-table
     :users="users"

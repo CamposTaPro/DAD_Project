@@ -1,9 +1,8 @@
 <script setup>
-import { ref, watch, computed, inject } from "vue";
+import { ref, watch, computed, inject,onMounted } from "vue";
 import avatarNoneUrl from '@/assets/avatar-none.png'
 
 const serverBaseUrl = inject("serverBaseUrl");
-
 const props = defineProps({
   user: {
     type: Object,
@@ -17,9 +16,10 @@ const props = defineProps({
 
 const emit = defineEmits(["save", "cancel"]);
 
-const editingUser = ref(props.user)
+const editingUser = ref(props.user);
 
 watch(
+  console.log(props.user),
   () => props.user,
   (newUser) => {
     editingUser.value = newUser
@@ -28,6 +28,7 @@ watch(
 )
 
 const photoFullUrl = computed(() => {
+  console.log(props)
   return editingUser.value.photo_url
     ? serverBaseUrl + "/storage/fotos/" + editingUser.value.photo_url
     : avatarNoneUrl
@@ -40,6 +41,8 @@ const save = () => {
 const cancel = () => {
   emit("cancel", editingUser.value);
 }
+
+
 </script>
 
 <template>
@@ -89,32 +92,6 @@ const cancel = () => {
               </label>
               <field-error-message :errors="errors" fieldName="type"></field-error-message>
             </div>
-          </div>
-          <div class="mb-3 ms-xs-3 flex-grow-1">
-            <div class="form-check form-check-inline">
-              <input
-                class="form-check-input"
-                type="radio"
-                name="radioGender"
-                value="M"
-                required
-                v-model="editingUser.gender"
-                id="inputGenderM"
-              />
-              <label class="form-check-label" for="inputGenderM">Masculino</label>
-            </div>
-            <div class="form-check form-check-inline">
-              <input
-                class="form-check-input"
-                type="radio"
-                name="radioGender"
-                value="F"
-                v-model="editingUser.gender"
-                id="inputGenderF"
-              />
-              <label class="form-check-label" for="inputGenderF">Feminino</label>
-            </div>
-            <field-error-message :errors="errors" fieldName="gender"></field-error-message>
           </div>
         </div>
       </div>

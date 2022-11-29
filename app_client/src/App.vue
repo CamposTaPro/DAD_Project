@@ -137,7 +137,7 @@ const clickMenuOption = () => {
               </router-link>
             </li>
             <li class="nav-item">
-              <router-link
+              <!-- <router-link
                 class="nav-link"
                 :class="{ active: $route.name === 'CurrentTasks' }"
                 :to="{ name: 'CurrentTasks' }"
@@ -145,10 +145,10 @@ const clickMenuOption = () => {
               >
                 <i class="bi bi-list-stars"></i>
                 Current Tasks
-              </router-link>
+              </router-link> -->
             </li>
             <li class="nav-item d-flex justify-content-between align-items-center pe-3">
-              <router-link
+              <!-- <router-link
                 class="nav-link w-100 me-3"
                 :class="{ active: $route.name === 'Tasks' }"
                 :to="{ name: 'Tasks' }"
@@ -164,10 +164,10 @@ const clickMenuOption = () => {
                 @click="clickMenuOption"
               >
                 <i class="bi bi-xs bi-plus-circle"></i>
-              </router-link>
+              </router-link> -->
             </li>
             <li class="nav-item">
-              <router-link
+              <!-- <router-link
                 class="nav-link"
                 :class="{ active: $route.name === 'Projects' }"
                 :to="{ name: 'Projects' }"
@@ -175,7 +175,7 @@ const clickMenuOption = () => {
               >
                 <i class="bi bi-files"></i>
                 Projects
-              </router-link>
+              </router-link> -->
             </li>
             <li class="nav-item">
               <router-link
@@ -185,32 +185,32 @@ const clickMenuOption = () => {
                 @click="clickMenuOption"
               >
                 <i class="bi bi-people"></i>
-                Team Members
+                Users
               </router-link>
             </li>
             <li class="nav-item" v-show="userStore.user?.type == 'A'">
-              <router-link class="nav-link" :class="{ active: $route.name === 'Reports' }"
+              <!-- <router-link class="nav-link" :class="{ active: $route.name === 'Reports' }"
                 :to="{ name: 'Reports' }" @click="clickMenuOption">
                 <i class="bi bi-bar-chart-line"></i>
                 Reports
-              </router-link>
+              </router-link> -->
             </li>
           </ul>
 
           <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted"
               v-if="userStore.user">
             <span>My Projects</span>
-            <router-link
+            <!-- <router-link
               class="link-secondary"
               :to="{ name: 'NewProject' }"
               aria-label="Add a new project"
               @click="clickMenuOption"
             >
               <i class="bi bi-xs bi-plus-circle"></i>
-            </router-link>
+            </router-link> -->
           </h6>
           <ul class="nav flex-column mb-2">
-            <li class="nav-item" v-for="prj in projectsStore.myInprogressProjects" :key="prj.id">
+            <!-- <li class="nav-item" v-for="prj in projectsStore.myInprogressProjects" :key="prj.id">
               <router-link
                 class="nav-link w-100 me-3"
                 :class="{
@@ -222,7 +222,7 @@ const clickMenuOption = () => {
                 <i class="bi bi-file-ruled"></i>
                 {{ prj.name }}
               </router-link>
-            </li>
+            </li> -->
           </ul>
 
           <div class="d-block d-md-none">
