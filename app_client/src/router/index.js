@@ -14,7 +14,7 @@ import ProjectTasks from "../components/projects/ProjectTasks.vue"
 import Task from "../components/tasks/Task.vue"
 import Project from "../components/projects/Project.vue"
 import RouteRedirector from "../components/global/RouteRedirector.vue"
-
+import Register from "../components/auth/Register.vue"
 import Product from "../components/products/Product.vue"
 
 const router = createRouter({
@@ -35,6 +35,11 @@ const router = createRouter({
       path: '/login',
       name: 'Login',
       component: Login
+    },
+    {
+      path:'/register',
+      name: 'Register',
+      component:Register
     },
     {
       path: '/password',

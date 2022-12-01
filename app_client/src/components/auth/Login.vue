@@ -1,5 +1,5 @@
 <script setup>
-  import { ref, inject } from 'vue'
+  import { ref, inject,onMounted } from 'vue'
   import { useRouter } from 'vue-router'  
   import { useUserStore } from '../../stores/user.js'
   const router = useRouter()  
@@ -24,6 +24,11 @@
       toast.error('User credentials are invalid!')
     }
   }
+onMounted(() => {
+    if (userStore.user) {
+      router.push({ name: 'home' })
+    }
+  })
 </script>
 
 
