@@ -15,6 +15,8 @@ import Task from "../components/tasks/Task.vue"
 import Project from "../components/projects/Project.vue"
 import RouteRedirector from "../components/global/RouteRedirector.vue"
 
+import Product from "../components/products/Product.vue"
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -121,6 +123,11 @@ const router = createRouter({
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: () => import('../views/AboutView.vue')
+    },
+    {
+      path: '/products',
+      name: 'Products',
+      component: Product
     }
   ]
 })
@@ -141,10 +148,10 @@ router.beforeEach((to, from, next) => {
     next()
     return
   }
-  if (!userStore.user) {
+  /*if (!userStore.user) {
     next({ name: 'Login' })
     return
-  }
+  }*/
   if (to.name == 'Reports') {
     if (userStore.user.type != 'EM') {
       next({ name: 'home' })

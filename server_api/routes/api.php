@@ -1,10 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\api\TaskController;
-use App\Http\Controllers\api\ProjectController;
-use App\Http\Controllers\api\UserController;
 use App\Http\Controllers\api\AuthController;
+use App\Http\Controllers\api\TaskController;
+use App\Http\Controllers\api\UserController;
+use App\Http\Controllers\api\ProductController;
+use App\Http\Controllers\api\ProjectController;
 
 Route::post('login', [AuthController::class, 'login']);
 
@@ -35,5 +36,8 @@ Route::middleware('auth:api')->group(function () {
     Route::put('projects/{project}', [ProjectController::class, 'update']);
     Route::get('users/{user}/projects', [ProjectController::class, 'getProjectsOfUser']);
     Route::get('users/{user}/projects/inprogress', [ProjectController::class, 'getProjectsInProgressOfUser']);
+
 });
 
+Route::get('products', [ProductController::class, 'getProducts']);
+Route::get('products/{type}', [ProductController::class, 'getProductByType']);

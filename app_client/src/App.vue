@@ -109,15 +109,15 @@ const clickMenuOption = () => {
               </router-link>
             </li>
             <li class="nav-item">
-              <!-- <router-link
+              <router-link
                 class="nav-link"
-                :class="{ active: $route.name === 'CurrentTasks' }"
-                :to="{ name: 'CurrentTasks' }"
+                :class="{ active: $route.name === 'Products' }"
+                :to="{ name: 'Products' }"
                 @click="clickMenuOption"
               >
                 <i class="bi bi-list-stars"></i>
-                Current Tasks
-              </router-link> -->
+                Products
+              </router-link>
             </li>
             <li class="nav-item d-flex justify-content-between align-items-center pe-3">
               <!-- <router-link
