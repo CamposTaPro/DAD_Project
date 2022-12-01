@@ -102,10 +102,10 @@ const clickMenuOption = () => {
         <div class="position-sticky pt-3">
           <ul class="nav flex-column">
             <li class="nav-item" v-if="userStore.user">
-              <router-link class="nav-link" :class="{ active: $route.name === 'Dashboard' }" :to="{ name: 'Dashboard' }"
+              <router-link class="nav-link" :class="{ active: $route.name === 'ProductTable' }" :to="{ name: 'ProductTable' }"
                 @click="clickMenuOption">
                 <i class="bi bi-house"></i>
-                Dashboard
+                Product
               </router-link>
             </li>
             <li class="nav-item">
