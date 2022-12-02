@@ -47,7 +47,7 @@ const clickMenuOption = () => {
           <li class="nav-item" v-show="!userStore.user">
               <router-link 
                   class="nav-link" 
-                  :class="{ active: $route.name === 'Login' }" :to="{ name: 'Login' }"
+                  :class="{ active: $route.name === 'Register' }" :to="{ name: 'Register' }"
                   @click="clickMenuOption">
               <i class="bi bi-person-check-fill"></i>
               Register

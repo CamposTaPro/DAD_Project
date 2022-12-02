@@ -1,5 +1,6 @@
 <?php
 
+use Carbon\Traits\Rounding;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\api\AuthController;
 use App\Http\Controllers\api\TaskController;
@@ -8,7 +9,7 @@ use App\Http\Controllers\api\ProductController;
 use App\Http\Controllers\api\ProjectController;
 
 Route::post('login', [AuthController::class, 'login']);
-
+Route::post('register', [UserController::class, 'create']);
 Route::middleware('auth:api')->group(function () {
     Route::post('logout', [AuthController::class, 'logout']);
     Route::get('users/me', [UserController::class, 'show_me']);
