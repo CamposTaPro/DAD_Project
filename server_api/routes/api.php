@@ -38,7 +38,10 @@ Route::middleware('auth:api')->group(function () {
     Route::get('users/{user}/projects', [ProjectController::class, 'getProjectsOfUser']);
     Route::get('users/{user}/projects/inprogress', [ProjectController::class, 'getProjectsInProgressOfUser']);
 
+    Route::delete('products/{product}', [ProductController::class, 'destroy']);
 });
 
 Route::get('products', [ProductController::class, 'getProducts']);
 Route::get('products/{type}', [ProductController::class, 'getProductByType']);
+
+Route::post('products', [ProductController::class, 'store']);

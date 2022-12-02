@@ -15,7 +15,9 @@ import Task from "../components/tasks/Task.vue"
 import Project from "../components/projects/Project.vue"
 import RouteRedirector from "../components/global/RouteRedirector.vue"
 import Register from "../components/auth/Register.vue"
+import Products from "../components/products/Products.vue"
 import Product from "../components/products/Product.vue"
+import ProductTable from '../components/products/ProductTable.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -132,7 +134,17 @@ const router = createRouter({
     {
       path: '/products',
       name: 'Products',
+      component: Products
+    }, 
+    {
+      path: '/product',
+      name: 'Product',
       component: Product
+    }, 
+    {
+      path: '/producttable',
+      name: 'ProductTable',
+      component: ProductTable
     }
   ]
 })
