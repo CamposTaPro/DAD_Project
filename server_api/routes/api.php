@@ -8,6 +8,7 @@ use App\Http\Controllers\api\UserController;
 use App\Http\Controllers\api\OrderController;
 use App\Http\Controllers\api\ProductController;
 use App\Http\Controllers\api\ProjectController;
+use App\Http\Controllers\api\CustomerController;
 
 Route::post('login', [AuthController::class, 'login']);
 Route::post('register', [UserController::class, 'create']);
@@ -42,11 +43,12 @@ Route::middleware('auth:api')->group(function () {
     Route::delete('products/{product}', [ProductController::class, 'destroy']);
 });
 
+Route::get('customerpayment/{customer}', [CustomerController::class, 'getCustomerPayment']);
+Route::get('customerreference/{customer}', [CustomerController::class, 'getCustomerReference']);
+
 Route::get('products', [ProductController::class, 'getProducts']);
 Route::get('products/{type}', [ProductController::class, 'getProductByType']);
-
 Route::post('products', [ProductController::class, 'store']);
-
 Route::get('product/{id}', [ProductController::class, 'index']);
 Route::put('product/{id}', [ProductController::class, 'update']);
 

@@ -101,7 +101,7 @@ const clickMenuOption = () => {
       <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
         <div class="position-sticky pt-3">
           <ul class="nav flex-column">
-            <li class="nav-item" v-if="userStore.user">
+            <li class="nav-item" v-show="userStore.user?.type == 'EM'">
               <router-link class="nav-link" :class="{ active: $route.name === 'ProductTable' }" :to="{ name: 'ProductTable' }"
                 @click="clickMenuOption">
                 <i class="bi bi-house"></i>
@@ -149,7 +149,7 @@ const clickMenuOption = () => {
                 Projects
               </router-link> -->
             </li>
-            <li class="nav-item" v-if="userStore.user">
+            <li class="nav-item" v-show="userStore.user?.type == 'EM'">
               <router-link class="nav-link" :class="{ active: $route.name === 'Users' }" :to="{ name: 'Users' }"
                 @click="clickMenuOption">
                 <i class="bi bi-people"></i>
