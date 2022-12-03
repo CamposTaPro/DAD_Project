@@ -13,12 +13,12 @@ Route::post('register', [UserController::class, 'create']);
 Route::middleware('auth:api')->group(function () {
     Route::post('logout', [AuthController::class, 'logout']);
     Route::get('users/me', [UserController::class, 'show_me']);
-    //Route::get('users', [UserController::class, 'index']);
+    Route::get('users', [UserController::class, 'index']);
 
     Route::get('users/{user}', [UserController::class, 'show'])
         ->middleware('can:view,user');
-   // Route::patch('users/{user}', [UserController::class, 'update'])
-     //   ->middleware('can:update,user');
+    Route::patch('users/{user}', [UserController::class, 'update'])
+      ->middleware('can:update,user');
     Route::patch('users/{user}/password', [UserController::class, 'update_password'])
         ->middleware('can:updatePassword,user');
 
@@ -45,6 +45,7 @@ Route::get('products', [ProductController::class, 'getProducts']);
 Route::get('products/{type}', [ProductController::class, 'getProductByType']);
 
 Route::post('products', [ProductController::class, 'store']);
-Route::get('users', [UserController::class, 'index']);
-Route::patch('users/{user}', [UserController::class, 'update']);
+Route::post('employee', [UserController::class, 'createEmployee']);
+//Route::get('users', [UserController::class, 'index']);
+//Route::patch('users/{user}', [UserController::class, 'update']);
 

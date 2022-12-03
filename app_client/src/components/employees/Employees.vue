@@ -36,6 +36,7 @@ onMounted(() => {
 
 <template>
   <h3 class="mt-5 mb-3">Employees</h3>
+  <router-link to="/employee" class="btn btn-primary">Add Employee</router-link>
   <hr />
   <EmployeeTable
     :users="users"
