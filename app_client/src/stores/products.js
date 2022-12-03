@@ -1,4 +1,4 @@
-import { ref, computed, inject } from "vue";
+import { ref, computed, inject, createCommentVNode } from "vue";
 import { defineStore } from "pinia";
 import { useUserStore } from "@/stores/user.js";
 
@@ -71,10 +71,26 @@ export const useProductsStore = defineStore("products", () => {
       payment_reference: paymentReference.value,
     });
 
-    console.log(response.data);
-    if(response.status == 200){
-        console.log("deu fixe")
-        clearProducts();
+    if (response.status == 200) {
+      console.log("deu fixe");
+
+      for (let i = 0; i < products.value.length; i++) {
+        const response2 = await axios.post("orderitems", {
+          order_id: response.data.id,
+          order_local_number: 1, //TODO
+          product_id: products.value[i].id,
+          status: "W",
+          price: products.value[i].price,
+          preparation_by: 7, //TODO
+          notes: "asd", //TODO
+        });
+
+
+        if (response2.status == 200) {
+          console.log("deu fixe 2x");
+          clearProducts();
+        }
+      }
     }
   }
 

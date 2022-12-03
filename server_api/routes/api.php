@@ -9,6 +9,7 @@ use App\Http\Controllers\api\OrderController;
 use App\Http\Controllers\api\ProductController;
 use App\Http\Controllers\api\ProjectController;
 use App\Http\Controllers\api\CustomerController;
+use App\Http\Controllers\api\Order_ItemController;
 
 Route::post('login', [AuthController::class, 'login']);
 Route::post('register', [UserController::class, 'create']);
@@ -54,6 +55,8 @@ Route::put('product/{id}', [ProductController::class, 'update']);
 
 Route::get('orders', [OrderController::class, 'index']);
 Route::post('orders', [OrderController::class, 'store']);
+
+Route::post('orderitems', [Order_ItemController::class, 'store']);
 
 Route::post('employee', [UserController::class, 'createEmployee']);
 //Route::get('users', [UserController::class, 'index']);
