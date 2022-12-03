@@ -9,3 +9,10 @@ php artisan db:seed
 ```
 php artisan storage:link
 ```
+ir ver a ficha 7 de autenticação para dar setup ao passport
+
+no frontend usar
+```
+npm install
+npm run dev
+```
