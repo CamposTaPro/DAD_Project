@@ -2,12 +2,9 @@
 
 namespace App\Http\Resources;
 
-
-use App\Http\Resources\CustomerResource;
-use App\Models\Customer;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class UserResource extends JsonResource
+class CustomerResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -19,12 +16,12 @@ class UserResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'type' => $this->type,
-            'name' => $this->name,
-            'email' => $this->email,
-            'photo_url' => $this->photo_url,
-            'customer' => CustomerResource::collection(Customer::where('user_id', $this->id)->get()),
-
+            'user_id' => $this->user_id,
+            'phone' => $this->phone,
+            'points' => $this->points,
+            'nif' => $this->nif,
+            'default_payment_reference' => $this->default_payment_reference,
+            'default_payment_type' => $this->default_payment_type,
         ];
     }
 }

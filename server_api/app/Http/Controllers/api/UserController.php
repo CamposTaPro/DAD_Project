@@ -49,10 +49,38 @@ class UserController extends Controller
         return new UserResource($user);
     }
 
-    public function update(UpdateUserRequest $request, User $user)
+    public function update(Request $request, User $user)
     {
-        $user->update($request->validated());
-        return new UserResource($user);
+        try {
+
+            $customer = Customer::where('user_id', $user->id)->first();
+            if ($request->has('name')) {
+                $user->name = $request->name;
+            }
+            if ($request->has('email')) {
+                $user->email = $request->email;
+            }
+            if ($request->has('nif')) {
+                $customer->nif = $request->nif;
+            }
+            if ($request->has('phone')) {
+                $customer->phone = $request->phone;
+            }
+            if ($request->has('default_payment_reference')) {
+                $customer->default_payment_reference = $request->default_payment_reference;
+            }
+            $user->save();
+            if($customer){
+                $customer->save();
+            }
+
+            return new UserResource($user);
+        }catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error updating user',
+                'error' => $e->getMessage()
+            ], 422);
+        }
     }
 
     public function update_password(UpdateUserPasswordRequest $request, User $user)
@@ -65,5 +93,20 @@ class UserController extends Controller
     public function show_me(Request $request)
     {
         return new UserResource($request->user());
+    }
+    public function createEmployee(Request $request)
+    {
+        $user= new User();
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->password = Hash::make($request->password);
+        $user->type = $request->type;
+        $user->save();
+
+        return response()->json([
+            'message' => 'User created successfully',
+            'user' => $user
+        ], 201);
+
     }
 }
