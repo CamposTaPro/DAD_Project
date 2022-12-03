@@ -44,7 +44,14 @@
 
   const save = () => {
       errors.value = null
-      axios.put('users/' + props.id, user.value)
+      if(user.value.type=='C'){
+        axios.patch('users/' + props.id,{
+        name: user.value.name,
+        email: user.value.email,
+        nif: user.value.customer[0].nif,
+        phone: user.value.customer[0].phone,
+        default_payment_reference: user.value.customer[0].default_payment_reference,
+      })
         .then((response) => {
           user.value = response.data.data
           originalValueStr = dataAsString()
@@ -59,6 +66,26 @@
               toast.error('User #' + props.id + ' was not updated due to unknown server error!')
             }
         })
+      }else{
+      axios.patch('users/' + props.id,{
+        name: user.value.name,
+        email: user.value.email
+      })
+        .then((response) => {
+          user.value = response.data.data
+          originalValueStr = dataAsString()
+          toast.success('User #' + user.value.id + ' was updated successfully.')
+          router.back()
+        })
+        .catch((error) => {
+          if (error.response.status == 422) {
+              toast.error('User #' + props.id + ' was not updated due to validation errors!')
+              errors.value = error.response.data.errors
+            } else {
+              toast.error('User #' + props.id + ' was not updated due to unknown server error!')
+            }
+        })
+      }
   }
 
   const cancel = () => {

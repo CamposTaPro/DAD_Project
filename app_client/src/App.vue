@@ -34,7 +34,7 @@ const clickMenuOption = () => {
     <div class="container-fluid">
       <router-link class="navbar-brand col-md-3 col-lg-2 me-0 px-3" :to="{ name: 'home' }" @click="clickMenuOption">
         <img src="@/assets/logo.svg" alt="" width="30" height="24" class="d-inline-block align-text-top" />
-        App name
+        Fastuga   
       </router-link>
       <button id="buttonSidebarExpandId" ref="buttonSidebarExpand" class="navbar-toggler" type="button"
         data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false"
@@ -157,6 +157,13 @@ const clickMenuOption = () => {
               </router-link>
             </li>
             <li class="nav-item" v-show="userStore.user?.type == 'EM'">
+              <router-link class="nav-link" :class="{ active: $route.name === 'Employees' }" :to="{ name: 'Employees' }"
+                @click="clickMenuOption">
+                <i class="bi bi-people"></i>
+                Employees
+              </router-link>
+            </li>
+            <li class="nav-item" v-show="userStore.user?.type == 'EM'">
               <!-- <router-link class="nav-link" :class="{ active: $route.name === 'Reports' }"
                 :to="{ name: 'Reports' }" @click="clickMenuOption">
                 <i class="bi bi-bar-chart-line"></i>
@@ -167,7 +174,6 @@ const clickMenuOption = () => {
 
           <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted"
             v-if="userStore.user">
-            <span>My Projects</span>
             <!-- <router-link
               class="link-secondary"
               :to="{ name: 'NewProject' }"

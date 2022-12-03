@@ -43,14 +43,17 @@ const photoFullUrl = (user) => {
 
 const editClick = (user) => {
   emit("edit", user)
-  console.log(user)
+  console.log( user)
 }
 
-const canViewUserDetail  = (userId) => {
+const canViewUserDetail  = (user) => {
   if (!userStore.user) {
     return false
   }
-  return userStore.user.type == 'EM' || userStore.user.id == userId
+  if(user.type=='EM' && userStore.user.id!=user.id){
+    return false
+  }
+  return userStore.user.type == 'EM' || userStore.user.id == user.id
 }
 </script>
 
@@ -75,7 +78,7 @@ const canViewUserDetail  = (userId) => {
         <td v-if="showEmail" class="align-middle">{{ user.email }}</td>
         <td v-if="showAdmin" class="align-middle">{{ user.type == "EM" ? "Sim" : "" }}</td>
         <td class="text-end align-middle" v-if="showEditButton">
-          <div class="d-flex justify-content-end" v-if="canViewUserDetail(user.id)">
+          <div class="d-flex justify-content-end" v-if="canViewUserDetail(user)">
             <button class="btn btn-xs btn-light" @click="editClick(user)" v-if="showEditButton">
               <i class="bi bi-xs bi-pencil"></i>
             </button>
