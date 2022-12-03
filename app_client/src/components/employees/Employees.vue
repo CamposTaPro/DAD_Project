@@ -1,10 +1,11 @@
 <script setup>
 import { ref, computed, onMounted, inject } from "vue";
 import { useRouter } from "vue-router";
+import { useUserStore } from '../../stores/user.js'
 import EmployeeTable from "./EmployeeTable.vue";
 
 const router = useRouter();
-
+const userStore = useUserStore()
 const axios = inject("axios");
 
 const users = ref([]);
@@ -30,6 +31,9 @@ const loadUsers = () => {
   }
 
 onMounted(() => {
+  if(userStore.user.type!="EM"){
+    router.push({ name: 'home' })
+  }
   loadUsers();
 });
 </script>

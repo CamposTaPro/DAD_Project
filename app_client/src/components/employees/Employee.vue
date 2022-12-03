@@ -1,9 +1,11 @@
 <script setup>
-import { ref, watch, inject } from 'vue'  
+import { ref, watch, inject,onMounted } from 'vue'  
 import { useRouter } from "vue-router";
+import { useUserStore } from '../../stores/user.js'
 
 const axios = inject('axios');
 const toast = inject("toast");
+const userStore = useUserStore();
 const router = useRouter();
 const name = ref('')
 const email = ref('')
@@ -32,9 +34,11 @@ const createEmployee = async () => {
     }
 
 }
-
-
-
+onMounted(() => {
+    if (userStore.user.type != "EM") {
+        router.push({ name: 'home' })
+    }
+})
 </script>
 
 
@@ -66,6 +70,7 @@ const createEmployee = async () => {
                     </div>
                     <br>
                     <button type="submit" class="btn btn-primary" @click="createEmployee">Submit</button>
+                    <RouterLink to="/employees" class="btn btn-secondary">Go Back</RouterLink>
                 </form>
             </div>
         </div>
