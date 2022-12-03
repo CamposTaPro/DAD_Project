@@ -1,8 +1,10 @@
 <script setup>
 import { ref, inject, onMounted, watch } from 'vue'
+import { useRouter, RouterLink, RouterView } from "vue-router"
 
 const axios = inject('axios')
 const serverBaseUrl = inject("serverBaseUrl");
+const router = useRouter();
 
 const products = ref([])
 
@@ -21,6 +23,10 @@ const deleteProduct = async (id) => {
     if(response.status == 200){
         fetchProducts()
     }
+}
+
+const editProduct = (id) => {
+    router.push({ name: 'ProductEdit', params: { id: id } })
 }
 
 onMounted(() => {

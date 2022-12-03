@@ -1,8 +1,10 @@
 <script setup>
-import { ref, watch, inject } from 'vue'
+import { ref, inject, onMounted, watch } from 'vue'
+import { useRouter, RouterLink, RouterView } from "vue-router"
 
 const axios = inject('axios')
-
+const serverBaseUrl = inject("serverBaseUrl");
+const router = useRouter();
 
 const name = ref('')
 const description = ref('')
@@ -10,48 +12,52 @@ const price = ref(0)
 const type = ref('')
 const photoFile = ref('')
 const photoUrl = ref('')
-const file = ref(null)
 
-function readFile(event) {
-    photoFile.value = file.value.files[0];
-    console.log(file.value.files)
+const props = defineProps({
+    id: {
+        type: Number,
+        default: null
+    }
+})
+
+
+const fetchProduct = async () => {
+    let names = '';
+
+    const response = await axios.get(`product/${props.id}`)
+    if (response.status == 200) {
+        name.value = response.data[0].name
+        description.value = response.data[0].description
+        price.value = response.data[0].price
+        type.value = response.data[0].type
+        photoUrl.value = response.data[0].photo_url
+        photoUrl.value = `${serverBaseUrl}/storage/products/${photoUrl.value}`
+    }
+    console.log(names)
+    console.log(response.data)
 }
 
-const createProduct = async () => {
-    const formData = new FormData()
-
-    //formData.append('name', name.value ? name.value : 'mmm')
-    //formData.append('type', type.value ? type.value : 'drink')
-    //formData.append('description', description.value ? description.value : 'mmm')
-    formData.append('file', photoFile.value)
-    //formData.append('price', price.value ? price.value : 1)
-    //watch what's is appended in formData
-
-    /*await fetch(`http://server_api.test/api/products`, {
-        method: 'POST',
-        body: formData,
-        headers: {
-            'content-type': 'multipart/form-data'
-        }
+const editProduct = async () => {
+    const response = await axios.put(`product/${props.id}`, {
+        name: name.value,
+        description: description.value,
+        price: price.value,
+        type: type.value,
+        //photo_url: photoUrl.value
     })
-    return;*/
-
-    let config = {
-        headers: {
-            'content-type': 'multipart/form-data'
-        }
+    if (response.status == 200){
+        console.log("Deu fixe")
+        router.push('/producttable')
     }
 
-    const response = await axios.post('products', formData, config)
-    if (response.status == 200) {
-        //\toast.success('Product #' + response.data.data.id + ' was created successfully.')
-        //router.push({ name: 'Product', params: { id: response.data.data.id } })
-        console.log("ok")
-    } else {
-        //toast.error('Product was not created due to unknown server error!')
-        console.log("não deu")
-    }
+}
 
+const photoFullUrl = () => {
+    return `${serverBaseUrl}/storage/products/${photoUrl.value}`
+}
+
+function readFile(event) {
+    photoFile.value = event.target.files[0]
 }
 
 watch(photoFile, (photoFile) => {
@@ -63,14 +69,11 @@ watch(photoFile, (photoFile) => {
     }
 })
 
-const idk = () => {
-    if (price.value < 0) {
-        price.value = 0
-    }
-}
+onMounted(() => {
+    fetchProduct()
+})
 
 </script>
-
 
 <template>
     <h1>Product</h1>
@@ -101,10 +104,10 @@ const idk = () => {
                     </div>
                     <div class="form-group">
                         <label for="photoUrl">Photo</label>
-                        <input type="file" class="form-control" id="photoUrl" ref="file" @change="readFile">
+                        <input type="file" class="form-control" id="photoUrl" @change="readFile">
                         <img v-show="photoUrl" :src="photoUrl" />
                     </div>
-                    <button type="submit" class="btn btn-primary" @click="createProduct">Submit</button>
+                    <button type="submit" class="btn btn-primary" @click="editProduct">Submit</button>
                 </form>
             </div>
         </div>

@@ -45,3 +45,5 @@ Route::get('products', [ProductController::class, 'getProducts']);
 Route::get('products/{type}', [ProductController::class, 'getProductByType']);
 
 Route::post('products', [ProductController::class, 'store']);
+Route::get('product/{id}', [ProductController::class, 'index']);
+Route::put('product/{id}', [ProductController::class, 'update']);

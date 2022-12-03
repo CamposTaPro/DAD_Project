@@ -78,14 +78,14 @@ const cancel = () => {
         <div class="d-flex ms-1 mt-4 flex-wrap justify-content-between">
           <div class="mb-3 me-3 flex-grow-1">
             <div class="form-check">
-              <input
+              <input 
                 class="form-check-input"
                 type="checkbox"
-                true-value="A"
-                false-value="M"
+                true-value="EM"
+                false-value="C, A, ED, EC" 
                 v-model="editingUser.type"
                 id="inputType"
-              />
+              /> <!--Verificar os valores false-value-->
               <label class="form-check-label" for="inputType">
                 User is Administrator
               </label>
