@@ -1,6 +1,6 @@
 <script setup>
-import { ref, watch, computed, inject,onMounted } from "vue";
-import avatarNoneUrl from '@/assets/avatar-none.png'
+import { ref, watch, computed, inject, onMounted } from "vue";
+import avatarNoneUrl from "@/assets/avatar-none.png";
 
 const serverBaseUrl = inject("serverBaseUrl");
 const props = defineProps({
@@ -10,38 +10,36 @@ const props = defineProps({
   },
   errors: {
     type: Object,
-    required: false
+    required: false,
   },
-})
+});
 
 const emit = defineEmits(["save", "cancel"]);
 
 const editingUser = ref(props.user);
-
+const aux= ref(props.user);
 watch(
   () => props.user,
   (newUser) => {
-    editingUser.value = newUser
+    editingUser.value = newUser;
   },
   { immediate: true }
-)
+);
 
 const photoFullUrl = computed(() => {
-  console.log(props)
   return editingUser.value.photo_url
     ? serverBaseUrl + "/storage/fotos/" + editingUser.value.photo_url
-    : avatarNoneUrl
-})
+    : avatarNoneUrl;
+});
 
 const save = () => {
   emit("save", editingUser.value);
-}
+
+};
 
 const cancel = () => {
   emit("cancel", editingUser.value);
-}
-
-
+};
 </script>
 
 <template>
@@ -60,7 +58,10 @@ const cancel = () => {
             required
             v-model="editingUser.name"
           />
-          <field-error-message :errors="errors" fieldName="name"></field-error-message>
+          <field-error-message
+            :errors="errors"
+            fieldName="name"
+          ></field-error-message>
         </div>
 
         <div class="mb-3 px-1">
@@ -73,25 +74,57 @@ const cancel = () => {
             required
             v-model="editingUser.email"
           />
-          <field-error-message :errors="errors" fieldName="email"></field-error-message>
+          <field-error-message
+            :errors="errors"
+            fieldName="email"
+          ></field-error-message>
         </div>
-        <div class="d-flex ms-1 mt-4 flex-wrap justify-content-between">
-          <div class="mb-3 me-3 flex-grow-1">
-            <div class="form-check">
-              <input
-                class="form-check-input"
-                type="checkbox"
-                true-value="A"
-                false-value="M"
-                v-model="editingUser.type"
-                id="inputType"
-              />
-              <label class="form-check-label" for="inputType">
-                User is Administrator
-              </label>
-              <field-error-message :errors="errors" fieldName="type"></field-error-message>
-            </div>
-          </div>
+        <div class="mb-3 px-1" v-if="editingUser.type == 'C'">
+          <label for="inputEmail" class="form-label">Nif</label>
+          <input
+            type="payment_type"
+            class="form-control"
+            id="inputEmail"
+            placeholder=""
+            required
+            v-model="editingUser.customer[0].nif"
+          />
+          <field-error-message
+            :errors="errors"
+            fieldName="payment_nif"
+          ></field-error-message>
+        </div>
+        <div class="mb-3 px-1" v-if="editingUser.type == 'C'">
+          <label for="inputEmail" class="form-label">Phone</label>
+          <input
+            type="payment_type"
+            class="form-control"
+            id="inputEmail"
+            placeholder=""
+            required
+            v-model="editingUser.customer[0].phone"
+          />
+          <field-error-message
+            :errors="errors"
+            fieldName="phone"
+          ></field-error-message>
+        </div>
+        <div class="mb-3 px-1" v-if="editingUser.type == 'C'">
+          <label for="inputEmail" class="form-label"
+            >Default Payment Reference</label
+          >
+          <input
+            type="payment_type"
+            class="form-control"
+            id="inputEmail"
+            placeholder="Email"
+            required
+            v-model="editingUser.customer[0].default_payment_reference"
+          />
+          <field-error-message
+            :errors="errors"
+            fieldName="payment_reference"
+          ></field-error-message>
         </div>
       </div>
       <div class="w-25">
@@ -104,8 +137,12 @@ const cancel = () => {
       </div>
     </div>
     <div class="mb-3 d-flex justify-content-end">
-      <button type="button" class="btn btn-primary px-5" @click="save">Save</button>
-      <button type="button" class="btn btn-light px-5" @click="cancel">Cancel</button>
+      <button type="button" class="btn btn-primary px-5" @click="save">
+        Save
+      </button>
+      <button type="button" class="btn btn-light px-5" @click="cancel">
+        Cancel
+      </button>
     </div>
   </form>
 </template>
