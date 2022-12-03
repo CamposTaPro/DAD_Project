@@ -1,5 +1,8 @@
 <script setup>
 import { ref, inject, onMounted, watch } from 'vue'
+import { useProductsStore } from '@/stores/products.js'
+
+const carrinho = useProductsStore()
 
 const axios = inject('axios')
 const serverBaseUrl = inject("serverBaseUrl");
@@ -38,12 +41,15 @@ watch(selectedType, (newType, oldType) => {
 })
 
 
-
 const photoFullUrl = (product) => {
     /*return product.photo_url
         ? `${serverBaseUrl}/storage/products/${product.photo_url}`
         : `${serverBaseUrl}/storage/products/none.png`*/
     return `${serverBaseUrl}/storage/products/${product.photo_url}`
+}
+
+const addProduct = async (product) => {
+    carrinho.insertProduct(product)
 }
 
 onMounted(() => {
@@ -75,6 +81,8 @@ onMounted(() => {
                 <!--<p> {{ product.type }}</p>-->
                 <p>{{ product.price }}€</p>
             </div>
+
+            <button type="button" class="btn btn-primary" @click="addProduct(product)">Adicionar ao carrinho</button>
         </li>
     </ul>
 </template>

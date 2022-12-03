@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\api\AuthController;
 use App\Http\Controllers\api\TaskController;
 use App\Http\Controllers\api\UserController;
+use App\Http\Controllers\api\OrderController;
 use App\Http\Controllers\api\ProductController;
 use App\Http\Controllers\api\ProjectController;
 
@@ -47,3 +48,6 @@ Route::get('products/{type}', [ProductController::class, 'getProductByType']);
 Route::post('products', [ProductController::class, 'store']);
 Route::get('product/{id}', [ProductController::class, 'index']);
 Route::put('product/{id}', [ProductController::class, 'update']);
+
+Route::get('orders', [OrderController::class, 'index']);
+Route::post('orders', [OrderController::class, 'store']);

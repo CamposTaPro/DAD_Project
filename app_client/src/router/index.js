@@ -19,6 +19,7 @@ import Products from "../components/products/Products.vue"
 import Product from "../components/products/Product.vue"
 import ProductTable from '../components/products/ProductTable.vue'
 import ProductEdit from '../components/products/ProductEdit.vue'
+import Carrinho from '../components/Carrinho.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -152,6 +153,11 @@ const router = createRouter({
       name: 'ProductEdit',
       component: ProductEdit,
       props: route => ({ id: parseInt(route.params.id) })
+    },
+    {
+      path: '/carrinho',
+      name: 'Carrinho',
+      component: Carrinho
     }
   ]
 })

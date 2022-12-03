@@ -120,23 +120,23 @@ const clickMenuOption = () => {
               </router-link>
             </li>
             <li class="nav-item d-flex justify-content-between align-items-center pe-3">
-              <!-- <router-link
+              <router-link
                 class="nav-link w-100 me-3"
-                :class="{ active: $route.name === 'Tasks' }"
-                :to="{ name: 'Tasks' }"
+                :class="{ active: $route.name === 'Carrinho' }"
+                :to="{ name: 'Carrinho' }"
                 @click="clickMenuOption"
               >
                 <i class="bi bi-list-check"></i>
-                Tasks
+                Carrinho
               </router-link>
-              <router-link
+              <!--<router-link
                 class="link-secondary"
                 :to="{ name: 'NewTask' }"
                 aria-label="Add a new task"
                 @click="clickMenuOption"
               >
                 <i class="bi bi-xs bi-plus-circle"></i>
-              </router-link> -->
+              </router-link>-->
             </li>
             <li class="nav-item">
               <!-- <router-link
