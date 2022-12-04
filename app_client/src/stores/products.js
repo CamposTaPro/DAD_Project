@@ -53,6 +53,16 @@ export const useProductsStore = defineStore("products", () => {
     paymentReference.value = response.data;
   }
 
+  async function postOrderItems(orderItem) {
+    const response = await axios.post("orderitems", orderItem);
+    console.log(response.data);
+
+    if (response.status == 200) {
+      console.log("deu fixe 2x");
+      
+    }
+  }
+
   getCustomerPayment();
   getCustomerReference();
   async function postProducts() {
@@ -74,24 +84,26 @@ export const useProductsStore = defineStore("products", () => {
     if (response.status == 200) {
       console.log("deu fixe");
 
+      let order_id = response.data.id;
+      var order_local_number = 1; //TODO
+
       for (let i = 0; i < products.value.length; i++) {
-        const response2 = await axios.post("orderitems", {
-          order_id: response.data.id,
-          order_local_number: 1, //TODO
-          product_id: products.value[i].id,
+        var product = products.value[i];
+
+        const orderItem = {
+          order_id: order_id,
+          order_local_number: order_local_number, //TODO
+          product_id: product.id,
           status: "W",
-          price: products.value[i].price,
+          price: product.price,
           preparation_by: 7, //TODO
           notes: "asd", //TODO
-        });
-
-
-        if (response2.status == 200) {
-          console.log("deu fixe 2x");
-          clearProducts();
         }
+        order_local_number = 2; //TODO
+        await postOrderItems(orderItem);
       }
     }
+    clearProducts();
   }
 
   return {
