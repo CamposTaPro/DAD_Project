@@ -25,6 +25,8 @@ import Carrinho from '../components/Carrinho.vue'
 import Employees from "../components/employees/Employees.vue"
 import Employee from "../components/employees/Employee.vue"
 
+import Kitchen from "../components/chef/Kitchen.vue"
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -173,6 +175,11 @@ const router = createRouter({
       path:'/employee',
       name: 'Employee',
       component: Employee
+    },
+    {
+      path: '/kitchen',
+      name: 'Kitchen',
+      component: Kitchen
     }
   ]
 })

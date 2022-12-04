@@ -77,7 +77,7 @@ onMounted(() => {
         <li v-for="product in products" :key="product.id">
             <div>
                 <h2>{{ product.name }}</h2>
-                <img :src="photoFullUrl(product)" />
+                <img style="width: 20%;" :src="photoFullUrl(product)" />
                 <!--<p> {{ product.type }}</p>-->
                 <p>{{ product.price }}€</p>
             </div>
@@ -88,5 +88,9 @@ onMounted(() => {
 </template>
 
 <style scope>
-
+li{
+    display: inline-block;
+    width: 50%;
+    margin-bottom: 2%;
+}
 </style>
