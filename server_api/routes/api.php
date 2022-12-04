@@ -59,7 +59,10 @@ Route::post('orders', [OrderController::class, 'store']);
 Route::post('orderitems', [Order_ItemController::class, 'store']);
 
 Route::post('employee', [UserController::class, 'createEmployee']);
+
 //Route::get('users', [UserController::class, 'index']);
 //Route::patch('users/{user}', [UserController::class, 'update']);
+
+Route::get('customer/{customer}/orders', [CustomerController::class, 'showOrders']);
 
 
