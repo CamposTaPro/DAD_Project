@@ -27,7 +27,7 @@ class OrderResource extends JsonResource
             'date' => $this->date,
             'payment_type' => $this->payment_type,
             //'delivered_by' => User::find($this->delivered_by)->name,
-            'delivered_by' => User::find($this->delivered_by),
+            'delivered_by' => User::find($this->delivered_by),  //TODO
 
         ];
     }
