@@ -18,15 +18,13 @@ import Register from "../components/auth/Register.vue"
 import Products from "../components/products/Products.vue"
 import Product from "../components/products/Product.vue"
 import ProductTable from '../components/products/ProductTable.vue'
-
 import ProductEdit from '../components/products/ProductEdit.vue'
 import Carrinho from '../components/Carrinho.vue'
-
 import Employees from "../components/employees/Employees.vue"
 import Employee from "../components/employees/Employee.vue"
+import Historical from '../components/customers/Historical.vue'
 
 import Kitchen from "../components/chef/Kitchen.vue"
-
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -180,6 +178,11 @@ const router = createRouter({
       path: '/kitchen',
       name: 'Kitchen',
       component: Kitchen
+    }, 
+    {
+      path:'/historical',
+      name: 'Historical',
+      component: Historical
     }
   ]
 })

@@ -101,7 +101,7 @@ const clickMenuOption = () => {
       <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
         <div class="position-sticky pt-3">
           <ul class="nav flex-column">
-            <li class="nav-item" v-if="userStore.user">
+            <li class="nav-item" v-show="userStore.user?.type == 'EM'">
               <router-link class="nav-link" :class="{ active: $route.name === 'ProductTable' }" :to="{ name: 'ProductTable' }"
                 @click="clickMenuOption">
                 <i class="bi bi-house"></i>
@@ -149,7 +149,7 @@ const clickMenuOption = () => {
                 Projects
               </router-link> -->
             </li>
-            <li class="nav-item" v-if="userStore.user">
+            <li class="nav-item" v-show="userStore.user?.type == 'EM'">
               <router-link class="nav-link" :class="{ active: $route.name === 'Users' }" :to="{ name: 'Users' }"
                 @click="clickMenuOption">
                 <i class="bi bi-people"></i>
@@ -163,33 +163,26 @@ const clickMenuOption = () => {
                 Employees
               </router-link>
             </li>
-            <li class="nav-item" v-show="userStore.user?.type == 'EC'||userStore.user?.type == 'EM' ">
-              <router-link class="nav-link" :class="{ active: $route.name === 'Kitchen' }" :to="{ name: 'Kitchen' }"
-                @click="clickMenuOption">
-                <i class="bi bi-people"></i>
-                Kitchen
-              </router-link>
-            </li>
-            <li class="nav-item" v-show="userStore.user?.type == 'EM'">
-              <!-- <router-link class="nav-link" :class="{ active: $route.name === 'Reports' }"
-                :to="{ name: 'Reports' }" @click="clickMenuOption">
+            <li class="nav-item" v-show="userStore.user?.type == 'C'">
+              <router-link class="nav-link" :class="{ active: $route.name === 'Historical' }"
+                :to="{ name: 'Historical' }" @click="clickMenuOption">
                 <i class="bi bi-bar-chart-line"></i>
-                Reports
-              </router-link> -->
+                Historical
+              </router-link> 
             </li>
           </ul>
-
+          <!--
           <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted"
             v-if="userStore.user">
-            <!-- <router-link
+             <router-link
               class="link-secondary"
               :to="{ name: 'NewProject' }"
               aria-label="Add a new project"
               @click="clickMenuOption"
             >
               <i class="bi bi-xs bi-plus-circle"></i>
-            </router-link> -->
-          </h6>
+            </router-link> 
+          </h6>-->
           <ul class="nav flex-column mb-2">
             <!-- <li class="nav-item" v-for="prj in projectsStore.myInprogressProjects" :key="prj.id">
               <router-link

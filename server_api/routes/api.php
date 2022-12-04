@@ -8,6 +8,8 @@ use App\Http\Controllers\api\UserController;
 use App\Http\Controllers\api\OrderController;
 use App\Http\Controllers\api\ProductController;
 use App\Http\Controllers\api\ProjectController;
+use App\Http\Controllers\api\CustomerController;
+use App\Http\Controllers\api\Order_ItemController;
 
 Route::post('login', [AuthController::class, 'login']);
 Route::post('register', [UserController::class, 'create']);
@@ -42,19 +44,29 @@ Route::middleware('auth:api')->group(function () {
     Route::delete('products/{product}', [ProductController::class, 'destroy']);
 });
 
+Route::get('customerpayment/{customer}', [CustomerController::class, 'getCustomerPayment']);
+Route::get('customerreference/{customer}', [CustomerController::class, 'getCustomerReference']);
+
 Route::get('products', [ProductController::class, 'getProducts']);
 Route::get('products/{type}', [ProductController::class, 'getProductByType']);
-
+Route::get('products/order/items', [ProductController::class, 'getProductsByOrderItemStatus']);
 Route::post('products', [ProductController::class, 'store']);
-
 Route::get('product/{id}', [ProductController::class, 'index']);
 Route::put('product/{id}', [ProductController::class, 'update']);
 
 Route::get('orders', [OrderController::class, 'index']);
 Route::post('orders', [OrderController::class, 'store']);
 
+Route::get('orderitems', [Order_ItemController::class, 'index']);
+Route::get('orderitems/{order_item}', [Order_ItemController::class, 'show']);
+Route::post('orderitems', [Order_ItemController::class, 'store']);
+Route::patch('orderitems/{order_item}/status', [Order_ItemController::class, 'updateStatus']);
+
 Route::post('employee', [UserController::class, 'createEmployee']);
+
 //Route::get('users', [UserController::class, 'index']);
 //Route::patch('users/{user}', [UserController::class, 'update']);
+
+Route::get('customer/{customer}/orders', [CustomerController::class, 'showOrders']);
 
 
