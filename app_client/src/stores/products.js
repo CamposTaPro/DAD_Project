@@ -94,7 +94,7 @@ export const useProductsStore = defineStore("products", () => {
           order_id: order_id,
           order_local_number: order_local_number, //TODO
           product_id: product.id,
-          status: "W",
+          status: product.type != "hot dish" ? "R" : "W", //VERIFY
           price: product.price,
           preparation_by: 7, //TODO
           notes: "asd", //TODO

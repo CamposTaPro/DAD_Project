@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\api;
 
+use App\Models\Order_Item;
+use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\File;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\File;
 
 class ProductController extends Controller
 {
@@ -17,6 +19,18 @@ class ProductController extends Controller
 
     public function getProductByType(string $type) {
         $products = Product::where('type', $type)->get();
+        return response()->json($products);
+    }
+
+    public function getProductsByOrderItemStatus(Request $request){
+
+        $order_items = Order_Item::where('status', $request->order_status)->get();
+
+        $products = array();
+        foreach($order_items as $order_item){
+            $product = Product::where('id', $order_item->product_id)->first();
+            array_push($products, $product);
+        }
         return response()->json($products);
     }
 

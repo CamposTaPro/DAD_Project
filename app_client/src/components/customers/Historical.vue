@@ -33,7 +33,7 @@ onMounted(()=> {
             <p>Payment Type: {{ order.payment_type }}</p>
             <p>Total Price: {{ order.total_price }}€</p>
             <p>Date: {{ order.date }}</p>
-            <p>Delivered by: {{ order.delivered_by }}</p>
+            <p>Delivered by: {{ order.delivered_by }}</p>  <!--TODO-->
         </div>
     </li>
 </ul>

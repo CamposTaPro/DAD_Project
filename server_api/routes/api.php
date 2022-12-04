@@ -49,6 +49,7 @@ Route::get('customerreference/{customer}', [CustomerController::class, 'getCusto
 
 Route::get('products', [ProductController::class, 'getProducts']);
 Route::get('products/{type}', [ProductController::class, 'getProductByType']);
+Route::get('products/order/items', [ProductController::class, 'getProductsByOrderItemStatus']);
 Route::post('products', [ProductController::class, 'store']);
 Route::get('product/{id}', [ProductController::class, 'index']);
 Route::put('product/{id}', [ProductController::class, 'update']);
@@ -56,7 +57,10 @@ Route::put('product/{id}', [ProductController::class, 'update']);
 Route::get('orders', [OrderController::class, 'index']);
 Route::post('orders', [OrderController::class, 'store']);
 
+Route::get('orderitems', [Order_ItemController::class, 'index']);
+Route::get('orderitems/{order_item}', [Order_ItemController::class, 'show']);
 Route::post('orderitems', [Order_ItemController::class, 'store']);
+Route::patch('orderitems/{order_item}/status', [Order_ItemController::class, 'updateStatus']);
 
 Route::post('employee', [UserController::class, 'createEmployee']);
 
