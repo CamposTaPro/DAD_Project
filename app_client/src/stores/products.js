@@ -1,4 +1,4 @@
-import { ref, computed, inject } from "vue";
+import { ref, computed, inject, createCommentVNode } from "vue";
 import { defineStore } from "pinia";
 import { useUserStore } from "@/stores/user.js";
 
@@ -53,6 +53,16 @@ export const useProductsStore = defineStore("products", () => {
     paymentReference.value = response.data;
   }
 
+  async function postOrderItems(orderItem) {
+    const response = await axios.post("orderitems", orderItem);
+    console.log(response.data);
+
+    if (response.status == 200) {
+      console.log("deu fixe 2x");
+      
+    }
+  }
+
   getCustomerPayment();
   getCustomerReference();
   async function postProducts() {
@@ -71,11 +81,29 @@ export const useProductsStore = defineStore("products", () => {
       payment_reference: paymentReference.value,
     });
 
-    console.log(response.data);
-    if(response.status == 200){
-        console.log("deu fixe")
-        clearProducts();
+    if (response.status == 200) {
+      console.log("deu fixe");
+
+      let order_id = response.data.id;
+      var order_local_number = 1; //TODO
+
+      for (let i = 0; i < products.value.length; i++) {
+        var product = products.value[i];
+
+        const orderItem = {
+          order_id: order_id,
+          order_local_number: order_local_number, //TODO
+          product_id: product.id,
+          status: "W",
+          price: product.price,
+          preparation_by: 7, //TODO
+          notes: "asd", //TODO
+        }
+        order_local_number = 2; //TODO
+        await postOrderItems(orderItem);
+      }
     }
+    clearProducts();
   }
 
   return {
