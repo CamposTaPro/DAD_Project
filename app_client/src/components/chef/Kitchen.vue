@@ -7,15 +7,19 @@ const serverBaseUrl = inject("serverBaseUrl");
 const products = ref([])
 const selectedStatus = ref(null)
 const status = ref([])
-const order_items = ref([])
+const order_item = ref([])
 
 const fetchOrders = async () => {
-    let response = await axios.get('order_item')
-    order_items.value = response.data
-    console.log(order_items.value);
+    let response = await axios.get('products/order/items', {
+        params: {
+            order_status: 'W'
+        }
+    })
+    order_item.value = response.data
+    console.log(order_item.value);
 
-    if (order_items.value) {
-        order_items.value.forEach((item) => {
+    if (order_item.value) {
+        order_item.value.forEach((item) => {
 
             if (!status.value.includes(item.status)) {
                 status.value.push(item.status)
@@ -24,32 +28,25 @@ const fetchOrders = async () => {
     }
 }
 
-const fetchOrderItemsByStatus = async (status) => {
-    let response = await axios.get(`order_item/${status}`)
-    order_items.value = response.data
-    console.log(products.value)
+const Terminado = (id) => {
+    let response = axios.patch(`orderitems/${id}/status`, {
+        order_status: 'R'
+    })
+    console.log(response.data);
 }
 
-/*
+
 const photoFullUrl = (product) => {
+    
     /*return product.photo_url
         ? `${serverBaseUrl}/storage/products/${product.photo_url}`
         : `${serverBaseUrl}/storage/products/none.png`                                      estava comentado ate aqui
-
+    */
 
 
     return `${serverBaseUrl}/storage/products/${product.photo_url}`
 }
-*/
-watch(selectedStatus, (newStatus) => {
-    if (newStatus) {
-        fetchOrderItemsByStatus(newStatus)
-        console.log(newStatus)
 
-    } else {
-        fetchOrders()
-    }
-})
 
 onMounted(() => {
     fetchOrders()
@@ -59,25 +56,16 @@ onMounted(() => {
 
 <template>
     <h1>Products:</h1>
-    <div class="mx-2 mt-2 flex-grow-1 filter-div">
-        <label for="search" class="form-label">Filter by Status:</label>
-        <select class="form-select" id="status" v-model="selectedStatus">
-            <option :value="null">All status</option>
-            <option v-for="Onestatus in status" :key="Onestatus.id" :value="Onestatus">
-                {{ Onestatus }}
-            </option>
-        </select>
-    </div>
-
-    <ul v-for="item in order_items" :key="item.status" >
-        <li  v-if="item.status == 'W'" >
+    <ul v-for="item in order_item">
+        <li>
             <div class="card">
                 <!--<img src="img_avatar.png" alt="Avatar" style="width:100%">-->
                 <div class="container">
-                <h4><b>Estado do prato: {{item.status}}</b></h4> 
-                <p>{{item.product_id}}--{{}}</p> 
+                <h4><b>{{item.name}}</b></h4> 
+                <img class="comida" :src="photoFullUrl(item)" /> 
+                </div>
+                <button @click="Terminado(item.id)">Prato Terminado</button>
             </div>
-</div>
         </li>
     </ul>
 </template>
@@ -101,5 +89,10 @@ li{
 
 .container {
   padding: 2px 16px;
+}
+
+.comida{
+  width: 100%;
+  height: 100%;
 }
 </style>
