@@ -172,8 +172,8 @@ const clickMenuOption = () => {
             </li>
             <li class="nav-item" v-show="userStore.user?.type == 'EM'">
               <!-- <router-link class="nav-link" :class="{ active: $route.name === 'Reports' }"
-                :to="{ name: 'Reports' }" @click="clickMenuOption">
-
+                :to="{ name: 'Reports' }" @click="clickMenuOption">-->
+              </li>
             <li class="nav-item" v-show="userStore.user?.type == 'C'">
               <router-link class="nav-link" :class="{ active: $route.name === 'Historical' }"
                 :to="{ name: 'Historical' }" @click="clickMenuOption">
@@ -185,15 +185,15 @@ const clickMenuOption = () => {
 
           <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted"
             v-if="userStore.user">
-            <!-- <router-link
+             <router-link
               class="link-secondary"
               :to="{ name: 'NewProject' }"
               aria-label="Add a new project"
               @click="clickMenuOption"
             >
               <i class="bi bi-xs bi-plus-circle"></i>
-            </router-link> -->
-          </h6>
+            </router-link> 
+          </h6>-->
           <ul class="nav flex-column mb-2">
             <!-- <li class="nav-item" v-for="prj in projectsStore.myInprogressProjects" :key="prj.id">
               <router-link

@@ -26,7 +26,6 @@ import Historical from '../components/customers/Historical.vue'
 
 import Kitchen from "../components/chef/Kitchen.vue"
 
-
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
