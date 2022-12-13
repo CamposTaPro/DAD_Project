@@ -1,5 +1,5 @@
 <script setup>
-import { ref, inject,onMounted } from "vue";
+import { ref, inject, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { useUserStore } from "../../stores/user.js";
 const router = useRouter();
@@ -14,9 +14,8 @@ const credentials = ref({
   phone: "",
   password: "",
   paymentType: "",
-  default_payment_reference: ""
+  default_payment_reference: "",
 });
-
 
 const userStore = useUserStore();
 
@@ -52,7 +51,29 @@ async function register(credentials) {
   } catch (error) {
     console.log(error);
     credentials.password = "";
-    toast.error("Costumer credentials are invalid!");
+    console.log(error.response.data.errors);
+
+    if (error.response.data.errors.name) {
+      toast.error(error.response.data.errors.name[0]);
+    }
+    if (error.response.data.errors.email) {
+      toast.error(error.response.data.errors.email[0]);
+    }
+    if (error.response.data.errors.nif) {
+      toast.error(error.response.data.errors.nif[0]);
+    }
+    if (error.response.data.errors.phone) {
+      toast.error(error.response.data.errors.phone[0]);
+    }
+    if (error.response.data.errors.password) {
+      toast.error(error.response.data.errors.password[0]);
+    }
+    if (error.response.data.errors.default_payment_reference) {
+      toast.error(error.response.data.errors.default_payment_reference[0]);
+    }
+    if(error.response.data.errors.default_payment_type){
+      toast.error(error.response.data.errors.default_payment_type[0]);
+    }
   }
 }
 onMounted(() => {
@@ -123,9 +144,9 @@ onMounted(() => {
           required
           v-model="credentials.paymentType"
         >
-          <option value="visa">Visa</option>
-          <option value="paypal">Paypal</option>
-          <option value="mbway">MBWay</option>
+          <option value="VISA">Visa</option>
+          <option value="PAYPAL">Paypal</option>
+          <option value="MBWAY">MBWay</option>
         </select>
       </div>
     </div>
@@ -156,21 +177,23 @@ onMounted(() => {
       </div>
     </div>
     <div class="mb-3 d-flex justify-content-center">
-      <button v-if="credentials.paymentType"
+      <button
+        v-if="credentials.paymentType"
         type="button"
         class="btn btn-primary px-5"
         @click="register(credentials)"
       >
         Register
       </button>
-      <button v-else
-      type="button"
-      class="btn btn-primary px-5"
-      @click="register(credentials)"
-      disabled
-    >
-      Register
-    </button>
+      <button
+        v-else
+        type="button"
+        class="btn btn-primary px-5"
+        @click="register(credentials)"
+        disabled
+      >
+        Register
+      </button>
     </div>
   </form>
 </template>

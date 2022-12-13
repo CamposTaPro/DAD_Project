@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api;
 use App\Models\User;
 use App\Models\Customer;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Hash;
@@ -16,6 +17,17 @@ class UserController extends Controller
 {
     public function create(Request $request)
     {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required',
+            'nif' => 'required|numeric|unique:customers',
+            'phone' => 'required|numeric|unique:customers',
+            'default_payment_type' => 'required|string|in:VISA,PAYPAL,MBWAY',
+            'default_payment_reference' =>[Rule::when($request->default_payment_type == 'VISA', 'required|numeric|digits:16','required') , Rule::when($request->default_payment_type == 'PAYPAL', 'required|email','required'),Rule::when($request->default_payment_type == 'MBWAY', 'required|numeric|doesnt_start_with:0|regex:/^([0-9\s\-\+\(\)]*)$/|digits:9', 'required')]
+
+         ]);
+
         $user= new User();
         $user->name = $request->name;
         $user->email = $request->email;
