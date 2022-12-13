@@ -173,6 +173,7 @@ const router = createRouter({
       path:'/employee',
       name: 'Employee',
       component: Employee
+
     },
     {
       path: '/kitchen',

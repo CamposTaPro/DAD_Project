@@ -170,6 +170,10 @@ const clickMenuOption = () => {
                 Kitchen
               </router-link>
             </li>
+            <li class="nav-item" v-show="userStore.user?.type == 'EM'">
+              <!-- <router-link class="nav-link" :class="{ active: $route.name === 'Reports' }"
+                :to="{ name: 'Reports' }" @click="clickMenuOption">-->
+              </li>
             <li class="nav-item" v-show="userStore.user?.type == 'C'">
               <router-link class="nav-link" :class="{ active: $route.name === 'Historical' }"
                 :to="{ name: 'Historical' }" @click="clickMenuOption">
@@ -178,7 +182,7 @@ const clickMenuOption = () => {
               </router-link> 
             </li>
           </ul>
-          <!--
+
           <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted"
             v-if="userStore.user">
              <router-link
