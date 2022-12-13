@@ -108,6 +108,12 @@ class UserController extends Controller
     }
     public function createEmployee(Request $request)
     {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required',
+            'type' => 'required|string|in:EC,ED',
+         ]);
         $user= new User();
         $user->name = $request->name;
         $user->email = $request->email;
