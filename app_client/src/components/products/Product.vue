@@ -1,8 +1,11 @@
 <script setup>
 import { ref, watch, inject } from 'vue'
+import { useRouter } from "vue-router"
+import axios  from 'axios'
 
-const axios = inject('axios')
+const toast = inject("toast")
 
+const router = useRouter()
 
 const name = ref('')
 const description = ref('')
@@ -12,44 +15,36 @@ const photoFile = ref('')
 const photoUrl = ref('')
 const file = ref(null)
 
+
 function readFile(event) {
     photoFile.value = file.value.files[0];
-    console.log(file.value.files)
 }
 
 const createProduct = async () => {
-    const formData = new FormData()
-
-    //formData.append('name', name.value ? name.value : 'mmm')
-    //formData.append('type', type.value ? type.value : 'drink')
-    //formData.append('description', description.value ? description.value : 'mmm')
-    formData.append('file', photoFile.value)
-    //formData.append('price', price.value ? price.value : 1)
-    //watch what's is appended in formData
-
-    /*await fetch(`http://server_api.test/api/products`, {
-        method: 'POST',
-        body: formData,
+    const productPhoto = file.value?.files[0]
+    if(productPhoto){
+        const formData = new FormData()
+        formData.append('file', productPhoto)
+        formData.append('name', name.value)
+        formData.append('type', type.value)
+        formData.append('description', description.value)
+        formData.append('price', price.value)
+        
+        
+        const response = await axios.post('http://server_api.test/api/products', formData,{
         headers: {
-            'content-type': 'multipart/form-data'
+            'Content-Type':'multipart/form-data'
         }
-    })
-    return;*/
+        })
 
-    let config = {
-        headers: {
-            'content-type': 'multipart/form-data'
+        console.log(response)
+
+        if (response.status == 200) {
+            toast.success('Product #' + response.data.id + ' was created successfully.')
+            router.push({ name: 'Products' })
+        } else {
+            toast.error('Product was not created due to unknown server error!')
         }
-    }
-
-    const response = await axios.post('products', formData, config)
-    if (response.status == 200) {
-        //\toast.success('Product #' + response.data.data.id + ' was created successfully.')
-        //router.push({ name: 'Product', params: { id: response.data.data.id } })
-        console.log("ok")
-    } else {
-        //toast.error('Product was not created due to unknown server error!')
-        console.log("não deu")
     }
 
 }
@@ -58,14 +53,28 @@ watch(photoFile, (photoFile) => {
     let fileReader = new FileReader();
 
     fileReader.readAsDataURL(photoFile);
+
     fileReader.onload = (e) => {
         photoUrl.value = e.target.result;
     }
 })
 
-const idk = () => {
+const validateForm = () => {
+    //TODO
+    if (name.value == '') {
+        toast.error('Name is required!')
+    }
+    if (description.value == '') {
+        toast.error('Description is required!')
+    }
+    if (price.value == 0) {
+        toast.error('Price is required!')
+    }
+    if (type.value == '') {
+        toast.error('Type is required!')
+    }
     if (price.value < 0) {
-        price.value = 0
+        toast.error('Price must be greater than 0!')
     }
 }
 
@@ -77,7 +86,7 @@ const idk = () => {
     <div class="container">
         <div class="row">
             <div class="col-12">
-                <form @submit.prevent="idk">
+                <form @submit.prevent="validateForm">
                     <div class="form-group">
                         <label for="name">Name</label>
                         <input type="text" class="form-control" id="name" v-model="name">
