@@ -19,9 +19,6 @@ class CustomerController extends Controller
 
     public function showOrders(Request $request, Customer $customer)
     {
-        //return $customer->order;
         return OrderResource::collection($customer->order);
-        //return response()->json($customer->order);
-
     }
 }

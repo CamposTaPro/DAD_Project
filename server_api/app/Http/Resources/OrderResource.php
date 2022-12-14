@@ -15,9 +15,6 @@ class OrderResource extends JsonResource
      */
     public function toArray($request)
     {
-
-        //dd($request);
-        //dd(User::find($this->delivered_by)->name);
         return [
             'id' => $this->id,
             'ticket_number' => $this->ticket_number,
@@ -26,13 +23,8 @@ class OrderResource extends JsonResource
             'total_price' => $this->total_price,
             'date' => $this->date,
             'payment_type' => $this->payment_type,
-            //'delivered_by' => User::find($this->delivered_by)->name,
-            'delivered_by' => User::find($this->delivered_by),  //TODO
+            'delivered_by' => isset($this->delivered_by) ? User::find($this->delivered_by)->name : '',  //TODO
 
         ];
-    }
-
-    function getDeliverName($id){
-        return User::find($id)->name;
     }
 }
