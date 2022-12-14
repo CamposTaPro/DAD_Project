@@ -12,7 +12,8 @@ const order_item = ref([])
 const fetchOrders = async () => {
     let response = await axios.get('products/order/items', {
         params: {
-            order_status: 'W'
+            order_status: 'W',
+            type:"hot dish"
         }
     })
     order_item.value = response.data
