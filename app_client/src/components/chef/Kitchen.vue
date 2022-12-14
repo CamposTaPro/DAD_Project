@@ -1,18 +1,19 @@
 <script setup>
 import { ref, inject, onMounted, watch } from 'vue'
+import { useRouter } from 'vue-router'
 
 const axios = inject('axios')
 const serverBaseUrl = inject("serverBaseUrl");
-
+const router = useRouter();
 const products = ref([])
 const selectedStatus = ref(null)
 const status = ref([])
 const order_item = ref([])
 
 const fetchOrders = async () => {
-    let response = await axios.get('products/order/items', {
+    let response = await axios.get('orderitems_hotdishes', {
         params: {
-            order_status: 'W',
+            status: 'W',
             type:"hot dish"
         }
     })
@@ -29,11 +30,11 @@ const fetchOrders = async () => {
     }
 }
 
-const Terminado = (id) => {
-    let response = axios.patch(`orderitems/${id}/status`, {
-        order_status: 'R'
-    })
+async function Terminado(id){
+    const response = await axios.patch(`orderitems/${id}/status`, {
+        status: 'R'});
     console.log(response.data);
+    router.go()
 }
 
 
@@ -43,7 +44,7 @@ const photoFullUrl = (product) => {
         ? `${serverBaseUrl}/storage/products/${product.photo_url}`
         : `${serverBaseUrl}/storage/products/none.png`                                      estava comentado ate aqui
     */
-    return `${serverBaseUrl}/storage/products/${product.photo_url}`
+    return `${serverBaseUrl}/storage/products/${product}`
 }
 
 
@@ -59,8 +60,8 @@ onMounted(() => {
             <div class="card">
                 <!--<img src="img_avatar.png" alt="Avatar" style="width:100%">-->
                 <div class="container">
-                    <h4><b>{{ item.name }}</b></h4>
-                    <img class="comida" :src="photoFullUrl(item)" />
+                    <h4><b>{{ item.product[0].name }}- order:{{item.order_id}}</b></h4>
+                    <img class="comida" :src="photoFullUrl(item.product[0].photo_url)" />
                 </div>
                 <button @click="Terminado(item.id)">Prato Terminado</button>
             </div>
