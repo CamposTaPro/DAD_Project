@@ -11,6 +11,7 @@ const buttonSidebarExpand = ref(null)
 const logout = async () => {
   if (await userStore.logout()) {
     toast.success("User has logged out of the application.")
+    socket.emit('loggedOut', userStore.user)
     clickMenuOption()
     router.push({ name: 'home' })
   } else {

@@ -4,7 +4,7 @@ import axios from 'axios'
 import Toaster from "@meforma/vue-toaster";
 import FieldErrorMessage from './components/global/FieldErrorMessage.vue'
 import ConfirmationDialog from './components/global/ConfirmationDialog.vue'
-
+import { io } from "socket.io-client"
 import App from './App.vue'
 import router from './router'
 
@@ -23,6 +23,7 @@ app.provide('axios', axios.create({
     },
   }))
 app.provide('serverBaseUrl', serverBaseUrl)  
+app.provide('socket', io("http://localhost:8080"))
 
 app.use(Toaster, {
     // Global/Default options
