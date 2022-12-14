@@ -12,7 +12,8 @@ const order_item = ref([])
 const fetchOrders = async () => {
     let response = await axios.get('products/order/items', {
         params: {
-            order_status: 'W'
+            order_status: 'W',
+            type:"hot dish"
         }
     })
     order_item.value = response.data
@@ -37,13 +38,11 @@ const Terminado = (id) => {
 
 
 const photoFullUrl = (product) => {
-    
+
     /*return product.photo_url
         ? `${serverBaseUrl}/storage/products/${product.photo_url}`
         : `${serverBaseUrl}/storage/products/none.png`                                      estava comentado ate aqui
     */
-
-
     return `${serverBaseUrl}/storage/products/${product.photo_url}`
 }
 
@@ -57,42 +56,53 @@ onMounted(() => {
 <template>
     <h1>Products:</h1>
     <ul v-for="item in order_item">
-        <li>
             <div class="card">
                 <!--<img src="img_avatar.png" alt="Avatar" style="width:100%">-->
                 <div class="container">
-                <h4><b>{{item.name}}</b></h4> 
-                <img class="comida" :src="photoFullUrl(item)" /> 
+                    <h4><b>{{ item.name }}</b></h4>
+                    <img class="comida" :src="photoFullUrl(item)" />
                 </div>
                 <button @click="Terminado(item.id)">Prato Terminado</button>
             </div>
-        </li>
     </ul>
 </template>
 
 <style scope>
-li{
-    display: inline-block;
+li {
     width: 50%;
     margin-bottom: 2%;
 }
 
+h4 {
+    clear: both;
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap; 
+}
+
 .card {
-  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-  transition: 0.3s;
-  width: 50%;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    transition: 0.3s;
+    width: 80%;
+    height: 80%;
+}
+
+ul {
+    display: inline-block;
+    width: 33%;
+    margin:0%;
 }
 
 .card:hover {
-  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
 }
 
 .container {
-  padding: 2px 16px;
+    padding: 10% 22%;
 }
 
-.comida{
-  width: 100%;
-  height: 100%;
+.comida {
+    width: 80%;
+    height: 80%;
 }
 </style>

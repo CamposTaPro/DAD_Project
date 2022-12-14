@@ -3,14 +3,11 @@ import { useRouter, RouterLink, RouterView } from "vue-router"
 import { ref, inject } from "vue"
 import { useUserStore } from "./stores/user.js"
 import { useProjectsStore } from "./stores/projects.js"
-
 const router = useRouter()
 const toast = inject("toast")
 const userStore = useUserStore()
 const projectsStore = useProjectsStore()
-
 const buttonSidebarExpand = ref(null)
-
 const logout = async () => {
   if (await userStore.logout()) {
     toast.success("User has logged out of the application.")
@@ -21,15 +18,12 @@ const logout = async () => {
     toast.error("There was a problem logging out of the application!")
   }
 }
-
 const clickMenuOption = () => {
   if (window.getComputedStyle(buttonSidebarExpand.value).display !== "none") {
     buttonSidebarExpand.value.click()
   }
 }
-
 </script>
-
 <template>
   <nav class="navbar navbar-expand-md navbar-dark bg-dark sticky-top flex-md-nowrap p-0 shadow">
     <div class="container-fluid">
@@ -42,7 +36,6 @@ const clickMenuOption = () => {
         aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-
       <div class="collapse navbar-collapse justify-content-end">
         <ul class="navbar-nav">
           <li class="nav-item" v-show="!userStore.user">
@@ -76,6 +69,9 @@ const clickMenuOption = () => {
                 </router-link>
               </li>
               <li>
+                <hr class="dropdown-divider" />
+              </li>
+              <li>
                 <router-link class="dropdown-item" :class="{ active: $route.name === 'ChangePassword' }"
                   :to="{ name: 'ChangePassword' }" @click="clickMenuOption">
                   <i class="bi bi-key-fill"></i>
@@ -96,7 +92,6 @@ const clickMenuOption = () => {
       </div>
     </div>
   </nav>
-
   <div class="container-fluid">
     <div class="row">
       <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
@@ -139,6 +134,13 @@ const clickMenuOption = () => {
                 <i class="bi bi-xs bi-plus-circle"></i>
               </router-link>-->
             </li>
+            <li class="nav-item" v-show="userStore.user?.type == 'EC'||userStore.user?.type == 'EM' ">
+              <router-link class="nav-link" :class="{ active: $route.name === 'Kitchen' }" :to="{ name: 'Kitchen' }"
+                @click="clickMenuOption">
+                <i class="bi bi-people"></i>
+                Kitchen
+              </router-link>
+            </li>
             <li class="nav-item">
               <!-- <router-link
                 class="nav-link"
@@ -164,17 +166,6 @@ const clickMenuOption = () => {
                 Employees
               </router-link>
             </li>
-            <li class="nav-item" v-show="userStore.user?.type == 'EC'||userStore.user?.type == 'EM' ">
-              <router-link class="nav-link" :class="{ active: $route.name === 'Kitchen' }" :to="{ name: 'Kitchen' }"
-                @click="clickMenuOption">
-                <i class="bi bi-people"></i>
-                Kitchen
-              </router-link>
-            </li>
-            <li class="nav-item" v-show="userStore.user?.type == 'EM'">
-              <!-- <router-link class="nav-link" :class="{ active: $route.name === 'Reports' }"
-                :to="{ name: 'Reports' }" @click="clickMenuOption">-->
-              </li>
             <li class="nav-item" v-show="userStore.user?.type == 'C'">
               <router-link class="nav-link" :class="{ active: $route.name === 'Historical' }"
                 :to="{ name: 'Historical' }" @click="clickMenuOption">
@@ -186,15 +177,15 @@ const clickMenuOption = () => {
 
           <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted"
             v-if="userStore.user">
-             <router-link
+            <!-- <router-link
               class="link-secondary"
               :to="{ name: 'NewProject' }"
               aria-label="Add a new project"
               @click="clickMenuOption"
             >
               <i class="bi bi-xs bi-plus-circle"></i>
-            </router-link> 
-          </h6>-->
+            </router-link> -->
+          </h6>
           <ul class="nav flex-column mb-2">
             <!-- <li class="nav-item" v-for="prj in projectsStore.myInprogressProjects" :key="prj.id">
               <router-link
@@ -210,7 +201,6 @@ const clickMenuOption = () => {
               </router-link>
             </li> -->
           </ul>
-
           <div class="d-block d-md-none">
             <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
               <span>User</span>
@@ -259,7 +249,6 @@ const clickMenuOption = () => {
                         <i class="bi bi-arrow-right"></i>Logout
                       </a>
                     </li>
-
                   </ul>
                 </li>
               </div>
@@ -267,38 +256,31 @@ const clickMenuOption = () => {
           </div>
         </div>
       </nav>
-
       <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
         <router-view></router-view>
       </main>
     </div>
   </div>
 </template>
-
 <style>
 @import "./assets/dashboard.css";
-
 .avatar-img {
   margin: -1.2rem 0.8rem -2rem 0.8rem;
   width: 3.3rem;
   height: 3.3rem;
 }
-
 .avatar-text {
   line-height: 2.2rem;
   margin: 1rem 0.5rem -2rem 0;
   padding-top: 1rem;
 }
-
 .dropdown-item {
   font-size: 0.875rem;
 }
-
 .btn:focus {
   outline: none;
   box-shadow: none;
 }
-
 #sidebarMenu {
   overflow-y: auto;
 }

@@ -28,12 +28,10 @@ class ProductController extends Controller
 
         $products = array();
         foreach($order_items as $order_item){
-            $product = Product::where('id', $order_item->product_id)->first();
-            array_push($products, $product);
+            array_push($products,  $order_item->product()->where('type',$request->type)->get());
         }
         return response()->json($products);
     }
-
     public function destroy(int $id) {
         $product = Product::find($id);
         $product->delete();
