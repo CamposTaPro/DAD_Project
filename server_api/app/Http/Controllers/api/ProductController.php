@@ -41,44 +41,20 @@ class ProductController extends Controller
     }
 
     public function store(Request $request) {
-        $request->validate([
-            'file' => 'required|mimes:jpg,jpeg,png,csv,txt,xlx,xls,pdf|max:2048'
-         ]);
-
-
+        //dd($request->all());
+        //dd($request->file('file'));
         $product = new Product();
 
         $product->name = $request->name;
-        $product->type = $request->type;
         $product->description = $request->description;
-        //$product->photo_url = $request->photo_url->hashName();
-
-        //$request->file('photo_url')->store('storage/products', 'public');
-        //$photo_file = $request->file('photo_url');
-        //$product->photo_url = $request->file('photo_url');
-        $file_name = time().'_'.$request->file->getClientOriginalName();
-        $file_path = $request->file('file')->storeAs('products', $file_name, 'public');
-        $product->photo_url = '/storage/' . $file_path;
-
-
         $product->price = $request->price;
+        $product->type = $request->type;
+
+        $file_path = $request->file('file')->store('products','public');
+        $product->photo_url = $request->file('file')->hashName();
 
         $product->save();
-
-        $imageName = time().'.'.$request->photo_url->getClientOriginalExtension();
-        $request->photo_url->move(public_path('products'), $imageName);
-
-        //$photoPath = 'public/fotos';
-        //$targetDir = storage_path('app/' . $photoPath);
-
-        /*$newfilename = $product->id . "_" . uniqid() . '.jpg';
-        File::copy($photo_file, $targetDir . '/' . $newfilename);
-        DB::table('users')->where('id', $product->id)->update(['photo_url' => $newfilename]);
-        $this->command->info("Updated Photo of User $product->id. File $photo_file copied as $newfilename");*/
         return response()->json($product);
-
-        /*$product = Product::create($request->all());
-        return response()->json($product);*/
     }
 
     public function gravarFoto($id, $file)
@@ -89,7 +65,8 @@ class ProductController extends Controller
         //$sourceDir = database_path('seeds/fotos');
         $newfilename = $id . "_" . uniqid() . '.jpg';
         File::copy($file, $targetDir . '/' . $newfilename);
-        DB::table('users')->where('id', $id)->update(['photo_url' => $newfilename]);
+        DB::table('products')->where('id', $id)->update(['photo_url' => $newfilename]);
         $this->command->info("Updated Photo of User $id. File $file copied as $newfilename");
+
     }
 }
