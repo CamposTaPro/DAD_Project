@@ -19,10 +19,11 @@ class Order_Item extends Model
      */
     protected $table='order_items';
     public $timestamps = false;
-    
+
     //public $incrementing = false;
 
     protected $fillable = [
+        'id',
         'order_id',
         'order_local_number',
         'product_id',

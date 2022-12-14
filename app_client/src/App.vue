@@ -114,7 +114,7 @@ const clickMenuOption = () => {
                 Products
               </router-link>
             </li>
-            <li class="nav-item d-flex justify-content-between align-items-center pe-3">
+            <li class="nav-item d-flex justify-content-between align-items-center pe-3" v-if="userStore.user?.type == 'C' || userStore.user==null">
               <router-link
                 class="nav-link w-100 me-3"
                 :class="{ active: $route.name === 'Carrinho' }"
