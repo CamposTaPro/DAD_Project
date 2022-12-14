@@ -11,6 +11,7 @@ const buttonSidebarExpand = ref(null)
 const logout = async () => {
   if (await userStore.logout()) {
     toast.success("User has logged out of the application.")
+    socket.emit('loggedOut', userStore.user)
     clickMenuOption()
     router.push({ name: 'home' })
   } else {
@@ -114,7 +115,7 @@ const clickMenuOption = () => {
                 Products
               </router-link>
             </li>
-            <li class="nav-item d-flex justify-content-between align-items-center pe-3">
+            <li class="nav-item d-flex justify-content-between align-items-center pe-3" v-if="userStore.user?.type == 'C' || userStore.user==null">
               <router-link
                 class="nav-link w-100 me-3"
                 :class="{ active: $route.name === 'Carrinho' }"

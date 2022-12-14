@@ -67,6 +67,7 @@ onMounted(() => {
             <option v-for="Onetype in types" :key="Onetype.id" :value="Onetype">
                 {{ Onetype }}
             </option>
+            
         </select>
     </div>
     <div class="panel-heading">

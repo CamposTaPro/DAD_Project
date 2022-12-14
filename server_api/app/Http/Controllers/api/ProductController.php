@@ -28,7 +28,9 @@ class ProductController extends Controller
 
         $products = array();
         foreach($order_items as $order_item){
-            array_push($products,  $order_item->product()->where('type',$request->type)->get());
+            if (!$order_item->product()->where('type', $request->type)->get()->isEmpty()) {
+                array_push($products, $order_item->product()->where('type',$request->type)->get());
+            }
         }
         return response()->json($products);
     }
