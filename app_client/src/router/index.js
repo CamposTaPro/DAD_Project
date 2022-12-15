@@ -25,6 +25,7 @@ import Employee from "../components/employees/Employee.vue"
 import Historical from '../components/customers/Historical.vue'
 
 import Kitchen from "../components/chef/Kitchen.vue"
+import FinishDish from "../components/chef/FinishDish.vue"
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -179,6 +180,11 @@ const router = createRouter({
       path: '/kitchen',
       name: 'Kitchen',
       component: Kitchen
+    },
+    {
+      path: '/FinishDish',
+      name: 'FinishDish',
+      component: FinishDish
     }, 
     {
       path:'/historical',
