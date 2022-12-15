@@ -41,4 +41,8 @@ class Order_ItemController extends Controller
         $order_item= Order_ItemResource::collection(Order_Item::where('status', $request->status)->get()->where('product.type', $request->type));
         return response()->json($order_item);
     }
+    public function show_my_preparation(Request $request,Order_Item $order_item){
+        $order_item= Order_ItemResource::collection(Order_Item::where('status', $request->status)->get()->where('product.type', $request->type)->where('preparation_by', $request->preparation_by));
+        return response()->json($order_item);
+    }
 }

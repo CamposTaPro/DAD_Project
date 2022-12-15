@@ -64,8 +64,10 @@ onMounted(() => {
             <div class="card">
                 <img class="comida" :src="photoFullUrl(item.product[0].photo_url)" />
                 <div class="container">
-                    <p><b>{{ item.product[0].name }}</b></p>
+                    <b>{{ item.product[0].name }}</b>
                     <p>order:{{item.order_id}}</p>
+                    <p v-if="item.note!=null">Nota: {{item.note}}</p>
+                    <p v-else>Nota: Sem nota</p>
                 </div>
                 <button @click="Comecar(item.id)">Comecar Preparo</button>
             </div>
@@ -76,6 +78,7 @@ onMounted(() => {
 .card {
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
     transition: 0.3s;
+    border-radius: 10%;
 }
 
 img.comida {
@@ -85,8 +88,7 @@ img.comida {
 
 ul {
     display: inline-block;
-    width: 30%;
-    margin:0%;
+    width: 33%;
 }
 
 .card:hover {
