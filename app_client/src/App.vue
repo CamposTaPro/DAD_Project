@@ -208,6 +208,7 @@ const clickMenuOption = () => {
               </router-link>
             </li> -->
           </ul>
+          
           <div class="d-block d-md-none">
             <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
               <span>User</span>
@@ -226,7 +227,7 @@ const clickMenuOption = () => {
                   Login
                 </router-link>
               </li>
-              <div v-if="userStore.user">
+              <div class="perfil" v-if="userStore.user">
                 <li class="nav-item dropdown" v-show="userStore.user">
                   <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink2" role="button"
                     data-bs-toggle="dropdown" aria-expanded="false">
@@ -240,6 +241,9 @@ const clickMenuOption = () => {
                         :to="{ name: 'User', params: { id: userStore.userId } }" @click="clickMenuOption">
                         <i class="bi bi-person-square"></i>Profile
                       </router-link>
+                    </li>
+                    <li>
+                      <hr class="dropdown-divider" />
                     </li>
                     <li>
                       <router-link class="dropdown-item" :class="{ active: $route.name === 'ChangePassword' }"
@@ -282,7 +286,7 @@ const clickMenuOption = () => {
   padding-top: 1rem;
 }
 .dropdown-item {
-  font-size: 0.875rem;
+  font-size: 80%;
 }
 .btn:focus {
   outline: none;
@@ -291,4 +295,5 @@ const clickMenuOption = () => {
 #sidebarMenu {
   overflow-y: auto;
 }
+
 </style>

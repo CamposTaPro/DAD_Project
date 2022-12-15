@@ -73,25 +73,90 @@ onMounted(() => {
     <div class="panel-heading">
         <h3 class="panel-title">Search results for "<span>{{ selectedType ? selectedType : 'All types' }}</span>"</h3>
     </div>
-
-    <ul>
-        <li v-for="product in products" :key="product.id">
+    
+    <ul v-for="product in products" :key="product.id">
+            <div class="card">
+                <img class="comida" :src="photoFullUrl(product)" />
             <div>
-                <h2>{{ product.name }}</h2>
-                <img style="width: 20%;" :src="photoFullUrl(product)" />
-                <!--<p> {{ product.type }}</p>-->
+                <b>{{ product.name }}</b>
+                <p> {{ product.type }}</p>
                 <p>{{ product.price }}€</p>
             </div>
-
-            <button type="button" class="btn btn-primary" @click="addProduct(product)">Adicionar ao carrinho</button>
-        </li>
+            <button type="button" @click="addProduct(product)">Adicionar ao carrinho</button>
+        </div>
     </ul>
 </template>
 
 <style scope>
-li{
+.card {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    transition: 0.3s;
+}
+
+img.comida {
+    width: 100%;
+    height: 250px;
+}
+
+ul {
     display: inline-block;
-    width: 50%;
-    margin-bottom: 2%;
+    width: 15%;
+}
+ 
+@media screen and (max-width: 950px) {
+    ul {
+        display: inline-block;
+        width: 30%;
+    }
+}
+
+.card:hover {
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+}
+
+/* CSS */
+button{
+  align-items: center;
+  background-clip: padding-box;
+  background-color: #fa6400;
+  border: 1px solid transparent;
+  border-radius: .25rem;
+  box-shadow: rgba(0, 0, 0, 0.02) 0 1px 3px 0;
+  box-sizing: border-box;
+  color: #fff;
+  cursor: pointer;
+  display: inline-flex;
+  font-family: system-ui,-apple-system,system-ui,"Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  justify-content: center;
+  line-height: 1.25;
+  margin: 0;
+  min-height: 3rem;
+  padding: calc(.875rem - 1px) calc(1.5rem - 1px);
+  position: relative;
+  text-decoration: none;
+  transition: all 250ms;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  vertical-align: baseline;
+  width: auto;
+}
+
+button:hover,
+button:focus {
+  background-color: #fb8332;
+  box-shadow: rgba(0, 0, 0, 0.1) 0 4px 12px;
+}
+
+button:hover {
+  transform: translateY(-1px);
+}
+
+button:active {
+  background-color: #c85000;
+  box-shadow: rgba(0, 0, 0, .06) 0 2px 4px;
+  transform: translateY(0);
 }
 </style>

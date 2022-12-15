@@ -59,7 +59,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <h1>Products:</h1>
+    <h1>Pratos por preparar:</h1>
     <ul v-for="item in order_item">
             <div class="card">
                 <img class="comida" :src="photoFullUrl(item.product[0].photo_url)" />
@@ -78,7 +78,6 @@ onMounted(() => {
 .card {
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
     transition: 0.3s;
-    border-radius: 10%;
 }
 
 img.comida {
