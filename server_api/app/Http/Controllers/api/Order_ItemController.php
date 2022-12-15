@@ -27,6 +27,7 @@ class Order_ItemController extends Controller
     public function updateStatus(Request $request, Order_Item $orderItem){
         try {
             $orderItem->status = $request->status;
+            $orderItem->preparation_by = $request->preparation_by;
             $orderItem->save();
             return response()->json($orderItem);
         }catch (\Exception $e){

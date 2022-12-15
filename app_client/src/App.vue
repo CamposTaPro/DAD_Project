@@ -96,7 +96,7 @@ const clickMenuOption = () => {
     <div class="row">
       <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
         <div class="position-sticky pt-3">
-          <ul class="nav flex-column">
+          <ul class="nav flex-column w-100">
             <li class="nav-item" v-show="userStore.user?.type == 'EM'">
               <router-link class="nav-link" :class="{ active: $route.name === 'ProductTable' }" :to="{ name: 'ProductTable' }"
                 @click="clickMenuOption">
@@ -104,7 +104,7 @@ const clickMenuOption = () => {
                 Product
               </router-link>
             </li>
-            <li class="nav-item">
+            <li class="nav-item w-100">
               <router-link
                 class="nav-link"
                 :class="{ active: $route.name === 'Products' }"
@@ -115,7 +115,7 @@ const clickMenuOption = () => {
                 Products
               </router-link>
             </li>
-            <li class="nav-item d-flex justify-content-between align-items-center pe-3" v-if="userStore.user?.type == 'C' || userStore.user==null">
+            <li class="nav-item w-100" v-if="userStore.user?.type == 'C' || userStore.user==null">
               <router-link
                 class="nav-link w-100 me-3"
                 :class="{ active: $route.name === 'Carrinho' }"
@@ -134,21 +134,21 @@ const clickMenuOption = () => {
                 <i class="bi bi-xs bi-plus-circle"></i>
               </router-link>-->
             </li>
-            <li class="nav-item" v-show="userStore.user?.type == 'EC'||userStore.user?.type == 'EM' ">
+            <li class="nav-item w-100" v-show="userStore.user?.type == 'EC'||userStore.user?.type == 'EM' ">
               <router-link class="nav-link" :class="{ active: $route.name === 'Kitchen' }" :to="{ name: 'Kitchen' }"
                 @click="clickMenuOption">
                 <i class="bi bi-people"></i>
                 Kitchen
               </router-link>
             </li>
-            <li class="nav-item" v-show="userStore.user?.type == 'EC'||userStore.user?.type == 'EM' ">
+            <li class="nav-item w-100" v-show="userStore.user?.type == 'EC'||userStore.user?.type == 'EM' ">
               <router-link class="nav-link" :class="{ active: $route.name === 'FinishDish' }" :to="{ name: 'FinishDish' }"
                 @click="clickMenuOption">
                 <i class="bi bi-people"></i>
                 FinishDish
               </router-link>
             </li>
-            <li class="nav-item">
+            <li class="nav-item w-100">
               <!-- <router-link
                 class="nav-link"
                 :class="{ active: $route.name === 'Projects' }"
@@ -159,21 +159,21 @@ const clickMenuOption = () => {
                 Projects
               </router-link> -->
             </li>
-            <li class="nav-item" v-show="userStore.user?.type == 'EM'">
+            <li class="nav-item w-100" v-show="userStore.user?.type == 'EM'">
               <router-link class="nav-link" :class="{ active: $route.name === 'Users' }" :to="{ name: 'Users' }"
                 @click="clickMenuOption">
                 <i class="bi bi-people"></i>
                 Users
               </router-link>
             </li>
-            <li class="nav-item" v-show="userStore.user?.type == 'EM'">
+            <li class="nav-item w-100" v-show="userStore.user?.type == 'EM'">
               <router-link class="nav-link" :class="{ active: $route.name === 'Employees' }" :to="{ name: 'Employees' }"
                 @click="clickMenuOption">
                 <i class="bi bi-people"></i>
                 Employees
               </router-link>
             </li>
-            <li class="nav-item" v-show="userStore.user?.type == 'C'">
+            <li class="nav-item w-100" v-show="userStore.user?.type == 'C'">
               <router-link class="nav-link" :class="{ active: $route.name === 'Historical' }"
                 :to="{ name: 'Historical' }" @click="clickMenuOption">
                 <i class="bi bi-bar-chart-line"></i>
