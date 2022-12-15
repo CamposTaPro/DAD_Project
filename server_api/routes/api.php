@@ -66,6 +66,7 @@ Route::get('orderitems/{order_item}', [Order_ItemController::class, 'show']);
 Route::post('orderitems', [Order_ItemController::class, 'store']);
 Route::patch('orderitems/{order_item}/status', [Order_ItemController::class, 'updateStatus']);
 Route::get('orderitems_hotdishes', [Order_ItemController::class, 'show_hot_dish']);
+Route::get('orderitems_preparationby', [Order_ItemController::class, 'show_my_preparation']);
 
 Route::post('employee', [UserController::class, 'createEmployee']);
 
