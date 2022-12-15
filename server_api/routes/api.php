@@ -5,7 +5,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\api\AuthController;
 use App\Http\Controllers\api\TaskController;
 use App\Http\Controllers\api\UserController;
-use App\Http\Controllers\api\FilesController;
 use App\Http\Controllers\api\OrderController;
 use App\Http\Controllers\api\ProductController;
 use App\Http\Controllers\api\ProjectController;
@@ -15,6 +14,7 @@ use App\Http\Controllers\api\Order_ItemController;
 
 Route::post('login', [AuthController::class, 'login']);
 Route::post('register', [UserController::class, 'create']);
+
 Route::middleware('auth:api')->group(function () {
     Route::post('logout', [AuthController::class, 'logout']);
     Route::get('users/me', [UserController::class, 'show_me']);
@@ -49,14 +49,13 @@ Route::middleware('auth:api')->group(function () {
 Route::get('customerpayment/{customer}', [CustomerController::class, 'getCustomerPayment']);
 Route::get('customerreference/{customer}', [CustomerController::class, 'getCustomerReference']);
 
+
 Route::get('products', [ProductController::class, 'getProducts']);
 Route::get('products/{type}', [ProductController::class, 'getProductByType']);
 Route::get('products/order/items', [ProductController::class, 'getProductsByOrderItemStatus']);
-
 Route::post('products', [ProductController::class, 'store']);
-
 Route::get('product/{id}', [ProductController::class, 'index']);
-Route::put('product/{id}', [ProductController::class, 'update']);
+Route::patch('product/{id}/update', [ProductController::class, 'update']);
 
 Route::get('orders', [OrderController::class, 'index']);
 Route::post('orders', [OrderController::class, 'store']);
@@ -75,4 +74,3 @@ Route::post('employee', [UserController::class, 'createEmployee']);
 
 Route::get('customer/{customer}/orders', [CustomerController::class, 'showOrders']);
 
-Route::post('files',[FilesController::class,'store']);
