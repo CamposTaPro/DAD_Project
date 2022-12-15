@@ -15,7 +15,7 @@ console.log(userStore.user.id);
 const fetchOrders = async () => {
     let response = await axios.get('orderitems_hotdishes', {
         params: {
-            status: 'W',
+            status: 'P',
             type:"hot dish"
         }
     })
@@ -32,9 +32,9 @@ const fetchOrders = async () => {
     }
 }
 
-async function Comecar(id){
+async function Terminar(id){
     const response = await axios.patch(`orderitems/${id}/status`, {
-        status: 'P',
+        status: 'R',
         preparation_by: userStore.user.id
     });
     console.log(response.data);
@@ -61,18 +61,21 @@ onMounted(() => {
 <template>
     <h1>Products:</h1>
     <ul v-for="item in order_item">
-            <div class="card">
+            <div v-if="item.preparation_by == userStore.user.id" class="card">
                 <img class="comida" :src="photoFullUrl(item.product[0].photo_url)" />
                 <div class="container">
                     <p><b>{{ item.product[0].name }}</b></p>
                     <p>order:{{item.order_id}}</p>
+                    <p>order:{{item.preparation_by}}</p>
                 </div>
-                <button @click="Comecar(item.id)">Comecar Preparo</button>
+                <button @click="Terminar(item.id)">Prato Pronto</button>
             </div>
     </ul>
 </template>
 
 <style scope>
+
+
 .card {
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
     transition: 0.3s;
