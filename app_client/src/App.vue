@@ -141,6 +141,13 @@ const clickMenuOption = () => {
                 Kitchen
               </router-link>
             </li>
+            <li class="nav-item w-100" v-show="userStore.user?.type == 'EC'||userStore.user?.type == 'EM' ">
+              <router-link class="nav-link" :class="{ active: $route.name === 'FinishDish' }" :to="{ name: 'FinishDish' }"
+                @click="clickMenuOption">
+                <i class="bi bi-people"></i>
+                FinishDish
+              </router-link>
+            </li>
             <li class="nav-item w-100">
               <!-- <router-link
                 class="nav-link"
