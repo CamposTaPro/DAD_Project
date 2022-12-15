@@ -23,6 +23,7 @@ class Order_ItemResource extends JsonResource
             'product_id' => $this->product_id,
             'price' => $this->price,
             'preparation_by'=> $this->preparation_by,
+            'note'=> $this->notes,
             'product' => ProductResource::collection(Product::where('id', $this->product_id)->get()),
         ];
     }
