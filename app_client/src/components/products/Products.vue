@@ -1,5 +1,5 @@
 <script setup>
-import { ref, inject, onMounted, watch } from 'vue'
+import { ref, inject, onMounted, watch, toDisplayString } from 'vue'
 import { useProductsStore } from '@/stores/products.js'
 
 const carrinho = useProductsStore()
@@ -10,7 +10,7 @@ const serverBaseUrl = inject("serverBaseUrl");
 const products = ref([])
 const selectedType = ref(null)
 const types = ref([])
-
+const toast = inject('toast')
 const fetchProducts = async () => {
     let response = await axios.get('products')
     products.value = response.data
@@ -50,6 +50,7 @@ const photoFullUrl = (product) => {
 
 const addProduct = async (product) => {
     carrinho.insertProduct(product)
+    toast.success('O '+ product.name +' foi adicionado ao carrinho!');
 }
 
 onMounted(() => {
@@ -63,29 +64,36 @@ onMounted(() => {
     <div class="mx-2 mt-2 flex-grow-1 filter-div">
         <label for="search" class="form-label">Filter by Type:</label>
         <select class="form-select" id="type" v-model="selectedType">
-            <option :value="null">All types</option>
+            <option :value="null">ALL TYPES</option>
             <option v-for="Onetype in types" :key="Onetype.id" :value="Onetype">
-                {{ Onetype }}
+                {{ Onetype.toUpperCase() }}
             </option>
             
         </select>
     </div>
     <div class="panel-heading">
-        <h3 class="panel-title">Search results for "<span>{{ selectedType ? selectedType : 'All types' }}</span>"</h3>
+        <h3 class="panel-title">Search results for "<span>{{ selectedType ? selectedType.toUpperCase() : 'ALL TYPES' }}</span>"</h3>
     </div>
 
-    <ul>
-        <li v-for="product in products" :key="product.id">
-            <div>
-                <h2>{{ product.name }}</h2>
-                <img style="width: 20%;" :src="photoFullUrl(product)" />
+    <div class="row">
+        <div class="col-sm-4"  v-for="product in products" :key="product.id"> 
+  <div class="card my-1" >
+    <img class="card-img-top" style="height: 18rem;object-fit: cover;" :src="photoFullUrl(product)" />
+    <div class="card-body">
+                <h5 src="card-title">{{ product.name }}</h5>
                 <!--<p> {{ product.type }}</p>-->
-                <p>{{ product.price }}€</p>
-            </div>
+                <p src="card-text">{{ product.price }}€</p>
+    </div>
+    <div class="card-footer">
+        <button type="button" class="btn btn-primary" @click="addProduct(product)">Adicionar ao carrinho</button>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">Detalhes</button>
+</div>
 
-            <button type="button" class="btn btn-primary" @click="addProduct(product)">Adicionar ao carrinho</button>
-        </li>
-    </ul>
+</div>
+</div>
+</div>
+
+
 </template>
 
 <style scope>
