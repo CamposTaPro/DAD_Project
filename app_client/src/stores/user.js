@@ -7,7 +7,7 @@ export const useUserStore = defineStore('user', () => {
     //const projectsStore = useProjectsStore()
     const axios = inject('axios')
     const serverBaseUrl = inject('serverBaseUrl')
-    
+    const socket = inject('socket')
     const user = ref(null)
     
     const userPhotoUrl = computed(() => {
@@ -36,6 +36,7 @@ export const useUserStore = defineStore('user', () => {
         try {
             const response = await axios.get('users/me')
             user.value = response.data.data
+            socket.emit('loggedIn', user.value)
         } catch (error) {
             clearUser () 
             throw error

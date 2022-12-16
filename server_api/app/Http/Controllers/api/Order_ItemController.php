@@ -24,6 +24,11 @@ class Order_ItemController extends Controller
         return response()->json($order_item);
     }
 
+    public function getOrderItensByOrderId(int $id){
+        $ordersItens = Order_Item::where('order_id',$id)->get();
+        return response()->json($ordersItens);
+    }
+
     public function updateStatus(Request $request, Order_Item $orderItem){
         try {
             $orderItem->status = $request->status;

@@ -1,10 +1,12 @@
 import { ref, computed, inject, createCommentVNode } from "vue";
+import { useRouter, RouterLink, RouterView } from "vue-router"
 import { defineStore } from "pinia";
 import { useUserStore } from "@/stores/user.js";
 
 export const useProductsStore = defineStore("products", () => {
   const axios = inject("axios");
   const userStore = useUserStore();
+  const router = useRouter();
 
   const products = ref([]);
   const price = ref(0);
@@ -18,6 +20,8 @@ export const useProductsStore = defineStore("products", () => {
   const showProducts = computed(() => {
     return products.value;
   });
+
+  
 
   function insertProduct(newProduct) {
     products.value.push(newProduct);
@@ -63,15 +67,21 @@ export const useProductsStore = defineStore("products", () => {
     }
   }
 
-  getCustomerPayment();
-  getCustomerReference();
+  if (userStore.userId == null || userStore.userId == 'C') {
+    getCustomerPayment();
+    getCustomerReference();
+  }
+
+
+
   async function postProducts() {
+    
     price.value = getPriceAllProducts();
 
     const response = await axios.post("orders", {
       ticket_number: 99, //TODO
       status: "P",
-      customer_id: userStore.userId ? userStore.userId : null,
+      customer_id: userStore.userId ? userStore.userId : null,  //TODO
       total_price: price.value,
       total_paid: price.value, //TODO
       total_paid_with_points: "0.00", //TODO
@@ -114,5 +124,6 @@ export const useProductsStore = defineStore("products", () => {
     deleteProduct,
     clearProducts,
     postProducts,
+    getPriceAllProducts,
   };
 });
