@@ -3,19 +3,20 @@ import { ref, computed, onMounted, inject } from "vue";
 import { useRouter } from "vue-router";
 import { useUserStore } from '../../stores/user.js'
 import EmployeeTable from "./EmployeeTable.vue";
+import { Bootstrap5Pagination } from 'laravel-vue-pagination';
 
 const router = useRouter();
 const userStore = useUserStore()
 const axios = inject("axios");
 
-const users = ref([]);
+const users = ref({});
 
-const loadUsers = () => {
+const loadUsers = (view = 1) => {
   axios
-    .get("users")
+    .get("users?page=" + view)
     .then((response) => {
-      users.value = response.data.data;
-      users.value = users.value.filter(function (user) {
+      users.value = response.data;
+      users.value.data = users.value.data.filter(function (user) {
         return user.type != "C";
       });
     })
@@ -43,10 +44,15 @@ onMounted(() => {
   <router-link to="/employee" class="btn btn-primary">Add Employee</router-link>
   <hr />
   <EmployeeTable
-    :users="users"
+    :users="users.data"
     :showId="false"
     @edit="editUser"
   ></EmployeeTable>
+  
+  <Bootstrap5Pagination
+        :data="users" size="small"
+        @pagination-change-page="loadUsers"
+    />
 </template>
 
 <style scoped>

@@ -2,21 +2,22 @@
   import { ref, computed, onMounted, inject } from 'vue'
   import {useRouter} from 'vue-router'
   import UserTable from "./UserTable.vue"
-  
+  import { Bootstrap5Pagination } from 'laravel-vue-pagination';
+
   const router = useRouter()
 
   const axios = inject('axios')
 
-  const users = ref([])
+  const users = ref({})
 
   const totalUsers = computed(() => {
     return users.value.length
   })
 
-  const loadUsers = () => {
-    axios.get('users')
+  const loadUsers = (view = 1) => {
+    axios.get('users?page='+view)
         .then((response) => {
-          users.value = response.data.data
+          users.value = response.data
         })
         .catch((error) => {
           console.log(error)
@@ -37,10 +38,14 @@
   <h3 class="mt-5 mb-3">Users</h3>
   <hr>
   <user-table
-    :users="users"
+    :users="users.data"
     :showId="false"
     @edit="editUser"
   ></user-table>
+  <Bootstrap5Pagination
+        :data="users" size="small"
+        @pagination-change-page="loadUsers"
+    />
 </template>
 
 <style scoped>
