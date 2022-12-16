@@ -1,5 +1,5 @@
 <script setup>
-import { ref, inject, onMounted, watch } from 'vue'
+import { ref, inject, onMounted, watch, toDisplayString } from 'vue'
 import { useProductsStore } from '@/stores/products.js'
 
 const carrinho = useProductsStore()
@@ -10,7 +10,7 @@ const serverBaseUrl = inject("serverBaseUrl");
 const products = ref([])
 const selectedType = ref(null)
 const types = ref([])
-
+const toast = inject('toast')
 const fetchProducts = async () => {
     let response = await axios.get('products')
     products.value = response.data
@@ -50,6 +50,7 @@ const photoFullUrl = (product) => {
 
 const addProduct = async (product) => {
     carrinho.insertProduct(product)
+    toast.success('O '+ product.name +' foi adicionado ao carrinho!');
 }
 
 onMounted(() => {

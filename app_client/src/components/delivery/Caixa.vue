@@ -17,12 +17,17 @@ const fetchOrders = async () => {
 
 socket.on('readyProduct', (product) => {
     console.log("Recebi do socker")
-    orders.value = orders.value.map((elem) => {
-        if (elem.id == product.order_id) {
-            elem.status = 'R'
-            toast.success("Produto com o id "+elem.id+" esta ready!")
-        }
-        return elem
+        //foreach order
+        orders.value.forEach((order) => {
+        //foreach order itens
+        order.order_itens.forEach((orderItem) => {
+            //if order item product id is equal to product id
+            if (orderItem.id == product.id) {
+                //change order item status to ready
+                orderItem.status = 'R'
+                toast.success("Produto com o id "+product.id+" esta ready!")
+            }
+        })
     })
 })
 
