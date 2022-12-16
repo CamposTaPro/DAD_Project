@@ -7,7 +7,6 @@ import ConfirmationDialog from './components/global/ConfirmationDialog.vue'
 import { io } from "socket.io-client"
 import App from './App.vue'
 import router from './router'
-
 //import './assets/main.css'
 import "bootstrap/dist/css/bootstrap.min.css"
 import "bootstrap-icons/font/bootstrap-icons.css"
