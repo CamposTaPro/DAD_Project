@@ -53,79 +53,10 @@ export const useProductsStore = defineStore("products", () => {
   function getPriceAllProducts() {
     let price = 0;
     products.value.forEach((prd) => {
-      price += parseFloat(prd.price); //TODO * prd.quantity
+      price += parseFloat(prd.price); //TODO - verificar se é necessario (* prd.quantity)
     });
     return price.toFixed(2);
   }
-
-  //-------------DELETE-------------
-  /*async function getCustomerPayment() {
-    const response = await axios.get("customerpayment/" + userStore.userId);
-    paymentType.value = response.data;
-  }
-
-  async function getCustomerReference() {
-    const response = await axios.get("customerreference/" + userStore.userId);
-
-    paymentReference.value = response.data;
-  }
-
-  async function postOrderItems(orderItem) {
-    const response = await axios.post("orderitems", orderItem);
-    console.log(response.data);
-
-    if (response.status == 200) {
-      console.log("deu fixe 2x");
-    }
-  }
-
-  if (userStore.userId == null || userStore.userId == "C") {
-    getCustomerPayment();
-    getCustomerReference();
-  }
-
-  async function postProducts() {
-    price.value = getPriceAllProducts();
-
-    const response = await axios.post("orders", {
-      ticket_number: 99, //TODO
-      status: "P",
-      customer_id: userStore.userId ? userStore.userId : null, //TODO
-      total_price: price.value,
-      total_paid: price.value, //TODO
-      total_paid_with_points: "0.00", //TODO
-      points_gained: 0, //TODO
-      points_used_to_pay: 0, //TODO
-      payment_type: paymentType.value,
-      payment_reference: paymentReference.value,
-    });
-
-    if (response.status == 200) {
-      console.log("deu fixe");
-
-      let order_id = response.data.id;
-      var order_local_number = 1; //TODO
-
-      for (let i = 0; i < products.totalProducts; i++) {
-        var product = products.value[i];
-
-        const orderItem = {
-          order_id: order_id,
-          order_local_number: order_local_number, //TODO
-          product_id: product.id,
-          status: product.type != "hot dish" ? "R" : "W", //VERIFY
-          price: product.price,
-          preparation_by: null,
-          notes: product.note,
-        };
-        order_local_number = 2; //TODO
-        await postOrderItems(orderItem);
-      }
-    }
-    clearProducts();
-  }
-  //-------------DELETE-------------
-  */
 
   return {
     products,
