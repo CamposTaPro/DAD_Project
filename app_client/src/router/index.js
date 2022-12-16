@@ -24,7 +24,7 @@ import Employees from "../components/employees/Employees.vue"
 import Employee from "../components/employees/Employee.vue"
 import Historical from '../components/customers/Historical.vue'
 import Payment from '../components/Payment.vue'
-
+import Caixa from '../components/delivery/Caixa.vue'
 import Kitchen from "../components/chef/Kitchen.vue"
 import FinishDish from "../components/chef/FinishDish.vue"
 
@@ -191,6 +191,11 @@ const router = createRouter({
       path:'/historical',
       name: 'Historical',
       component: Historical
+    },
+    {
+      path: '/caixa',
+      name: 'Caixa',
+      component: Caixa
     },
     {
       path:'/payment',

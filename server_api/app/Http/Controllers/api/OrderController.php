@@ -5,13 +5,59 @@ namespace App\Http\Controllers\api;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-
+use App\Models\Order_Item;
+use App\Models\Product;
 class OrderController extends Controller
 {
     public function index() {
         $orders = Order::all();
 
         return response()->json($orders);
+    }
+
+    public function getOrderByStatus(string $status) {
+        $orders = Order::where('status', $status)->get();
+
+        
+        foreach ($orders as $order) {
+        $ordersItens = Order_Item::where('order_id',$order->id)->get();
+        $order->order_itens = $ordersItens;
+        }
+
+        foreach($ordersItens as $pratos){
+            $product = Product::where('id',$pratos->product_id)->get();
+            $pratos->product = $product;
+        }
+        return response()->json($orders);
+    }
+
+    public function getOrderPending(){
+        $orders = Order::where('status', 'P')->orWhere('status', 'R')->get();
+
+        
+        foreach ($orders as $order) {
+        $ordersItens = Order_Item::where('order_id',$order->id)->get();
+        $order->order_itens = $ordersItens;
+        foreach($ordersItens as $pratos){
+            $product = Product::where('id',$pratos->product_id)->get();
+            $pratos->product = $product;
+        }
+        }
+
+        return response()->json($orders);
+    }
+
+    public function updateStatus(Request $request, Order $order){
+        try {
+            $order->status = $request->status;
+            $order->save();
+            return response()->json($order);
+        }catch (\Exception $e){
+            return response()->json([
+                'message' => 'Error updating order',
+                'error' => $e->getMessage()
+            ], 422);
+        }
     }
 
     public function store(Request $request) {
