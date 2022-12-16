@@ -15,6 +15,13 @@ use App\Http\Requests\UpdateUserPasswordRequest;
 
 class UserController extends Controller
 {
+
+    public function destroy(int $id)
+    {
+        $user = User::find($id);
+        $user->delete();
+        return response()->json($user);
+    }
     public function create(Request $request)
     {
         $request->validate([

@@ -1,8 +1,13 @@
 <script setup>
 import { ref, watch, computed, inject, onMounted } from "vue";
 import avatarNoneUrl from "@/assets/avatar-none.png";
-
+import { useUserStore } from "../../stores/user.js"
+import { routeLocationKey } from "vue-router";
 const serverBaseUrl = inject("serverBaseUrl");
+
+
+const userStore = useUserStore()
+
 const props = defineProps({
   user: {
     type: Object,
@@ -40,6 +45,8 @@ const save = () => {
 const cancel = () => {
   emit("cancel", editingUser.value);
 };
+
+
 </script>
 
 <template>

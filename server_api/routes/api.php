@@ -20,6 +20,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get('users/me', [UserController::class, 'show_me']);
     Route::get('users', [UserController::class, 'index']);
 
+    Route::delete('users/{user}', [UserController::class, 'destroy']);
     Route::get('users/{user}', [UserController::class, 'show'])
         ->middleware('can:view,user');
     Route::patch('users/{user}', [UserController::class, 'update'])

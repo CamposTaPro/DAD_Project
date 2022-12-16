@@ -55,6 +55,17 @@ const canViewUserDetail  = (user) => {
   }
   return userStore.user.type == 'EM' || userStore.user.id == user.id
 }
+const showDeleteButton = (user) => {
+  if (!userStore.user) {
+    return false
+  }
+  return userStore.user.type == 'EM' && user.type!='EM';
+}
+
+const deleteUser = async (id) => {
+    emit("deleteClick", id)
+}
+
 </script>
 
 <template>
@@ -82,6 +93,8 @@ const canViewUserDetail  = (user) => {
             <button class="btn btn-xs btn-light" @click="editClick(user)" v-if="showEditButton">
               <i class="bi bi-xs bi-pencil"></i>
             </button>
+            <button type="button" class="btn btn-danger" v-if="showDeleteButton(user)" @click="deleteUser(user.id)">Delete</button>
+            <button type="button" class="btn btn-danger" style="visibility: hidden" v-else >Delete</button>
           </div>
         </td>
       </tr>

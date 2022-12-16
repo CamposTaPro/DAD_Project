@@ -6,6 +6,8 @@ import { useUserStore } from "../../stores/user.js"
 const serverBaseUrl = inject("serverBaseUrl")
 const userStore = useUserStore()
 
+const axios = inject('axios')
+
 const props = defineProps({
   users: {
     type: Array,
@@ -46,11 +48,22 @@ const editClick = (user) => {
   console.log(user)
 }
 
-const canViewUserDetail  = (userId) => {
+const canViewUserDetail  = (user) => {
   if (!userStore.user) {
     return false
   }
-  return userStore.user.type == 'EM' || userStore.user.id == userId
+  return userStore.user.type == 'EM' && (user.type!='EM' || userStore.user.id == user.id);
+}
+const showDeleteButton = (user) => {
+  if (!userStore.user) {
+    return false
+  }
+  return userStore.user.type == 'EM' && user.type!='EM';
+}
+
+
+const deleteUser = async (id) => {
+    emit("deleteClick", id)
 }
 </script>
 
@@ -75,12 +88,15 @@ const canViewUserDetail  = (userId) => {
         <td v-if="showEmail" class="align-middle">{{ user.email }}</td>
         <td v-if="showAdmin" class="align-middle">{{ user.type == "EM" ? "Sim" : "" }}</td>
         <td class="text-end align-middle" v-if="showEditButton">
-          <div class="d-flex justify-content-end" v-if="canViewUserDetail(user.id)">
+          <div class="d-flex justify-content-end" v-if="canViewUserDetail(user)">
             <button class="btn btn-xs btn-light" @click="editClick(user)" v-if="showEditButton">
               <i class="bi bi-xs bi-pencil"></i>
             </button>
+            <button type="button" class="btn btn-danger" v-if="showDeleteButton(user)" @click="deleteUser(user.id)">Delete</button>
+            <button type="button" class="btn btn-danger" style="visibility: hidden" v-else @click="deleteUser(user.id)">Delete</button>
           </div>
         </td>
+
       </tr>
     </tbody>
   </table>

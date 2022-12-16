@@ -29,6 +29,13 @@ const loadUsers = () => {
     console.log(user)
     router.push({ name: 'User', params: { id: user.id} })
   }
+  
+  const deleteUser = async (id) =>{
+    let response = await axios.delete(`users/${id}`)
+    if(response.status == 200){
+      loadUsers()
+    }
+  }
 
 onMounted(() => {
   if(userStore.user.type!="EM"){
@@ -46,6 +53,7 @@ onMounted(() => {
     :users="users"
     :showId="false"
     @edit="editUser"
+    @deleteClick="deleteUser"
   ></EmployeeTable>
 </template>
 

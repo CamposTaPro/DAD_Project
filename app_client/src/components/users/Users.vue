@@ -2,6 +2,9 @@
   import { ref, computed, onMounted, inject } from 'vue'
   import {useRouter} from 'vue-router'
   import UserTable from "./UserTable.vue"
+  import { useUserStore } from "../../stores/user.js"
+
+  const userStore = useUserStore()
   
   const router = useRouter()
 
@@ -27,6 +30,12 @@
     console.log(user)
     router.push({ name: 'User', params: { id: user.id} })
   }
+  const deleteUser = async (id) =>{
+    let response = await axios.delete(`users/${id}`)
+    if(response.status == 200){
+      loadUsers()
+    }
+  }
 
   onMounted (() => {
     loadUsers()
@@ -35,11 +44,13 @@
 
 <template>
   <h3 class="mt-5 mb-3">Users</h3>
+  <h3>Total: {{totalUsers}}</h3>
   <hr>
   <user-table
     :users="users"
     :showId="false"
     @edit="editUser"
+    @deleteClick="deleteUser"
   ></user-table>
 </template>
 
