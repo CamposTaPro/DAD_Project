@@ -5,7 +5,6 @@ import { ref, inject,onMounted } from 'vue'
   import { useUserStore } from '../../stores/user.js'
   const router = useRouter()  
   const toast = inject('toast')
-  const socket = inject("socket")
   
   const credentials = ref({
         username: '',
@@ -20,7 +19,6 @@ import { ref, inject,onMounted } from 'vue'
     if (await userStore.login(credentials.value)) {
       toast.success('User ' + userStore.user.name + ' has entered the application.')
       emit('login')
-      socket.emit('loggedIn', userStore.user)
       router.back()
     } else {
       credentials.value.password = ''

@@ -1,8 +1,9 @@
 <script setup>
 import { ref, inject, onMounted, watch } from 'vue'
 import { useRouter, RouterLink, RouterView } from "vue-router"
+import axios from 'axios'
 
-const axios = inject('axios')
+//const axios = inject('axios')
 const serverBaseUrl = inject("serverBaseUrl");
 const router = useRouter();
 
@@ -12,6 +13,7 @@ const price = ref(0)
 const type = ref('')
 const photoFile = ref('')
 const photoUrl = ref('')
+const file = ref(null)
 
 const props = defineProps({
     id: {
@@ -22,42 +24,52 @@ const props = defineProps({
 
 
 const fetchProduct = async () => {
-    let names = '';
 
-    const response = await axios.get(`product/${props.id}`)
+    const response = await axios.get(`http://server_api.test/api/product/${props.id}`)
     if (response.status == 200) {
-        name.value = response.data[0].name
-        description.value = response.data[0].description
-        price.value = response.data[0].price
-        type.value = response.data[0].type
-        photoUrl.value = response.data[0].photo_url
+        name.value = response.data.name
+        description.value = response.data.description
+        price.value = response.data.price
+        type.value = response.data.type
+        photoUrl.value = response.data.photo_url
         photoUrl.value = `${serverBaseUrl}/storage/products/${photoUrl.value}`
     }
-    console.log(names)
+
     console.log(response.data)
 }
 
 const editProduct = async () => {
-    const response = await axios.put(`product/${props.id}`, {
-        name: name.value,
-        description: description.value,
-        price: price.value,
-        type: type.value,
-        //photo_url: photoUrl.value
+    const productPhoto = file.value?.files[0]
+    
+    const formData = new FormData()
+    formData.append('name', name.value)
+    formData.append('type', type.value)
+    formData.append('description', description.value)
+    formData.append('price', price.value)
+    formData.append('_method', 'patch')
+    
+    if (productPhoto) {
+        formData.append('file', productPhoto)
+    }
+
+    const response = await axios.post(`http://server_api.test/api/product/${props.id}/update`, formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
     })
-    if (response.status == 200){
+    console.log(response);
+    if (response.status == 200) {
         console.log("Deu fixe")
         router.push('/producttable')
+    } else {
+        console.log("Deu merda")
     }
 
 }
 
-const photoFullUrl = () => {
-    return `${serverBaseUrl}/storage/products/${photoUrl.value}`
-}
 
 function readFile(event) {
-    photoFile.value = event.target.files[0]
+    photoFile.value = file.value.files[0];
 }
 
 watch(photoFile, (photoFile) => {
@@ -68,6 +80,25 @@ watch(photoFile, (photoFile) => {
         photoUrl.value = e.target.result;
     }
 })
+
+const validateForm = () => {
+    //TODO
+    if (name.value == '') {
+        toast.error('Name is required!')
+    }
+    if (description.value == '') {
+        toast.error('Description is required!')
+    }
+    if (price.value == 0) {
+        toast.error('Price is required!')
+    }
+    if (type.value == '') {
+        toast.error('Type is required!')
+    }
+    if (price.value < 0) {
+        toast.error('Price must be greater than 0!')
+    }
+}
 
 onMounted(() => {
     fetchProduct()
@@ -80,7 +111,7 @@ onMounted(() => {
     <div class="container">
         <div class="row">
             <div class="col-12">
-                <form @submit.prevent="idk">
+                <form @submit.prevent="validateForm">
                     <div class="form-group">
                         <label for="name">Name</label>
                         <input type="text" class="form-control" id="name" v-model="name">
@@ -104,7 +135,7 @@ onMounted(() => {
                     </div>
                     <div class="form-group">
                         <label for="photoUrl">Photo</label>
-                        <input type="file" class="form-control" id="photoUrl" @change="readFile">
+                        <input type="file" class="form-control" id="photoUrl" ref="file" @change="readFile">
                         <img v-show="photoUrl" :src="photoUrl" />
                     </div>
                     <button type="submit" class="btn btn-primary" @click="editProduct">Submit</button>

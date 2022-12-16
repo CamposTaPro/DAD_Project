@@ -17,13 +17,14 @@ io.on('connection', (socket) => {
             socket.in('chefs').emit('newHotDish', product)
         })
        
-        socket.on('readyProduct', (product,user) => {
-            socket.in('caixa').except(user.id).emit('readyProduct', product)
-            socket.in(user.id).emit('readyProduct',product);
+        socket.on('readyProduct', (product) => {
+            console.log(`Prato ${product.id} pronto para o caixa`)
+            socket.in('caixa').emit('readyProduct', product)
         })
 
-        socket.on('readyOrder', (order,user) => {
-            socket.in(user.id).emit('readyOrder', order)
+        socket.on('readyOrder', function (order,id) {
+            console.log(`Pedido ${order.id} pronto para o cliente ${id}`)
+            socket.in(id).emit('readyOrder', order)
         })
 
         socket.on('loggedIn', function (user) {

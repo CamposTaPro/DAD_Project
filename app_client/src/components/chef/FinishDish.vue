@@ -9,6 +9,8 @@ const router = useRouter();
 const status = ref([])
 const order_item = ref([])
 const userStore = useUserStore()
+const socket = inject("socket")
+
 
 console.log(userStore.user.id);
 
@@ -33,11 +35,12 @@ const fetchOrders = async () => {
     }
 }
 
-async function Terminar(id){
-    const response = await axios.patch(`orderitems/${id}/status`, {
+async function Terminar(order){
+    const response = await axios.patch(`orderitems/${order.id}/status`, {
         status: 'R',
         preparation_by: userStore.user.id
     });
+    socket.emit('readyProduct', order)
     console.log(response.data);
     router.go()
 }
@@ -70,7 +73,7 @@ onMounted(() => {
                     <p v-if="item.note!=null">Nota: {{item.note}}</p>
                     <p v-else>Nota: Sem nota</p>
                 </div>
-                <button @click="Terminar(item.id)">Prato Pronto</button>
+                <button @click="Terminar(item)">Prato Pronto</button>
             </div>
     </ul>
 </template>

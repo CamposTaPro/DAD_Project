@@ -60,6 +60,10 @@ Route::put('product/{id}', [ProductController::class, 'update']);
 
 Route::get('orders', [OrderController::class, 'index']);
 Route::post('orders', [OrderController::class, 'store']);
+Route::get('orders/{status}', [OrderController::class, 'getOrderByStatus']);
+Route::get('order/pending', [OrderController::class, 'getOrderPending']);
+Route::patch('orders/{order}/status', [OrderController::class, 'updateStatus']);
+
 
 Route::get('orderitems', [Order_ItemController::class, 'index']);
 Route::get('orderitems/{order_item}', [Order_ItemController::class, 'show']);
@@ -67,6 +71,7 @@ Route::post('orderitems', [Order_ItemController::class, 'store']);
 Route::patch('orderitems/{order_item}/status', [Order_ItemController::class, 'updateStatus']);
 Route::get('orderitems_hotdishes', [Order_ItemController::class, 'show_hot_dish']);
 Route::get('orderitems_preparationby', [Order_ItemController::class, 'show_my_preparation']);
+Route::get('orders/{id}/itens', [Order_ItemController::class, 'getOrderItensByOrderId']);
 
 Route::post('employee', [UserController::class, 'createEmployee']);
 

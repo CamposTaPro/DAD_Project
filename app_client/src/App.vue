@@ -8,10 +8,12 @@ const toast = inject("toast")
 const userStore = useUserStore()
 const projectsStore = useProjectsStore()
 const buttonSidebarExpand = ref(null)
+const socket = inject("socket")
 const logout = async () => {
+  console.log(userStore.user)
+    socket.emit('loggedOut', userStore.user)
   if (await userStore.logout()) {
     toast.success("User has logged out of the application.")
-    socket.emit('loggedOut', userStore.user)
     clickMenuOption()
     router.push({ name: 'home' })
   } else {
@@ -23,6 +25,11 @@ const clickMenuOption = () => {
     buttonSidebarExpand.value.click()
   }
 }
+
+socket.on('readyOrder', (order) => {
+  toast.success("Order com o id "+order.id+" esta pronta para ser entregue!")
+})
+
 </script>
 <template>
   <nav class="navbar navbar-expand-md navbar-dark bg-dark sticky-top flex-md-nowrap p-0 shadow">
@@ -54,38 +61,38 @@ const clickMenuOption = () => {
               Login
             </router-link>
           </li>
-          <li class="nav-item dropdown" > <!--v-show="userStore.user">-->
+          <li class="nav-item dropdown mb-3" > <!--v-show="userStore.user">-->
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
               data-bs-toggle="dropdown" aria-expanded="false">
               <img :src="userStore.userPhotoUrl" class="rounded-circle z-depth-0 avatar-img" alt="avatar image" />
               <span class="avatar-text">{{ userStore.user?.name ?? "Anonymous" }}</span>
             </a>
             <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink" v-show="userStore.user">
-              <li >
+              
                 <router-link class="dropdown-item"
                   :class="{ active: $route.name == 'User' && $route.params.id == userStore.userId }"
                   :to="{ name: 'User', params: { id: userStore.userId } }" @click="clickMenuOption">
                   <i class="bi bi-person-square"></i>Profile
                 </router-link>
-              </li>
-              <li>
+              
+              
                 <hr class="dropdown-divider" />
-              </li>
-              <li>
+              
+              
                 <router-link class="dropdown-item" :class="{ active: $route.name === 'ChangePassword' }"
                   :to="{ name: 'ChangePassword' }" @click="clickMenuOption">
                   <i class="bi bi-key-fill"></i>
                   Change password
                 </router-link>
-              </li>
-              <li>
+              
+              
                 <hr class="dropdown-divider" />
-              </li>
-              <li>
+              
+              
                 <a class="dropdown-item" @click.prevent="logout">
                   <i class="bi bi-arrow-right"></i>Logout
                 </a>
-              </li>
+          
             </ul>
           </li>
         </ul>
@@ -96,7 +103,7 @@ const clickMenuOption = () => {
     <div class="row">
       <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
         <div class="position-sticky pt-3">
-          <ul class="nav flex-column w-100">
+          <ul class="nav flex-column w-100 mt-5">
             <li class="nav-item" v-show="userStore.user?.type == 'EM'">
               <router-link class="nav-link" :class="{ active: $route.name === 'ProductTable' }" :to="{ name: 'ProductTable' }"
                 @click="clickMenuOption">
@@ -139,13 +146,6 @@ const clickMenuOption = () => {
                 @click="clickMenuOption">
                 <i class="bi bi-people"></i>
                 Kitchen
-              </router-link>
-            </li>
-            <li class="nav-item w-100" v-show="userStore.user?.type == 'EC'||userStore.user?.type == 'EM' ">
-              <router-link class="nav-link" :class="{ active: $route.name === 'FinishDish' }" :to="{ name: 'FinishDish' }"
-                @click="clickMenuOption">
-                <i class="bi bi-people"></i>
-                FinishDish
               </router-link>
             </li>
             <li class="nav-item w-100">
@@ -227,39 +227,32 @@ const clickMenuOption = () => {
                   Login
                 </router-link>
               </li>
-              <div class="perfil" v-if="userStore.user">
-                <li class="nav-item dropdown" v-show="userStore.user">
+              <div v-if="userStore.user" class="d-flex align-items-center">
+                <li class="nav-item dropdown " v-show="userStore.user">
                   <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink2" role="button"
                     data-bs-toggle="dropdown" aria-expanded="false">
-                    <img :src="userStore.userPhotoUrl" class="rounded-circle z-depth-0 avatar-img" alt="avatar image" />
+                    <img :src="userStore.userPhotoUrl" class="rounded-circle z-depth-1 avatar-img" alt="avatar image" />
                     <span class="avatar-text">User Name</span>
                   </a>
                   <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink2" >
-                    <li>
-                      <router-link class="dropdown-item"
+                  
+                      <router-link class="dropdown-item w-100"
                         :class="{ active: $route.name == 'User' && $route.params.id == userStore.userId }"
                         :to="{ name: 'User', params: { id: userStore.userId } }" @click="clickMenuOption">
-                        <i class="bi bi-person-square"></i>Profile
+                        <i class="bi bi-person-square"></i>perfil
                       </router-link>
-                    </li>
-                    <li>
-                      <hr class="dropdown-divider" />
-                    </li>
-                    <li>
-                      <router-link class="dropdown-item" :class="{ active: $route.name === 'ChangePassword' }"
+                     <hr class="dropdown-divider"/>
+                    
+                      <router-link class="dropdown-item w-100" :class="{ active: $route.name === 'ChangePassword' }"
                         :to="{ name: 'ChangePassword' }" @click="clickMenuOption">
                         <i class="bi bi-key-fill"></i>
                         Change password
                       </router-link>
-                    </li>
-                    <li>
-                      <hr class="dropdown-divider" />
-                    </li>
-                    <li>
+                                         <hr class="dropdown-divider"/>
+
                       <a class="dropdown-item" @click.prevent="logout">
                         <i class="bi bi-arrow-right"></i>Logout
                       </a>
-                    </li>
                   </ul>
                 </li>
               </div>
