@@ -1,125 +1,133 @@
 <script setup>
-import { ref, watch, inject } from 'vue'
-import { useRouter } from "vue-router"
-import axios  from 'axios'
+import { ref, inject, onMounted, watch } from 'vue'
+import { useUserStore } from "../../stores/user.js"
 
-const toast = inject("toast")
+const axios = inject('axios')
 
-const router = useRouter()
-
-const name = ref('')
-const description = ref('')
-const price = ref(0)
-const type = ref('')
-const photoFile = ref('')
-const photoUrl = ref('')
-const file = ref(null)
+const orders = ref([])
+const userStore = useUserStore()
+const toast = inject('toast')
+const socket = inject('socket')
 
 
-function readFile(event) {
-    photoFile.value = file.value.files[0];
-}
-
-const createProduct = async () => {
-    const productPhoto = file.value?.files[0]
-    if(productPhoto){
-        const formData = new FormData()
-        formData.append('file', productPhoto)
-        formData.append('name', name.value)
-        formData.append('type', type.value)
-        formData.append('description', description.value)
-        formData.append('price', price.value)
-        
-        
-        const response = await axios.post('http://server_api.test/api/products', formData,{
-        headers: {
-            'Content-Type':'multipart/form-data'
-        }
-        })
-
-        console.log(response)
-
-        if (response.status == 200) {
-            toast.success('Product #' + response.data.id + ' was created successfully.')
-            router.push({ name: 'Products' })
-        } else {
-            toast.error('Product was not created due to unknown server error!')
-        }
+const fetchOrders = async () => {
+    let response = await axios.get('order/pending')
+    orders.value = response.data
     }
 
-}
-
-watch(photoFile, (photoFile) => {
-    let fileReader = new FileReader();
-
-    fileReader.readAsDataURL(photoFile);
-
-    fileReader.onload = (e) => {
-        photoUrl.value = e.target.result;
-    }
+socket.on('readyProduct', (product) => {
+    console.log("Recebi do socker")
+    orders.value = orders.value.map((elem) => {
+        if (elem.id == product.order_id) {
+            elem.status = 'R'
+            toast.success("Produto com o id "+elem.id+" esta ready!")
+        }
+        return elem
+    })
 })
 
-const validateForm = () => {
-    //TODO
-    if (name.value == '') {
-        toast.error('Name is required!')
+
+onMounted(() => {
+    fetchOrders()
+})
+  
+const CancelarOrder = async (order) =>{
+
+    const response = await axios.patch(`orders/${order.id}/status`, {
+        status: 'C'
+    });
+
+    console.log(response.data)
+    orders.value = orders.value.filter((elem) => elem.id != order.id)
+    toast.error("Order com o id "+order.id+" cancelada!")
+    
+}
+
+
+    
+const EntregarOrder = async (order) =>{
+
+const response = await axios.patch(`orders/${order.id}/status`, {
+    status: 'R'
+});
+
+socket.emit('readyOrder',order,order.customer_id)
+
+//change array orders order status to ready
+orders.value = orders.value.map((elem) => {
+    if (elem.id == order.id) {
+        elem.status = 'R'
+        console.log(elem)
     }
-    if (description.value == '') {
-        toast.error('Description is required!')
-    }
-    if (price.value == 0) {
-        toast.error('Price is required!')
-    }
-    if (type.value == '') {
-        toast.error('Type is required!')
-    }
-    if (price.value < 0) {
-        toast.error('Price must be greater than 0!')
-    }
+    return elem
+})
+
+}
+
+const OrderEntregue = async (order) =>{
+
+const response = await axios.patch(`orders/${order.id}/status`, {
+    status: 'D'
+});
+
+
+console.log(response.data)
+    orders.value = orders.value.filter((elem) => elem.id != order.id)
+    toast.success("Order com o id "+order.id+" foi entregue!")
+    
 }
 
 </script>
 
-
 <template>
-    <h1>Product</h1>
-    <div class="container">
-        <div class="row">
-            <div class="col-12">
-                <form @submit.prevent="validateForm">
-                    <div class="form-group">
-                        <label for="name">Name</label>
-                        <input type="text" class="form-control" id="name" v-model="name">
-                    </div>
-                    <div class="form-group">
-                        <label for="description">Description</label>
-                        <input type="text" class="form-control" id="description" v-model="description">
-                    </div>
-                    <div class="form-group">
-                        <label for="price">Price</label>
-                        <input type="number" class="form-control" id="price" v-model="price">
-                    </div>
-                    <div class="form-group">
-                        <label for="type">Type</label>
-                        <select class="form-control" id="type" v-model="type">
-                            <option value="drink">drink</option>
-                            <option value="dessert">dessert</option>
-                            <option value="hot dish">hot dish</option>
-                            <option value="cold dish">cold dish</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="photoUrl">Photo</label>
-                        <input type="file" class="form-control" id="photoUrl" ref="file" @change="readFile">
-                        <img v-show="photoUrl" :src="photoUrl" />
-                    </div>
-                    <button type="submit" class="btn btn-primary" @click="createProduct">Submit</button>
-                </form>
-            </div>
-        </div>
+    <h1>Orders:</h1>
+
+    <div class="row">
+        <div  v-for="order in orders" :key="order.id"> 
+  <div class="card my-1" >
+    <div class="card-header">
+        <h5 src="card-title">Order number: {{ order.id }}</h5>
+  </div>
+    <div class="card-body">
+        <table class="table  table-striped w-100">
+            <thead>
+    <tr>
+      <th scope="col">PRODUTO</th>
+      <th scope="col">ESTADO ATUAL</th>
+      <th scope="col">NOTAS</th>
+      <th scope="col"> </th>
+    </tr>
+  </thead>
+
+            <tbody>
+          <tr  v-for="orderItens in order.order_itens" >
+            <th scope="row">{{ orderItens.product[0].name }} </th>
+            <td v-if="orderItens.status == 'P'"> A preparar </td>
+            <td v-else-if="orderItens.status == 'W'"> A Espera </td>
+            <td v-else-if="orderItens.status == 'R'"> Feito </td>
+            <td v-if="orderItens.notes"> {{orderItens.notes}} </td>
+            <td v-else>Sem Notas</td>
+            <td else></td>
+        </tr>
+  </tbody>
+        </table>
     </div>
+    <!--If all ordersItens are Ready then appear a botton-->
+    <div class="card-footer">
+        <button v-if="order.order_itens.every(elem => elem.status == 'R') && order.status == 'P'" @click="EntregarOrder(order)" class="btn btn-primary">Entregar Order!</button>
+        <button v-else-if="order.status == 'R'" @click="OrderEntregue(order)" class="btn btn-success">Order Entregue!</button>
+        <button class="btn btn-danger" @click="CancelarOrder(order)">Cancelar</button>
+        </div>
+</div>
+</div>
+</div>
+
 </template>
 
-<style scoped>
-
+<style scope>
+li{
+    display: inline-block;
+    width: 50%;
+    margin-bottom: 2%;
+}
 </style>
