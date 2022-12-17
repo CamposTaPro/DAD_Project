@@ -81,4 +81,4 @@ Route::post('employee', [UserController::class, 'createEmployee']);
 
 Route::get('customer/{customer}/orders', [CustomerController::class, 'showOrders']);
 
-Route::post('files',[FilesController::class,'store']);
+Route::patch('users/{users}/editpoints', [UserController::class, 'updatePoints']);
