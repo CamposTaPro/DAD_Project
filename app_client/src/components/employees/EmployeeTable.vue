@@ -52,6 +52,16 @@ const canViewUserDetail  = (user) => {
   }
   return userStore.user.type == 'EM' || userStore.user.id == user.id
 }
+
+const editBlocked = async (user) => {
+  const response = await axios.patch(`users/${user.id}/editblocked`)
+  if (response.status == 200){
+      //TODO: alert
+      console.log("Employee edit blocked")
+      //TODO refresh table
+
+  }
+}
 </script>
 
 <template>
@@ -78,6 +88,21 @@ const canViewUserDetail  = (user) => {
           <div class="d-flex justify-content-end" v-if="canViewUserDetail(user)">
             <button class="btn btn-xs btn-light" @click="editClick(user)" v-if="showEditButton">
               <i class="bi bi-xs bi-pencil"></i>
+            </button>
+          </div>
+        </td>
+        <td class="text-end align-middle">
+          <div class="d-flex justify-content-end">
+            <button class="btn btn-xs btn-light" @click="editBlocked(user)" >
+              <i v-if="user.blocked == true" class="bi bi-xs bi-lock"></i>
+              <i v-else class="bi bi-xs bi-unlock"></i>
+            </button>
+          </div>
+        </td>
+        <td class="text-end align-middle" >
+          <div class="d-flex justify-content-end">
+            <button class="btn btn-xs btn-light" @click="">
+              <i class="bi bi-xs bi-trash"></i>
             </button>
           </div>
         </td>
