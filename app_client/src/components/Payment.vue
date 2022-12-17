@@ -94,14 +94,14 @@ const createOrder = async () => {
         status: "P",
         customer_id: userId,
         total_price: products.getPriceAllProducts(),
-        total_paid: products.getPriceAllProducts(), //TODO
-        total_paid_with_points: "0.00", //TODO
-        points_gained: 0, //TODO
-        points_used_to_pay: 0, //TODO
+        total_paid: userStore.user ? products.getPriceAllProducts() - userStore.discount : products.getPriceAllProducts(), 
+        total_paid_with_points: userStore.user ? userStore.discount : "0.00", 
+        points_gained: userStore.user ? Math.floor((products.getPriceAllProducts() - userStore.discount) / 10) : 0, 
+        points_used_to_pay: userStore.user ? userStore.points : 0, 
         payment_type: type.value,
         payment_reference: reference.value,
     });
-
+    console.log(response.data)
     if (response.status == 200) {
         console.log("deu fixe");
 
@@ -123,6 +123,9 @@ const createOrder = async () => {
             await postOrderItems(orderItem);
         }
     } 
+    if (userStore.userId != -1){
+        changePoints();
+    }
     products.clearProducts();
     //TODO: alert
     router.push('/')
@@ -144,6 +147,16 @@ const verifyPayment = async () => {
     if (response.status == 422) {
         //TODO: alert - indicar o motivo do erro
         alert("Payment not valid")
+    }
+}
+
+const changePoints = async () => {
+    const response = axiosInjected.patch(`users/${userStore.userId}/editpoints`, {
+        points: Math.floor((products.getPriceAllProducts() - userStore.discount) / 10) - userStore.points
+    })
+    console.log(response.data)
+    if (response.status == 200) {
+        console.log("deu fixe again");
     }
 }
 
@@ -178,6 +191,10 @@ onMounted(() => {
                     </div>
                     <div class="form-group">
                         <p>Value: {{ products.getPriceAllProducts() }}</p>
+                    </div>
+                    <div v-if="userStore.points != 0 && userStore.userId != -1">
+                        <!--TODO - arredondar 2 decimas-->
+                        <p>Value with discount: {{ products.getPriceAllProducts() - userStore.discount }} </p>
                     </div>
                     <button type="submit" class="btn btn-primary" @click="verifyPayment">Submit</button>
                 </form>

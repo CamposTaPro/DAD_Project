@@ -137,5 +137,15 @@ class UserController extends Controller
             'user' => $user
         ], 200);
     }
-    
+
+    public function updatePoints($id, Request $request){
+        $user = User::find($id);
+        $customer = Customer::where('user_id', $user->id)->first();
+        $customer->points = $customer->points + $request->points;
+        $customer->save();
+        return response()->json([
+            'message' => 'User points updated successfully',
+            'user' => $user
+        ], 200);
+    }
 }

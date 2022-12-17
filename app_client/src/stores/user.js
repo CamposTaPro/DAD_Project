@@ -9,7 +9,18 @@ export const useUserStore = defineStore('user', () => {
     const serverBaseUrl = inject('serverBaseUrl')
     const socket = inject('socket')
     const user = ref(null)
+    const points = ref(null)
+    const discount = ref(null)
     
+    function insertPoints(pointsInputed) {
+        points.value += pointsInputed;
+        getDiscount();
+    }
+
+    function getDiscount() {
+        discount.value = points.value / 2;
+    }
+
     const userPhotoUrl = computed(() => {
         if (!user.value?.photo_url) {
             return avatarNoneUrl
@@ -89,5 +100,5 @@ export const useUserStore = defineStore('user', () => {
         return false
     }
     
-    return { user, userId, userPhotoUrl, login, logout, restoreToken,register }
+    return { user, userId, userPhotoUrl, login, logout, restoreToken,register, points, insertPoints, discount }
 })
