@@ -148,16 +148,16 @@ socket.on('readyOrder', (order) => {
                 Kitchen
               </router-link>
             </li>
-            <li class="nav-item w-100">
-              <!-- <router-link
+            <li class="nav-item w-100" v-show="userStore.user?.type == 'ED'||userStore.user?.type == 'EM' ">
+              <router-link
                 class="nav-link"
-                :class="{ active: $route.name === 'Projects' }"
-                :to="{ name: 'Projects' }"
+                :class="{ active: $route.name === 'Caixa' }"
+                :to="{ name: 'Caixa' }"
                 @click="clickMenuOption"
               >
                 <i class="bi bi-files"></i>
-                Projects
-              </router-link> -->
+                Caixa
+              </router-link>
             </li>
             <li class="nav-item w-100" v-show="userStore.user?.type == 'EM'">
               <router-link class="nav-link" :class="{ active: $route.name === 'Users' }" :to="{ name: 'Users' }"
