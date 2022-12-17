@@ -6,6 +6,7 @@ import { useUserStore } from "../../stores/user.js"
 const serverBaseUrl = inject("serverBaseUrl")
 const axios = inject("axios")
 const userStore = useUserStore()
+const socket = inject('socket')
 
 const props = defineProps({
   users: { },
@@ -57,11 +58,23 @@ const editBlocked = async (user) => {
       //TODO: alert
       console.log("User edit blocked")
       //TODO refresh table
-
+      user.blocked = !user.blocked
+      socket.emit('blockOrUnblockUser', user)
   }
+
 }
 
+const deleteUser = async (user) => {
+  socket.emit('deleteUser', user)
 
+
+  const teste = props.users.indexOf(user)
+  if (teste > -1) {
+    props.users.splice(teste, 1)
+  }
+  toast.success('O utilizador '+user.name+' foi apagado!');
+
+}
 </script>
 
 <template>
@@ -101,7 +114,7 @@ const editBlocked = async (user) => {
         </td>
         <td class="text-end align-middle" >
           <div class="d-flex justify-content-end">
-            <button class="btn btn-xs btn-light" @click="">
+            <button class="btn btn-xs btn-light" @click="deleteUser(user)">
               <i class="bi bi-xs bi-trash"></i>
             </button>
           </div>
