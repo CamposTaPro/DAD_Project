@@ -1,22 +1,27 @@
 <script setup>
 import { ref, inject, onMounted, watch } from 'vue'
-
+import { useRouter, RouterLink, RouterView } from "vue-router"
 import { useProductsStore } from '@/stores/products.js'
 
 const products = useProductsStore()
+const router = useRouter();
 const serverBaseUrl = inject("serverBaseUrl");
+
+const note = ref([]);
+
 
 const deleteProduct = (product) => {
     products.deleteProduct(product)
 }
 
-const createOrder = () => {
+const goToPayment = () => {
     if (products.totalProducts == 0) {
         //TODO: alert
         alert("Não tem produtos no carrinho")
         return;
     }
-    products.postProducts()
+    router.push({ name: 'Payment' })
+    //products.postProducts()
 }
 
 const photoFullUrl = (product) => {
@@ -24,28 +29,44 @@ const photoFullUrl = (product) => {
 }
 
 
-
 </script>
 
 <template>
-    <h1>Carrinho</h1>
-    <h1>{{ products.totalProducts }}</h1>
-    <ul>
-        <li v-for="product in products.showProducts" :key="product.id">
+    <h1>Carrinho - {{ products.totalProducts }} product/s</h1>
+    <div v-if="products.totalProducts > 0">
+        <div v-for="product, index in products.showProducts" :key="product.id">
             <div>
-                <h2>{{ product.name }}</h2>
-                <img style="width: 20%;" :src="photoFullUrl(product)" />
-                <!--<p> {{ product.type }}</p>-->
-                <p>{{ product.price }}€</p>
+                <ul>
+                    <li>
+                        <div>
+                            <h2>{{ product.name }}</h2>
+                            <img style="width: 20%;" :src="photoFullUrl(product)" />
+                            <p>{{ product.price }}€</p>
+                        </div>
+                        <div>
+                            <button type="button" class="btn btn-primary" @click="deleteProduct(product)">Retirar
+                                produto</button>
+                        </div>
+                        <div>
+                            <label for="price">Notes:</label>
+                            <input type="text" class="form-control" placeholder="sem..."
+                                @change="products.insertNoteInProduct(product, note, index)" v-model="note[index]">
+                        </div>
+                    </li>
+                </ul>
             </div>
-
-            <button type="button" class="btn btn-primary" @click="deleteProduct(product)">Retirar produto</button>
-        </li>
-    </ul>
-    <div>
-        <p v-if="products.totalProducts > 0" >Total: {{ products.getPriceAllProducts }}</p>
+        </div>
+        <div>
+            <p>Total: {{ products.getPriceAllProducts() }}</p>
+        </div>
+        <div>
+            <button type="button" class="btn btn-secondary" @click="goToPayment">Criar pedido</button>
+        </div>
     </div>
-    <button type="button" class="btn btn-secondary" @click="createOrder">Criar pedido</button>
+    
+    <div v-else>
+        <h1>Não tem produtos no carrinho</h1>
+    </div>
 </template>
 
 <style scoped>
