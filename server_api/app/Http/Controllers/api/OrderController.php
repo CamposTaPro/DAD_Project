@@ -19,16 +19,16 @@ class OrderController extends Controller
     public function getOrderByStatus(string $status) {
         $orders = Order::where('status', $status)->get();
 
-
         foreach ($orders as $order) {
         $ordersItens = Order_Item::where('order_id',$order->id)->get();
         $order->order_itens = $ordersItens;
-        }
-
+        
         foreach($ordersItens as $pratos){
             $product = Product::where('id',$pratos->product_id)->get();
             $pratos->product = $product;
         }
+        }
+    
         return response()->json($orders);
     }
 

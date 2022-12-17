@@ -77,7 +77,7 @@ const EntregarOrder = async (order) => {
     });
 
     socket.emit('readyOrder', order, order.customer_id)
-
+    socket.emit('readyOrderPublic', order)
     //change array orders order status to ready
     orders.value = orders.value.map((elem) => {
         if (elem.id == order.id) {
@@ -95,7 +95,7 @@ const OrderEntregue = async (order) => {
         status: 'D'
     });
 
-
+    socket.emit('deliverOrderPublic', order)
     console.log(response.data)
     orders.value = orders.value.filter((elem) => elem.id != order.id)
     toast.success("Order com o id " + order.id + " foi entregue!")
