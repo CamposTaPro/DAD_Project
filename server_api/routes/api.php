@@ -19,12 +19,12 @@ Route::middleware('auth:api')->group(function () {
     Route::post('logout', [AuthController::class, 'logout']);
     Route::get('users/me', [UserController::class, 'show_me']);
     Route::get('users', [UserController::class, 'index']);
+    Route::patch('users/{user}/editblocked', [UserController::class, 'updateBlocked']);
 
     Route::get('users/{user}', [UserController::class, 'show'])
         ->middleware('can:view,user');
     Route::patch('users/{user}', [UserController::class, 'update'])
       ->middleware('can:update,user');
-    Route::patch('users/{user}/editblocked', [UserController::class, 'updateBlocked']);
     Route::patch('users/{user}/password', [UserController::class, 'update_password'])
         ->middleware('can:updatePassword,user');
 

@@ -57,9 +57,10 @@ const editBlocked = async (user) => {
       //TODO: alert
       console.log("User edit blocked")
       //TODO refresh table
-      
+
   }
 }
+
 
 </script>
 
@@ -99,8 +100,8 @@ const editBlocked = async (user) => {
           </div>
         </td>
         <td class="text-end align-middle" >
-          <div class="d-flex justify-content-end" v-if="canViewUserDetail(user.id)">
-            <button class="btn btn-xs btn-light" @click="editClick(user)">
+          <div class="d-flex justify-content-end">
+            <button class="btn btn-xs btn-light" @click="">
               <i class="bi bi-xs bi-trash"></i>
             </button>
           </div>
