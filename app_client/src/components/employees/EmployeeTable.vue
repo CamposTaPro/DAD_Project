@@ -7,10 +7,7 @@ const serverBaseUrl = inject("serverBaseUrl")
 const userStore = useUserStore()
 
 const props = defineProps({
-  users: {
-    type: Array,
-    default: () => [],
-  },
+  users: {},
   showId: {
     type: Boolean,
     default: true,
