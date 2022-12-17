@@ -109,6 +109,7 @@ const createOrder = async () => {
 
         for (var i = 0; i < products.totalProducts; i++) {
             var product = products.products[i];
+
             var order_local_number = i+1;
             const orderItem = {
                 order_id: order_id,

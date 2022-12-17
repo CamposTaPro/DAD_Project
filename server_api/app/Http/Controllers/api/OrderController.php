@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Validation\Rule;
 use App\Models\Order_Item;
 use App\Models\Product;
 class OrderController extends Controller
@@ -18,7 +19,7 @@ class OrderController extends Controller
     public function getOrderByStatus(string $status) {
         $orders = Order::where('status', $status)->get();
 
-        
+
         foreach ($orders as $order) {
         $ordersItens = Order_Item::where('order_id',$order->id)->get();
         $order->order_itens = $ordersItens;
@@ -34,7 +35,7 @@ class OrderController extends Controller
     public function getOrderPending(){
         $orders = Order::where('status', 'P')->orWhere('status', 'R')->get();
 
-        
+
         foreach ($orders as $order) {
         $ordersItens = Order_Item::where('order_id',$order->id)->get();
         $order->order_itens = $ordersItens;
@@ -61,6 +62,20 @@ class OrderController extends Controller
     }
 
     public function store(Request $request) {
+        //VERIFY
+        $request->validate([
+            'ticket_number' => 'required|numeric|min:1|max:99',
+            'status' => 'required|in:P,R,C,D',
+            'customer_id' => '',
+            'total_price' => 'required|numeric',
+            'total_paid' => 'required|numeric',
+            'total_paid_with_points' => 'required',
+            'points_gained' => 'required',
+            'points_used_to_pay' => 'required',
+            'payment_type' => 'required',
+            //'payment_reference' => [Rule::when($request->payment_type == 'VISA', 'required|numeric|digits:16','required') , Rule::when($request->default_payment_type == 'PAYPAL', 'required|email','required'),Rule::when($request->default_payment_type == 'MBWAY', 'required|numeric|doesnt_start_with:0|regex:/^([0-9\s\-\+\(\)]*)$/|digits:9', 'required')]
+        ]);
+
         $order = new Order();
         $order->ticket_number = $request->ticket_number;
         $order->status = $request->status;

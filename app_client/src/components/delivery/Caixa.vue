@@ -1,8 +1,9 @@
 <script setup>
 import { ref, inject, onMounted, watch } from 'vue'
 import { useUserStore } from "../../stores/user.js"
+import axios from 'axios'
 
-const axios = inject('axios')
+const axiosInjected = inject('axios')
 
 const orders = ref([])
 const userStore = useUserStore()
@@ -11,21 +12,21 @@ const socket = inject('socket')
 
 
 const fetchOrders = async () => {
-    let response = await axios.get('order/pending')
+    let response = await axiosInjected.get('order/pending')
     orders.value = response.data
-    }
+}
 
 socket.on('readyProduct', (product) => {
     console.log("Recebi do socker")
-        //foreach order
-        orders.value.forEach((order) => {
+    //foreach order
+    orders.value.forEach((order) => {
         //foreach order itens
         order.order_itens.forEach((orderItem) => {
             //if order item product id is equal to product id
             if (orderItem.id == product.id) {
                 //change order item status to ready
                 orderItem.status = 'R'
-                toast.success("Produto com o id "+product.id+" esta ready!")
+                toast.success("Produto com o id " + product.id + " esta ready!")
             }
         })
     })
@@ -35,51 +36,70 @@ socket.on('readyProduct', (product) => {
 onMounted(() => {
     fetchOrders()
 })
-  
-const CancelarOrder = async (order) =>{
 
-    const response = await axios.patch(`orders/${order.id}/status`, {
+const CancelarOrder = async (order) => {
+
+    const response = await axiosInjected.patch(`orders/${order.id}/status`, {
         status: 'C'
     });
 
     console.log(response.data)
     orders.value = orders.value.filter((elem) => elem.id != order.id)
-    toast.error("Order com o id "+order.id+" cancelada!")
-    
+    toast.error("Order com o id " + order.id + " cancelada!")
+
+    await refund(order);
 }
 
+const refund = async (order) => {
+    var value = order.total_price;
+    var type = order.payment_type;
+    var reference = order.payment_reference;
 
-    
-const EntregarOrder = async (order) =>{
-
-const response = await axios.patch(`orders/${order.id}/status`, {
-    status: 'R'
-});
-
-socket.emit('readyOrder',order,order.customer_id)
-
-//change array orders order status to ready
-orders.value = orders.value.map((elem) => {
-    if (elem.id == order.id) {
-        elem.status = 'R'
-        console.log(elem)
+    const response = await axios.post("https://dad-202223-payments-api.vercel.app/api/refunds", {
+        type: type.toLowerCase(),
+        reference: reference,
+        value: Number(value)
+    });
+    console.log(response.data.message)
+    if (response.status == 201) {
+        console.log("Refund successfully");
     }
-    return elem
-})
+    if (response.status == 422) {
+        //TODO: alert - indicar o motivo do erro
+        console.log("Refund not valid: " + response.data.message)
+    }
+}
+
+const EntregarOrder = async (order) => {
+
+    const response = await axiosInjected.patch(`orders/${order.id}/status`, {
+        status: 'R'
+    });
+
+    socket.emit('readyOrder', order, order.customer_id)
+
+    //change array orders order status to ready
+    orders.value = orders.value.map((elem) => {
+        if (elem.id == order.id) {
+            elem.status = 'R'
+            console.log(elem)
+        }
+        return elem
+    })
 
 }
 
-const OrderEntregue = async (order) =>{
+const OrderEntregue = async (order) => {
 
-const response = await axios.patch(`orders/${order.id}/status`, {
-    status: 'D'
-});
+    const response = await axiosInjected.patch(`orders/${order.id}/status`, {
+        status: 'D'
+    });
 
 
-console.log(response.data)
+    console.log(response.data)
     orders.value = orders.value.filter((elem) => elem.id != order.id)
-    toast.success("Order com o id "+order.id+" foi entregue!")
-    
+    toast.success("Order com o id " + order.id + " foi entregue!")
+
 }
 
 </script>
@@ -88,49 +108,51 @@ console.log(response.data)
     <h1>Orders:</h1>
 
     <div class="row">
-        <div  v-for="order in orders" :key="order.id"> 
-  <div class="card my-1" >
-    <div class="card-header">
-        <h5 src="card-title">Order number: {{ order.id }}</h5>
-  </div>
-    <div class="card-body">
-        <table class="table  table-striped w-100">
-            <thead>
-    <tr>
-      <th scope="col">PRODUTO</th>
-      <th scope="col">ESTADO ATUAL</th>
-      <th scope="col">NOTAS</th>
-      <th scope="col"> </th>
-    </tr>
-  </thead>
+        <div v-for="order in orders" :key="order.id">
+            <div class="card my-1">
+                <div class="card-header">
+                    <h5 src="card-title">Order number: {{ order.id }}</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table  table-striped w-100">
+                        <thead>
+                            <tr>
+                                <th scope="col">PRODUTO</th>
+                                <th scope="col">ESTADO ATUAL</th>
+                                <th scope="col">NOTAS</th>
+                                <th scope="col"> </th>
+                            </tr>
+                        </thead>
 
-            <tbody>
-          <tr  v-for="orderItens in order.order_itens" >
-            <th scope="row">{{ orderItens.product[0].name }} </th>
-            <td v-if="orderItens.status == 'P'"> A preparar </td>
-            <td v-else-if="orderItens.status == 'W'"> A Espera </td>
-            <td v-else-if="orderItens.status == 'R'"> Feito </td>
-            <td v-if="orderItens.notes"> {{orderItens.notes}} </td>
-            <td v-else>Sem Notas</td>
-            <td else></td>
-        </tr>
-  </tbody>
-        </table>
-    </div>
-    <!--If all ordersItens are Ready then appear a botton-->
-    <div class="card-footer">
-        <button v-if="order.order_itens.every(elem => elem.status == 'R') && order.status == 'P'" @click="EntregarOrder(order)" class="btn btn-primary">Entregar Order!</button>
-        <button v-else-if="order.status == 'R'" @click="OrderEntregue(order)" class="btn btn-success">Order Entregue!</button>
-        <button class="btn btn-danger" @click="CancelarOrder(order)">Cancelar</button>
+                        <tbody>
+                            <tr v-for="orderItens in order.order_itens">
+                                <th scope="row">{{ orderItens.product[0].name }} </th>
+                                <td v-if="orderItens.status == 'P'"> A preparar </td>
+                                <td v-else-if="orderItens.status == 'W'"> A Espera </td>
+                                <td v-else-if="orderItens.status == 'R'"> Feito </td>
+                                <td v-if="orderItens.notes"> {{ orderItens.notes }} </td>
+                                <td v-else>Sem Notas</td>
+                                <td else></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!--If all ordersItens are Ready then appear a botton-->
+                <div class="card-footer">
+                    <button v-if="order.order_itens.every(elem => elem.status == 'R') && order.status == 'P'"
+                        @click="EntregarOrder(order)" class="btn btn-primary">Entregar Order!</button>
+                    <button v-else-if="order.status == 'R'" @click="OrderEntregue(order)" class="btn btn-success">Order
+                        Entregue!</button>
+                    <button class="btn btn-danger" @click="CancelarOrder(order)" v-show="userStore.user?.type == 'EM' ">Cancelar</button>
+                </div>
+            </div>
         </div>
-</div>
-</div>
-</div>
+    </div>
 
 </template>
 
 <style scope>
-li{
+li {
     display: inline-block;
     width: 50%;
     margin-bottom: 2%;
