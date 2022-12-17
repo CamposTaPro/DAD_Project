@@ -24,6 +24,7 @@ Route::middleware('auth:api')->group(function () {
         ->middleware('can:view,user');
     Route::patch('users/{user}', [UserController::class, 'update'])
       ->middleware('can:update,user');
+    Route::patch('users/{user}/editblocked', [UserController::class, 'updateBlocked']);
     Route::patch('users/{user}/password', [UserController::class, 'update_password'])
         ->middleware('can:updatePassword,user');
 

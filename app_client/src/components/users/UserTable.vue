@@ -4,6 +4,7 @@ import avatarNoneUrl from '@/assets/avatar-none.png'
 import { useUserStore } from "../../stores/user.js"
 
 const serverBaseUrl = inject("serverBaseUrl")
+const axios = inject("axios")
 const userStore = useUserStore()
 
 const props = defineProps({
@@ -49,6 +50,17 @@ const canViewUserDetail  = (userId) => {
   }
   return userStore.user.type == 'EM' || userStore.user.id == userId
 }
+
+const editBlocked = async (user) => {
+  const response = await axios.patch(`users/${user.id}/editblocked`)
+  if (response.status == 200){
+      //TODO: alert
+      console.log("User edit blocked")
+      //TODO refresh table
+      
+  }
+}
+
 </script>
 
 <template>
@@ -75,6 +87,21 @@ const canViewUserDetail  = (userId) => {
           <div class="d-flex justify-content-end" v-if="canViewUserDetail(user.id)">
             <button class="btn btn-xs btn-light" @click="editClick(user)" v-if="showEditButton">
               <i class="bi bi-xs bi-pencil"></i>
+            </button>
+          </div>
+        </td>
+        <td class="text-end align-middle">
+          <div class="d-flex justify-content-end">
+            <button class="btn btn-xs btn-light" @click="editBlocked(user)" >
+              <i v-if="user.blocked == true" class="bi bi-xs bi-lock"></i>
+              <i v-else class="bi bi-xs bi-unlock"></i>
+            </button>
+          </div>
+        </td>
+        <td class="text-end align-middle" >
+          <div class="d-flex justify-content-end" v-if="canViewUserDetail(user.id)">
+            <button class="btn btn-xs btn-light" @click="editClick(user)">
+              <i class="bi bi-xs bi-trash"></i>
             </button>
           </div>
         </td>
