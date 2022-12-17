@@ -24,7 +24,7 @@ class UserResource extends JsonResource
             'email' => $this->email,
             'photo_url' => $this->photo_url,
             'customer' => CustomerResource::collection(Customer::where('user_id', $this->id)->get()),
-
+            'blocked' => $this->blocked,
         ];
     }
 }

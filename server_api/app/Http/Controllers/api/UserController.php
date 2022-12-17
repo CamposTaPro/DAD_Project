@@ -127,4 +127,14 @@ class UserController extends Controller
         ], 201);
 
     }
+
+    public function updateBlocked($id){
+        $user = User::find($id);
+        $user->blocked = !$user->blocked;
+        $user->save();
+        return response()->json([
+            'message' => 'User blocked successfully',
+            'user' => $user
+        ], 200);
+    }
 }
