@@ -1,5 +1,5 @@
 <script setup>
-  import { ref, computed, onMounted, inject } from 'vue'
+  import { ref, computed, onMounted, inject, toDisplayString } from 'vue'
   import {useRouter} from 'vue-router'
   import UserTable from "./UserTable.vue"
   import { Bootstrap5Pagination } from 'laravel-vue-pagination';
@@ -10,9 +10,35 @@
 
   const users = ref({})
 
+  const toast = inject('toast')
+
+  const socket = inject('socket')
+
   const totalUsers = computed(() => {
     return users.value.length
   })
+
+  socket.on('blockOrUnblockUser', (user) => {
+
+    console.log('cheguei')
+    users.value.data.forEach((u) => {
+      if (u.id == user.id) {
+        u.blocked = user.blocked
+      }
+    })
+    toast.success('O utilizador '+user.name+' foi bloqueado/desbloqueado!');
+})
+
+
+socket.on('deleteUser', (user) => {
+users.value.data.forEach((u, index) => {
+  if (u.id == user.id) {
+    users.value.data.splice(index, 1)
+  }
+})
+
+toast.success('O utilizador '+user.name+' foi apagado!');
+})
 
   const loadUsers = (view = 1) => {
     axios.get('users?page='+view)
