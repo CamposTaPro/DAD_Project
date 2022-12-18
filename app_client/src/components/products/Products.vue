@@ -1,6 +1,16 @@
 <script setup>
 import { ref, inject, onMounted, watch, toDisplayString } from 'vue'
 import { useProductsStore } from '@/stores/products.js'
+import { Modal } from 'bootstrap'
+
+defineProps({
+  title: {
+    type: String,
+    default: "<<Title goes here>>",
+  },
+});
+let modalEle = ref(null);
+let thisModalObj = null;
 
 const carrinho = useProductsStore()
 
@@ -11,6 +21,8 @@ const products = ref([])
 const selectedType = ref(null)
 const types = ref([])
 const toast = inject('toast')
+
+
 const fetchProducts = async () => {
     let response = await axios.get('products')
     products.value = response.data
@@ -41,6 +53,7 @@ watch(selectedType, (newType, oldType) => {
 })
 
 
+
 const photoFullUrl = (product) => {
     /*return product.photo_url
         ? `${serverBaseUrl}/storage/products/${product.photo_url}`
@@ -50,12 +63,39 @@ const photoFullUrl = (product) => {
 
 const addProduct = async (product) => {
     carrinho.insertProduct(product)
-    toast.success('O '+ product.name +' foi adicionado ao carrinho!');
+    toast.success('O ' + product.name + ' foi adicionado ao carrinho!');
 }
+
+/*const Modal = (product) => {
+    var modal = document.getElementById("myModal");
+    var btn = document.getElementById("myBtn");
+    var span = document.getElementsByClassName("close")[0];
+    //enviar o id do produto para a modal
+    
+    modal.style.display = "block";
+    span.onclick = function () {
+        modal.style.display = "none";
+    }
+    window.onclick = function (event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+}*/
+   
+
+
+
 
 onMounted(() => {
     fetchProducts()
+    thisModalObj = new Modal(modalEle.value);
 })
+
+function _show() {
+  thisModalObj.show();
+}
+defineExpose({ show: _show });
 
 </script>
 
@@ -68,30 +108,76 @@ onMounted(() => {
             <option v-for="Onetype in types" :key="Onetype.id" :value="Onetype">
                 {{ Onetype.toUpperCase() }}
             </option>
-            
+
         </select>
     </div>
     <div class="panel-heading">
-        <h3 class="panel-title">Search results for "<span>{{ selectedType ? selectedType.toUpperCase() : 'ALL TYPES' }}</span>"</h3>
+        <h3 class="panel-title">Search results for "<span>{{ selectedType ? selectedType.toUpperCase() : 'ALL TYPES'
+        }}</span>"</h3>
     </div>
 
     <div class="row">
-        <div class="col-sm-4"  v-for="product in products" :key="product.id"> 
-  <div class="card my-1" >
-    <img class="card-img-top" style="height: 18rem;object-fit: cover;" :src="photoFullUrl(product)" />
-    <div class="card-body">
-                <h5 src="card-title">{{ product.name }}</h5>
-                <!--<p> {{ product.type }}</p>-->
-                <p src="card-text">{{ product.price }}€</p>
-    </div>
-    <div class="card-footer">
-        <button type="button" class="btn btn-primary" @click="addProduct(product)">Adicionar ao carrinho</button>
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">Detalhes</button>
-</div>
+        <div class="col-sm-4" v-for="product in products" :key="product.id">
+            <div class="card my-1">
+                <img class="card-img-top" style="height: 18rem;object-fit: cover;" :src="photoFullUrl(product)" />
+                <div class="card-body">
+                    <h5 src="card-title">{{ product.name }}</h5>
+                    <!--<p> {{ product.type }}</p>-->
+                    <p src="card-text">{{ product.price }}€</p>
+                </div>
+                <div class="card-footer">
+                    <button type="button" class="btn btn-primary" @click="addProduct(product)">Adicionar ao
+                        carrinho</button>
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">Detalhes</button>
 
-</div>
-</div>
-</div>
+
+                    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+                        aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    ...
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-primary">Save changes</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--<div id="myModal" class="modal">
+
+                        
+                            style="background-color: #fefefe;margin: auto;padding: 20px;float: center;border: 1px solid #888;width: 60%;height: 80%;">
+                            <span class="close">&times;</span>
+                            <div class="card my-1"
+                                style="display: flex;justify-content: center;align-items: center;height: 90%;">
+                                <img class="card-img-top" style="height: 15rem;object-fit:scale-down;"
+                                    :src="photoFullUrl(product)" />
+                                <div class="card-body">
+                                    <h5 src="card-title">{{ product.name }}</h5>
+                                    <p>{{ product.type }}</p>
+                                    <p src="card-text">{{ product.price }}€</p>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+    <button type="button" class="btn btn-primary" @click="" style="display:;"> Submeter </button>
+    </div>
+                        </div>
+                    </div>
+                </div>-->
+
+
+                </div>
+            </div>
+        </div>
+    </div>
 
 
 </template>
@@ -111,7 +197,7 @@ ul {
     display: inline-block;
     width: 15%;
 }
- 
+
 @media screen and (max-width: 950px) {
     ul {
         display: inline-block;
@@ -124,48 +210,89 @@ ul {
 }
 
 /* CSS */
-button{
-  align-items: center;
-  background-clip: padding-box;
-  background-color: #fa6400;
-  border: 1px solid transparent;
-  border-radius: .25rem;
-  box-shadow: rgba(0, 0, 0, 0.02) 0 1px 3px 0;
-  box-sizing: border-box;
-  color: #fff;
-  cursor: pointer;
-  display: inline-flex;
-  font-family: system-ui,-apple-system,system-ui,"Helvetica Neue",Helvetica,Arial,sans-serif;
-  font-size: 16px;
-  font-weight: 600;
-  justify-content: center;
-  line-height: 1.25;
-  margin: 0;
-  min-height: 3rem;
-  padding: calc(.875rem - 1px) calc(1.5rem - 1px);
-  position: relative;
-  text-decoration: none;
-  transition: all 250ms;
-  user-select: none;
-  -webkit-user-select: none;
-  touch-action: manipulation;
-  vertical-align: baseline;
-  width: auto;
+button {
+    align-items: center;
+    background-clip: padding-box;
+    background-color: #fa6400;
+    border: 1px solid transparent;
+    border-radius: .25rem;
+    box-shadow: rgba(0, 0, 0, 0.02) 0 1px 3px 0;
+    box-sizing: border-box;
+    color: #fff;
+    cursor: pointer;
+    display: inline-flex;
+    font-family: system-ui, -apple-system, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    justify-content: center;
+    line-height: 1.25;
+    margin: 0;
+    min-height: 3rem;
+    padding: calc(.875rem - 1px) calc(1.5rem - 1px);
+    position: relative;
+    text-decoration: none;
+    transition: all 250ms;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    vertical-align: baseline;
+    width: auto;
 }
 
 button:hover,
 button:focus {
-  background-color: #fb8332;
-  box-shadow: rgba(0, 0, 0, 0.1) 0 4px 12px;
+    background-color: #fb8332;
+    box-shadow: rgba(0, 0, 0, 0.1) 0 4px 12px;
 }
 
 button:hover {
-  transform: translateY(-1px);
+    transform: translateY(-1px);
 }
 
 button:active {
-  background-color: #c85000;
-  box-shadow: rgba(0, 0, 0, .06) 0 2px 4px;
-  transform: translateY(0);
+    background-color: #c85000;
+    box-shadow: rgba(0, 0, 0, .06) 0 2px 4px;
+    transform: translateY(0);
+}
+
+.modal {
+    display: none;
+    /* Hidden by default */
+    position: fixed;
+    /* Stay in place */
+    z-index: 1;
+    /* Sit on top */
+    padding-top: 100px;
+    /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%;
+    /* Full width */
+    height: 100%;
+    /* Full height */
+    overflow: auto;
+    /* Enable scroll if needed */
+    background-color: rgb(0, 0, 0);
+    /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.4);
+    /* Black w/ opacity */
+}
+
+
+
+/* The Close Button */
+.close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
 }
 </style>
