@@ -5,6 +5,9 @@ import { useUserStore } from "../../stores/user.js"
 
 const serverBaseUrl = inject("serverBaseUrl")
 const userStore = useUserStore()
+const axios = inject("axios")
+const socket = inject('socket')
+const toast = inject('toast')
 
 const props = defineProps({
   users: {},
@@ -59,8 +62,25 @@ const editBlocked = async (user) => {
       //TODO: alert
       console.log("Employee edit blocked")
       //TODO refresh table
-
+      user.blocked = !user.blocked
+      socket.emit('blockOrUnblockUser', user)
   }
+}
+const deleteUser = async (user) => {
+
+const response = await axios.delete(`users/${user.id}`)
+if (response.status == 200){
+    //TODO: alert
+    //TODO refresh table
+    socket.emit('deleteUser', user)
+}
+
+const teste = props.users.indexOf(user)
+if (teste > -1) {
+  props.users.splice(teste, 1)
+}
+toast.success('O utilizador '+user.name+' foi apagado!');
+
 }
 </script>
 
@@ -93,7 +113,7 @@ const editBlocked = async (user) => {
         </td>
         <td class="text-end align-middle">
           <div class="d-flex justify-content-end">
-            <button class="btn btn-xs btn-light" @click="editBlocked(user)" >
+            <button class="btn btn-xs btn-light" @click="editBlocked(user)" v-if="canViewUserDetail(user)" >
               <i v-if="user.blocked == true" class="bi bi-xs bi-lock"></i>
               <i v-else class="bi bi-xs bi-unlock"></i>
             </button>
@@ -101,7 +121,7 @@ const editBlocked = async (user) => {
         </td>
         <td class="text-end align-middle" >
           <div class="d-flex justify-content-end">
-            <button class="btn btn-xs btn-light" @click="">
+            <button class="btn btn-xs btn-light" @click="deleteUser(user)" v-if="canViewUserDetail(user)">
               <i class="bi bi-xs bi-trash"></i>
             </button>
           </div>

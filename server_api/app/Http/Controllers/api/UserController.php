@@ -4,17 +4,34 @@ namespace App\Http\Controllers\api;
 
 use App\Models\User;
 use App\Models\Customer;
+use App\Notifications\Email;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\UpdateUserRequest;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Notification;
 use App\Http\Requests\UpdateUserPasswordRequest;
 
 
 class UserController extends Controller
 {
+
+    public function destroy(int $id)
+    {
+        $user = User::find($id);
+        $user->delete();
+        return response()->json($user);
+    }
+
+    public function verifyEmail(User $user)
+    {
+        $user->email_verified_at = now();
+        $user->save();
+        return Redirect::to('http://127.0.0.1:5173/');
+    }
     public function create(Request $request)
     {
         $request->validate([
@@ -44,6 +61,7 @@ class UserController extends Controller
         $customer->points = 0;
         $customer->save();
 
+        Notification::send($user, new email());
         return response()->json([
             'message' => 'User created successfully',
             'user' => $user,

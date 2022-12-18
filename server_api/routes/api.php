@@ -28,6 +28,8 @@ Route::middleware('auth:api')->group(function () {
     Route::patch('users/{user}/password', [UserController::class, 'update_password'])
         ->middleware('can:updatePassword,user');
 
+    Route::delete('users/{user}', [UserController::class, 'destroy']);
+
     Route::get('users/{user}/tasks', [TaskController::class, 'getTasksOfUser']);
     Route::get('tasks/{task}', [TaskController::class, 'show']);
     Route::post('tasks', [TaskController::class, 'store']);
@@ -46,6 +48,7 @@ Route::middleware('auth:api')->group(function () {
 
     Route::delete('products/{product}', [ProductController::class, 'destroy']);
 });
+Route::get('verify/{user}',[UserController::class,'verifyEmail']);
 
 Route::get('customerpayment/{customer}', [CustomerController::class, 'getCustomerPayment']);
 Route::get('customerreference/{customer}', [CustomerController::class, 'getCustomerReference']);
