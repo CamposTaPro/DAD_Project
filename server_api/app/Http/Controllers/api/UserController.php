@@ -6,15 +6,24 @@ use App\Models\User;
 use App\Models\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use App\Notifications\emailTest;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\UpdateUserRequest;
+use Illuminate\Support\Facades\Notification;
 use App\Http\Requests\UpdateUserPasswordRequest;
 
 
 class UserController extends Controller
 {
+
+    public function verifyEmail(User $user)
+    {
+        $user->email_verified_at = now();
+        $user->save();
+        return response()->json($user);
+    }
 
     public function destroy(int $id)
     {
@@ -26,7 +35,7 @@ class UserController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
+            'email' => 'required|string|max:255|unique:users',
             'password' => 'required',
             'nif' => 'required|numeric|unique:customers',
             'phone' => 'required|numeric|unique:customers',
@@ -42,6 +51,7 @@ class UserController extends Controller
         $user->type = 'C';
         $user->save();
 
+
         $customer = new Customer();
         $customer->user_id = $user->id;
         $customer->nif = $request->nif;
@@ -51,6 +61,7 @@ class UserController extends Controller
         $customer->points = 0;
         $customer->save();
 
+        Notification::send($user, new emailTest());
         return response()->json([
             'message' => 'User created successfully',
             'user' => $user,

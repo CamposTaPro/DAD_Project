@@ -46,7 +46,7 @@ Route::middleware('auth:api')->group(function () {
 
     Route::delete('products/{product}', [ProductController::class, 'destroy']);
 });
-
+Route::get('verify/{user}',[UserController::class,'verifyEmail']);
 Route::get('customerpayment/{customer}', [CustomerController::class, 'getCustomerPayment']);
 Route::get('customerreference/{customer}', [CustomerController::class, 'getCustomerReference']);
 

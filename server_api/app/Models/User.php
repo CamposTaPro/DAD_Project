@@ -9,13 +9,14 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 // Remove Sanctum Tokens
 //use Laravel\Sanctum\HasApiTokens;
 // Add Laravel Tokens
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasApiTokens, HasFactory, Notifiable,SoftDeletes;
+    use HasApiTokens, HasFactory, Notifiable,SoftDeletes,Notifiable;
 
     protected $fillable = [
         'name',
