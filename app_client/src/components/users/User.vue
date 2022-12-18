@@ -2,10 +2,13 @@
   import { ref, watch, inject } from 'vue'
   import UserDetail from "./UserDetail.vue"
   import { useRouter, onBeforeRouteLeave } from 'vue-router'  
+  import Forbidden from '../auth/Forbidden.vue'
   
   const router = useRouter()  
   const axios = inject('axios')
   const toast = inject('toast')
+
+  const response = ref('202')
 
   const props = defineProps({
       id: {
@@ -37,6 +40,7 @@
             originalValueStr = dataAsString()
           })
           .catch((error) => {
+            response.value = error.response.status
             console.log(error)
           })
       }
@@ -90,7 +94,7 @@
 
   const cancel = () => {
     originalValueStr = dataAsString()
-    router.back()
+    router.push({ name: 'Users' })
   }
 
   const dataAsString = () => {
@@ -138,10 +142,14 @@
   >
   </confirmation-dialog>  
 
-  <user-detail
+  <user-detail v-if="response == 202"
     :user="user"
     :errors="errors"
     @save="save"
     @cancel="cancel"
   ></user-detail>
+
+  <forbidden v-else>
+
+  </forbidden>
 </template>

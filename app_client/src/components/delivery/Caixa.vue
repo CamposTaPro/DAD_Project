@@ -47,27 +47,27 @@ const CancelarOrder = async (order) => {
     orders.value = orders.value.filter((elem) => elem.id != order.id)
     toast.error("Order com o id " + order.id + " cancelada!")
 
-    await refund(order);
+    refund(order);
 }
 
-const refund = async (order) => {
+const refund = (order) => {
     var value = order.total_price;
     var type = order.payment_type;
     var reference = order.payment_reference;
 
-    const response = await axios.post("https://dad-202223-payments-api.vercel.app/api/refunds", {
+    axios.post("https://dad-202223-payments-api.vercel.app/api/refunds", {
         type: type.toLowerCase(),
         reference: reference,
         value: Number(value)
-    });
-    console.log(response.data.message)
-    if (response.status == 201) {
-        console.log("Refund successfully");
-    }
-    if (response.status == 422) {
-        //TODO: alert - indicar o motivo do erro
-        console.log("Refund not valid: " + response.data.message)
-    }
+    }).then((response) => {
+        if (response.status == 201) {
+            //TODO: alert
+            console.log("Refund successfully");
+        }
+    }).catch((error) => {
+        console.log(error.response.data.message)
+    })
+
 }
 
 const EntregarOrder = async (order) => {
@@ -77,7 +77,7 @@ const EntregarOrder = async (order) => {
     });
 
     socket.emit('readyOrder', order, order.customer_id)
-
+    socket.emit('readyOrderPublic', order)
     //change array orders order status to ready
     orders.value = orders.value.map((elem) => {
         if (elem.id == order.id) {
@@ -95,7 +95,7 @@ const OrderEntregue = async (order) => {
         status: 'D'
     });
 
-
+    socket.emit('deliverOrderPublic', order)
     console.log(response.data)
     orders.value = orders.value.filter((elem) => elem.id != order.id)
     toast.success("Order com o id " + order.id + " foi entregue!")

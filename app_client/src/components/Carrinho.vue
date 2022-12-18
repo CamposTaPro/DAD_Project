@@ -2,12 +2,18 @@
 import { ref, inject, onMounted, watch } from 'vue'
 import { useRouter, RouterLink, RouterView } from "vue-router"
 import { useProductsStore } from '@/stores/products.js'
+import { useUserStore } from "@/stores/user.js";
 
 const products = useProductsStore()
 const router = useRouter();
+const userStore = useUserStore();
 const serverBaseUrl = inject("serverBaseUrl");
+const axios = inject("axios");
+
 
 const note = ref([]);
+const user = ref([])
+const pointsInputed = ref(0)
 
 
 const deleteProduct = (product) => {
@@ -20,14 +26,47 @@ const goToPayment = () => {
         alert("Não tem produtos no carrinho")
         return;
     }
+    if (userStore.userId != -1 && validatePoints(pointsInputed.value)) {
+        console.log("insert")
+        userStore.insertPoints(pointsInputed.value)
+    }
     router.push({ name: 'Payment' })
-    //products.postProducts()
 }
 
 const photoFullUrl = (product) => {
     return `${serverBaseUrl}/storage/products/${product.photo_url}`
 }
 
+const getUser = async () => {
+    const response = await axios.get(`users/${userStore.userId}`)
+    if (response.status == 200) {
+        user.value = response.data.data.customer[0];
+    }
+}
+
+const validatePoints = (pointsInputed) => {
+    //TODO: alert
+    let error = true;
+    if(pointsInputed < 0){
+        alert("Não pode inserir valores negativos")
+        error = false;
+    }
+    if (pointsInputed > user.value.points) {
+        alert("Não tem pontos suficientes")
+        error = false;
+    }
+    if (pointsInputed % 10 != 0){
+        alert("Os descontos usam pontos de 10 em 10")
+        error = false;
+    }
+    return error;
+}
+
+onMounted(() => {
+    if (userStore.userId != -1) {
+        getUser();
+    }
+})
 
 </script>
 
@@ -56,6 +95,13 @@ const photoFullUrl = (product) => {
                 </ul>
             </div>
         </div>
+        <div v-if="userStore.userId != -1">
+            <div>
+                <p>Pontos Disponiveis: {{ user.points }}</p>
+                <label for="points">Quantidade de pontos que deseja usar</label>
+                <input type="number" id="points" name="points" min="0" max="99999999" step="10" @change="validatePoints(pointsInputed)" v-model="pointsInputed">
+            </div>
+        </div>
         <div>
             <p>Total: {{ products.getPriceAllProducts() }}</p>
         </div>
@@ -63,7 +109,7 @@ const photoFullUrl = (product) => {
             <button type="button" class="btn btn-secondary" @click="goToPayment">Criar pedido</button>
         </div>
     </div>
-    
+
     <div v-else>
         <h1>Não tem produtos no carrinho</h1>
     </div>

@@ -19,6 +19,7 @@ Route::middleware('auth:api')->group(function () {
     Route::post('logout', [AuthController::class, 'logout']);
     Route::get('users/me', [UserController::class, 'show_me']);
     Route::get('users', [UserController::class, 'index']);
+    Route::patch('users/{user}/editblocked', [UserController::class, 'updateBlocked']);
 
     Route::get('users/{user}', [UserController::class, 'show'])
         ->middleware('can:view,user');
@@ -26,6 +27,8 @@ Route::middleware('auth:api')->group(function () {
       ->middleware('can:update,user');
     Route::patch('users/{user}/password', [UserController::class, 'update_password'])
         ->middleware('can:updatePassword,user');
+
+    Route::delete('users/{user}', [UserController::class, 'destroy']);
 
     Route::get('users/{user}/tasks', [TaskController::class, 'getTasksOfUser']);
     Route::get('tasks/{task}', [TaskController::class, 'show']);
@@ -45,6 +48,7 @@ Route::middleware('auth:api')->group(function () {
 
     Route::delete('products/{product}', [ProductController::class, 'destroy']);
 });
+Route::get('verify/{user}',[UserController::class,'verifyEmail']);
 
 Route::get('customerpayment/{customer}', [CustomerController::class, 'getCustomerPayment']);
 Route::get('customerreference/{customer}', [CustomerController::class, 'getCustomerReference']);
@@ -80,4 +84,4 @@ Route::post('employee', [UserController::class, 'createEmployee']);
 
 Route::get('customer/{customer}/orders', [CustomerController::class, 'showOrders']);
 
-Route::post('files',[FilesController::class,'store']);
+Route::patch('users/{users}/editpoints', [UserController::class, 'updatePoints']);
