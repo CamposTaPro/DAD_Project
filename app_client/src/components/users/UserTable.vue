@@ -4,7 +4,10 @@ import avatarNoneUrl from '@/assets/avatar-none.png'
 import { useUserStore } from "../../stores/user.js"
 
 const serverBaseUrl = inject("serverBaseUrl")
+const axios = inject("axios")
 const userStore = useUserStore()
+const socket = inject('socket')
+const toast = inject('toast')
 
 const props = defineProps({
   users: { },
@@ -43,11 +46,41 @@ const editClick = (user) => {
   console.log(user)
 }
 
-const canViewUserDetail  = (userId) => {
+const canViewUserDetail  = (user) => {
   if (!userStore.user) {
     return false
   }
-  return userStore.user.type == 'EM' || userStore.user.id == userId
+ 
+  return userStore.user.type == 'EM' && (user.type!='EM' || userStore.user.id == user.id);
+}
+
+const editBlocked = async (user) => {
+  const response = await axios.patch(`users/${user.id}/editblocked`)
+  if (response.status == 200){
+      //TODO: alert
+      console.log("User edit blocked")
+      //TODO refresh table
+      user.blocked = !user.blocked
+      socket.emit('blockOrUnblockUser', user)
+  }
+
+}
+
+const deleteUser = async (user) => {
+
+  const response = await axios.delete(`users/${user.id}`)
+  if (response.status == 200){
+      //TODO: alert
+      //TODO refresh table
+      socket.emit('deleteUser', user)
+  }
+
+  const teste = props.users.indexOf(user)
+  if (teste > -1) {
+    props.users.splice(teste, 1)
+  }
+  toast.success('O utilizador '+user.name+' foi apagado!');
+
 }
 </script>
 
@@ -72,9 +105,24 @@ const canViewUserDetail  = (userId) => {
         <td v-if="showEmail" class="align-middle">{{ user.email }}</td>
         <td v-if="showAdmin" class="align-middle">{{ user.type == "EM" ? "Sim" : "" }}</td>
         <td class="text-end align-middle" v-if="showEditButton">
-          <div class="d-flex justify-content-end" v-if="canViewUserDetail(user.id)">
-            <button class="btn btn-xs btn-light" @click="editClick(user)" v-if="showEditButton">
+          <div class="d-flex justify-content-end" v-if="canViewUserDetail(user)">
+            <button class="btn btn-xs btn-light" @click="editClick(user)" v-if="canViewUserDetail(user)">
               <i class="bi bi-xs bi-pencil"></i>
+            </button>
+          </div>
+        </td>
+        <td class="text-end align-middle">
+          <div class="d-flex justify-content-end">
+            <button class="btn btn-xs btn-light" @click="editBlocked(user)" v-if="canViewUserDetail(user)">
+              <i v-if="user.blocked == true" class="bi bi-xs bi-lock"></i>
+              <i v-else class="bi bi-xs bi-unlock"></i>
+            </button>
+          </div>
+        </td>
+        <td class="text-end align-middle" >
+          <div class="d-flex justify-content-end">
+            <button class="btn btn-xs btn-light" @click="deleteUser(user)" v-if="canViewUserDetail(user)">
+              <i class="bi bi-xs bi-trash"></i>
             </button>
           </div>
         </td>
