@@ -208,6 +208,7 @@ socket.on('readyOrder', (order) => {
               </router-link>
             </li> -->
           </ul>
+          
           <div class="d-block d-md-none">
             <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
               <span>User</span>
@@ -278,7 +279,7 @@ socket.on('readyOrder', (order) => {
   padding-top: 1rem;
 }
 .dropdown-item {
-  font-size: 0.875rem;
+  font-size: 80%;
 }
 .btn:focus {
   outline: none;
@@ -287,4 +288,5 @@ socket.on('readyOrder', (order) => {
 #sidebarMenu {
   overflow-y: auto;
 }
+
 </style>
