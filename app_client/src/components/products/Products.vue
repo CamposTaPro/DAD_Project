@@ -66,26 +66,6 @@ const addProduct = async (product) => {
     toast.success('O ' + product.name + ' foi adicionado ao carrinho!');
 }
 
-/*const Modal = (product) => {
-    var modal = document.getElementById("myModal");
-    var btn = document.getElementById("myBtn");
-    var span = document.getElementsByClassName("close")[0];
-    //enviar o id do produto para a modal
-    
-    modal.style.display = "block";
-    span.onclick = function () {
-        modal.style.display = "none";
-    }
-    window.onclick = function (event) {
-        if (event.target == modal) {
-            modal.style.display = "none";
-        }
-    }
-}*/
-   
-
-
-
 
 onMounted(() => {
     fetchProducts()
@@ -128,51 +108,7 @@ defineExpose({ show: _show });
                 <div class="card-footer">
                     <button type="button" class="btn btn-primary" @click="addProduct(product)">Adicionar ao
                         carrinho</button>
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">Detalhes</button>
-
-
-                    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
-                        aria-labelledby="exampleModalLabel" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    ...
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                    <button type="button" class="btn btn-primary">Save changes</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!--<div id="myModal" class="modal">
-
-                        
-                            style="background-color: #fefefe;margin: auto;padding: 20px;float: center;border: 1px solid #888;width: 60%;height: 80%;">
-                            <span class="close">&times;</span>
-                            <div class="card my-1"
-                                style="display: flex;justify-content: center;align-items: center;height: 90%;">
-                                <img class="card-img-top" style="height: 15rem;object-fit:scale-down;"
-                                    :src="photoFullUrl(product)" />
-                                <div class="card-body">
-                                    <h5 src="card-title">{{ product.name }}</h5>
-                                    <p>{{ product.type }}</p>
-                                    <p src="card-text">{{ product.price }}€</p>
-                                </div>
-                            </div>
-                            <div class="card-footer">
-    <button type="button" class="btn btn-primary" @click="" style="display:;"> Submeter </button>
-    </div>
-                        </div>
-                    </div>
-                </div>-->
-
+                    <button type="button" style="float:right;" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">Detalhes</button>
 
                 </div>
             </div>
