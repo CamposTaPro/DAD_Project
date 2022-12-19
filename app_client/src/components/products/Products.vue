@@ -1,16 +1,25 @@
 <script setup>
 import { ref, inject, onMounted, watch, toDisplayString } from 'vue'
 import { useProductsStore } from '@/stores/products.js'
-import { Modal } from 'bootstrap'
+import { $vfm, VueFinalModal, ModalsContainer } from 'vue-final-modal'
+
 
 defineProps({
-  title: {
-    type: String,
-    default: "<<Title goes here>>",
-  },
+    title: {
+        type: String,
+        default: "<<Title goes here>>",
+    },
 });
-let modalEle = ref(null);
-let thisModalObj = null;
+
+const showModal = ref(false);
+const open = (product) => {
+    showModal.value = true;
+    return product;
+};
+const close = () => {
+    showModal.value = false;
+};
+
 
 const carrinho = useProductsStore()
 
@@ -69,13 +78,11 @@ const addProduct = async (product) => {
 
 onMounted(() => {
     fetchProducts()
-    thisModalObj = new Modal(modalEle.value);
+    components: {
+        VueFinalModal,
+            ModalsContainer
+    }
 })
-
-function _show() {
-  thisModalObj.show();
-}
-defineExpose({ show: _show });
 
 </script>
 
@@ -105,11 +112,25 @@ defineExpose({ show: _show });
                     <!--<p> {{ product.type }}</p>-->
                     <p src="card-text">{{ product.price }}€</p>
                 </div>
-                <div class="card-footer">
+                <div class="card-footer" style="display:inline;">
                     <button type="button" class="btn btn-primary" @click="addProduct(product)">Adicionar ao
                         carrinho</button>
-                    <button type="button" style="float:right;" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">Detalhes</button>
-
+                    
+                    <v-button type="button" style="width:fit-content;" class="btn btn-primary"
+                        @click="open(product.id)">Detalhes</v-button>
+                    <vue-final-modal v-model="showModal"> 
+                        <div class="col-sm-4" style="display: flex;justify-content: center;align-items: center;">
+                        <div class="card my-1">
+                            <img class="card-img-top" style="height: 18rem;object-fit: cover;"
+                                :src="photoFullUrl(product)" />
+                            <div class="card-body">
+                                <h5 src="card-title">{{ product.name }}</h5>
+                                <!--<p> {{ product.type }}</p>-->
+                                <p src="card-text">{{ product.price }}€</p>
+                            </div>
+                        </div>
+                    </div>
+                    </vue-final-modal>
                 </div>
             </div>
         </div>
@@ -158,7 +179,7 @@ button {
     cursor: pointer;
     display: inline-flex;
     font-family: system-ui, -apple-system, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-size: 16px;
+    font-size: 16%;
     font-weight: 600;
     justify-content: center;
     line-height: 1.25;
@@ -191,44 +212,17 @@ button:active {
     transform: translateY(0);
 }
 
-.modal {
-    display: none;
-    /* Hidden by default */
-    position: fixed;
-    /* Stay in place */
-    z-index: 1;
-    /* Sit on top */
-    padding-top: 100px;
-    /* Location of the box */
-    left: 0;
-    top: 0;
-    width: 100%;
-    /* Full width */
-    height: 100%;
-    /* Full height */
-    overflow: auto;
-    /* Enable scroll if needed */
-    background-color: rgb(0, 0, 0);
-    /* Fallback color */
-    background-color: rgba(0, 0, 0, 0.4);
-    /* Black w/ opacity */
+.modal__title {
+    margin: 0 2rem 0 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.modal__close {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
 }
 
 
-
-/* The Close Button */
-.close {
-    color: #aaaaaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-
-}
-
-.close:hover,
-.close:focus {
-    color: #000;
-    text-decoration: none;
-    cursor: pointer;
-}
 </style>
