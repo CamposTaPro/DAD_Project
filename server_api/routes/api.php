@@ -37,6 +37,7 @@ Route::middleware('auth:api')->group(function () {
     Route::patch('orders/{order}/status', [OrderController::class, 'updateStatus']);
 
     Route::get('orderitems_hotdishes', [Order_ItemController::class, 'show_hot_dish']);
+    Route::get('orderitems_preparing', [Order_ItemController::class, 'show_preparing']);
     Route::get('orderitems_preparationby', [Order_ItemController::class, 'show_my_preparation']);
     Route::patch('orderitems/{order_item}/status', [Order_ItemController::class, 'updateStatus']);
 
@@ -58,4 +59,3 @@ Route::post('orderitems', [Order_ItemController::class, 'store']);
 Route::get('product/{id}', [ProductController::class, 'index']); //TODO - dá Unauthenticated ao manager estando dentro do middleware (tem alguma coisa a haver com o middleware de autenticação)
 Route::patch('product/{id}', [ProductController::class, 'update']); //TODO (tem alguma coisa a haver com o middleware de autenticação)
 Route::post('products', [ProductController::class, 'store']); //TODO (tem alguma coisa a haver com o middleware de autenticação)
- 
