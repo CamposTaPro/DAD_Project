@@ -10,26 +10,38 @@ use App\Http\Resources\Order_ItemResource;
 
 class Order_ItemController extends Controller
 {
-    public function index(Request $request){
-        $order_items = Order_Item::all();
-        return response()->json($order_items);
-    }
 
-    public function show(Request $request, Order_Item $order_item){
+    public function show(Order_Item $order_item){
+        if ($order_item == null) {
+            return response()->json(['message' => 'Order item not found'], 404);
+        }
+        if ($order_item->product == null) {
+            return response()->json(['message' => 'Product not found'], 404);
+        }
+
         return response()->json($order_item->product);
     }
 
     public function store(Request $request) {
+        $request->validate([
+            'order_id' => 'required|numeric|min:1',
+            'product_id' => 'required|numeric|min:1',
+            'order_local_number' => 'required|numeric|min:1',
+            'status' => 'required|string|in:R,W',
+            'price' => 'required|min:0|numeric',
+        ]);
+
         $order_item = Order_Item::create($request->all());
         return response()->json($order_item);
     }
 
-    public function getOrderItensByOrderId(int $id){
-        $ordersItens = Order_Item::where('order_id',$id)->get();
-        return response()->json($ordersItens);
-    }
-
     public function updateStatus(Request $request, Order_Item $orderItem){
+        //VERIFY
+        $request->validate([
+            'status' => 'required|string|in:R,P',
+            'preparation_by' => 'required|numeric|min:1',
+        ]);
+
         try {
             $orderItem->status = $request->status;
             $orderItem->preparation_by = $request->preparation_by;
@@ -42,12 +54,41 @@ class Order_ItemController extends Controller
             ], 422);
         }
     }
+
     public function show_hot_dish(Request $request,Order_Item $order_item){
+        //VERIFY
+        $request->validate([
+            'status' => 'required|string|in:W',
+            'type' => 'required|string|in:hot dish',
+        ]);
+
+        if ($order_item == null) {
+            return response()->json(['message' => 'Order item not found'], 404);
+        }
+
         $order_item= Order_ItemResource::collection(Order_Item::where('status', $request->status)->get()->where('product.type', $request->type));
+
+        if ($order_item->isEmpty()) {
+            return response()->json(['message' => 'No order items found'], 404);
+        }
+
         return response()->json($order_item);
     }
+
     public function show_my_preparation(Request $request,Order_Item $order_item){
+        //VERIFY
+        $request->validate([
+            'status' => 'required|string|in:P',
+            'type' => 'required|string|in:hot dish',
+            'preparation_by' => 'required|numeric|min:1',
+        ]);
+
         $order_item= Order_ItemResource::collection(Order_Item::where('status', $request->status)->get()->where('product.type', $request->type)->where('preparation_by', $request->preparation_by));
+
+        if ($order_item->isEmpty()) {
+            return response()->json(['message' => 'No order items found'], 404);
+        }
+
         return response()->json($order_item);
     }
 }

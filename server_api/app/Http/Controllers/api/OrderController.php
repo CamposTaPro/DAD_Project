@@ -8,72 +8,69 @@ use App\Http\Controllers\Controller;
 use Illuminate\Validation\Rule;
 use App\Models\Order_Item;
 use App\Models\Product;
+
 class OrderController extends Controller
 {
-    public function index() {
-        $orders = Order::all();
 
-        return response()->json($orders);
-    }
+    public function getOrderByStatus(string $status)
+    {
+        if ($status == null) {
+            return response()->json(['message' => 'Status null'], 404);
+        }
 
-    public function getOrderByStatus(string $status) {
         $orders = Order::where('status', $status)->get();
 
+        if ($orders->isEmpty()) {
+            return response()->json(['message' => 'No orders found'], 404);
+        }
+
         foreach ($orders as $order) {
-        $ordersItens = Order_Item::where('order_id',$order->id)->get();
-        $order->order_itens = $ordersItens;
-        
-        foreach($ordersItens as $pratos){
-            $product = Product::where('id',$pratos->product_id)->get();
-            $pratos->product = $product;
+            $ordersItens = Order_Item::where('order_id', $order->id)->get();
+            $order->order_itens = $ordersItens;
+
+            foreach ($ordersItens as $pratos) {
+                $product = Product::where('id', $pratos->product_id)->get();
+                $pratos->product = $product;
+            }
         }
-        }
-    
+
         return response()->json($orders);
     }
 
-    public function getOrderPending(){
+    public function getOrderPending()
+    {
         $orders = Order::where('status', 'P')->orWhere('status', 'R')->get();
 
+        if ($orders->isEmpty()) {
+            return response()->json(['message' => 'No orders found'], 404);
+        }
 
         foreach ($orders as $order) {
-        $ordersItens = Order_Item::where('order_id',$order->id)->get();
-        $order->order_itens = $ordersItens;
-        foreach($ordersItens as $pratos){
-            $product = Product::where('id',$pratos->product_id)->get();
-            $pratos->product = $product;
-        }
+            $ordersItens = Order_Item::where('order_id', $order->id)->get();
+            $order->order_itens = $ordersItens;
+            foreach ($ordersItens as $pratos) {
+                $product = Product::where('id', $pratos->product_id)->get();
+                $pratos->product = $product;
+            }
         }
 
         return response()->json($orders);
     }
 
-    public function updateStatus(Request $request, Order $order){
-        try {
-            $order->status = $request->status;
-            $order->save();
-            return response()->json($order);
-        }catch (\Exception $e){
-            return response()->json([
-                'message' => 'Error updating order',
-                'error' => $e->getMessage()
-            ], 422);
-        }
-    }
-
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
         //VERIFY
         $request->validate([
             'ticket_number' => 'required|numeric|min:1|max:99',
-            'status' => 'required|in:P,R,C,D',
+            'status' => 'required|in:P',
             'customer_id' => '',
-            'total_price' => 'required|numeric',
-            'total_paid' => 'required|numeric',
-            'total_paid_with_points' => 'required',
-            'points_gained' => 'required',
-            'points_used_to_pay' => 'required',
+            'total_price' => 'required|numeric|min:0',
+            'total_paid' => 'required|numeric|min:0',
+            'total_paid_with_points' => 'required|min:0',
+            'points_gained' => 'required|min:0',
+            'points_used_to_pay' => 'required|min:0',
             'payment_type' => 'required',
-            //'payment_reference' => [Rule::when($request->payment_type == 'VISA', 'required|numeric|digits:16','required') , Rule::when($request->default_payment_type == 'PAYPAL', 'required|email','required'),Rule::when($request->default_payment_type == 'MBWAY', 'required|numeric|doesnt_start_with:0|regex:/^([0-9\s\-\+\(\)]*)$/|digits:9', 'required')]
+            'payment_reference' => [Rule::when($request->payment_type == 'VISA', 'required|numeric|digits:16|doesnt_start_with:0','required') , Rule::when($request->payment_type == 'PAYPAL', 'required|email','required'),Rule::when($request->payment_type == 'MBWAY', 'required|numeric|doesnt_start_with:0|digits:9', 'required')]
         ]);
 
         $order = new Order();
@@ -92,5 +89,27 @@ class OrderController extends Controller
         $order->save();
 
         return response()->json($order);
+    }
+
+    public function updateStatus(Request $request, Order $order){
+
+        $request->validate([
+            'status' => 'required|in:R,C,D'
+        ]);
+
+        if ($order == null) {
+            return response()->json(['message' => 'Order not found'], 404);
+        }
+
+        try {
+            $order->status = $request->status;
+            $order->save();
+            return response()->json($order);
+        }catch (\Exception $e){
+            return response()->json([
+                'message' => 'Error updating order',
+                'error' => $e->getMessage()
+            ], 422);
+        }
     }
 }

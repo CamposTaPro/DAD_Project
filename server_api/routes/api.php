@@ -15,6 +15,7 @@ use App\Http\Controllers\api\Order_ItemController;
 
 Route::post('login', [AuthController::class, 'login']);
 Route::post('register', [UserController::class, 'create']);
+
 Route::middleware('auth:api')->group(function () {
     Route::post('logout', [AuthController::class, 'logout']);
     Route::get('users/me', [UserController::class, 'show_me']);
@@ -29,59 +30,31 @@ Route::middleware('auth:api')->group(function () {
         ->middleware('can:updatePassword,user');
 
     Route::delete('users/{user}', [UserController::class, 'destroy']);
+    Route::post('employee', [UserController::class, 'createEmployee']);
+    Route::patch('users/{users}/editpoints', [UserController::class, 'updatePoints']);
 
-    Route::get('users/{user}/tasks', [TaskController::class, 'getTasksOfUser']);
-    Route::get('tasks/{task}', [TaskController::class, 'show']);
-    Route::post('tasks', [TaskController::class, 'store']);
-    Route::delete('tasks/{task}', [TaskController::class, 'destroy']);
-    Route::put('tasks/{task}', [TaskController::class, 'update']);
-    Route::patch('tasks/{task}/completed', [TaskController::class, 'update_completed']);
+    Route::get('order/pending', [OrderController::class, 'getOrderPending']);
+    Route::patch('orders/{order}/status', [OrderController::class, 'updateStatus']);
 
-    Route::get('projects', [ProjectController::class, 'index']);
-    Route::get('projects/{project}', [ProjectController::class, 'show']);
-    Route::get('projects/{project}/tasks', [ProjectController::class, 'showWithTasks']);
-    Route::post('projects', [ProjectController::class, 'store']);
-    Route::delete('projects/{project}', [ProjectController::class, 'destroy']);
-    Route::put('projects/{project}', [ProjectController::class, 'update']);
-    Route::get('users/{user}/projects', [ProjectController::class, 'getProjectsOfUser']);
-    Route::get('users/{user}/projects/inprogress', [ProjectController::class, 'getProjectsInProgressOfUser']);
+    Route::get('orderitems_hotdishes', [Order_ItemController::class, 'show_hot_dish']);
+    Route::get('orderitems_preparationby', [Order_ItemController::class, 'show_my_preparation']);
+    Route::patch('orderitems/{order_item}/status', [Order_ItemController::class, 'updateStatus']);
 
-    Route::delete('products/{product}', [ProductController::class, 'destroy']);
+    Route::get('customer/{customer}/orders', [CustomerController::class, 'showOrders']);
+
+    Route::delete('products/{product}', [ProductController::class, 'destroy']); //TODO - para isto já tenho permissão ???
+
 });
 Route::get('verify/{user}',[UserController::class,'verifyEmail']);
 
-Route::get('customerpayment/{customer}', [CustomerController::class, 'getCustomerPayment']);
-Route::get('customerreference/{customer}', [CustomerController::class, 'getCustomerReference']);
-
 Route::get('products', [ProductController::class, 'getProducts']);
 Route::get('products/{type}', [ProductController::class, 'getProductByType']);
-Route::get('products/order/items', [ProductController::class, 'getProductsByOrderItemStatus']);
 
-Route::post('products', [ProductController::class, 'store']);
-
-Route::get('product/{id}', [ProductController::class, 'index']);
-Route::put('product/{id}', [ProductController::class, 'update']);
-
-Route::get('orders', [OrderController::class, 'index']);
 Route::post('orders', [OrderController::class, 'store']);
 Route::get('orders/{status}', [OrderController::class, 'getOrderByStatus']);
-Route::get('order/pending', [OrderController::class, 'getOrderPending']);
-Route::patch('orders/{order}/status', [OrderController::class, 'updateStatus']);
 
-
-Route::get('orderitems', [Order_ItemController::class, 'index']);
-Route::get('orderitems/{order_item}', [Order_ItemController::class, 'show']);
 Route::post('orderitems', [Order_ItemController::class, 'store']);
-Route::patch('orderitems/{order_item}/status', [Order_ItemController::class, 'updateStatus']);
-Route::get('orderitems_hotdishes', [Order_ItemController::class, 'show_hot_dish']);
-Route::get('orderitems_preparationby', [Order_ItemController::class, 'show_my_preparation']);
-Route::get('orders/{id}/itens', [Order_ItemController::class, 'getOrderItensByOrderId']);
 
-Route::post('employee', [UserController::class, 'createEmployee']);
-
-//Route::get('users', [UserController::class, 'index']);
-//Route::patch('users/{user}', [UserController::class, 'update']);
-
-Route::get('customer/{customer}/orders', [CustomerController::class, 'showOrders']);
-
-Route::patch('users/{users}/editpoints', [UserController::class, 'updatePoints']);
+Route::get('product/{id}', [ProductController::class, 'index']); //TODO - dá Unauthenticated ao manager estando dentro do middleware
+Route::patch('product/{id}', [ProductController::class, 'update']); //TODO
+Route::post('products', [ProductController::class, 'store']); //TODO
