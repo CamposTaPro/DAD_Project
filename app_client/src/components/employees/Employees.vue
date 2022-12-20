@@ -13,7 +13,7 @@ const users = ref({});
 
 const loadUsers = (view = 1) => {
   axios
-    .get("users?page=" + view)
+  .get("employees?page=" + view)
     .then((response) => {
       users.value = response.data;
       users.value.data = users.value.data.filter(function (user) {

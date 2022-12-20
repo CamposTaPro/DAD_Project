@@ -10,10 +10,18 @@ const userStore = useUserStore()
 const toast = inject('toast')
 const socket = inject('socket')
 
+socket.on('newOrder', (order) => {
+    if (orders.value.some((elem) => elem.id != order.id)) {
+        fetchOrders()
+        toast.success("Nova order com o id " + order.id + "!")
+    }
+
+})
 
 const fetchOrders = async () => {
     let response = await axiosInjected.get('order/pending')
     orders.value = response.data
+    console.log(orders.value)
 }
 
 socket.on('readyProduct', (product) => {
@@ -65,6 +73,11 @@ const refund = (order) => {
 }
 
 const EntregarOrder = async (order) => {
+
+    if (orders.value.some((elem) => elem.ticket_number == order.ticket_number && elem.id < order.id)) {
+        toast.error("Já existe uma order com o mesmo ticket e esta primeiro que essa order!")
+        return
+    }
 
     const response = await axiosInjected.patch(`orders/${order.id}/status`, {
         status: 'R'
