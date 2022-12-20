@@ -46,7 +46,8 @@ toast.success('O utilizador '+user.name+' foi apagado!');
           users.value = response.data
         })
         .catch((error) => {
-          //TODO handle error
+          //TODO handle error(igual ao employees.vue)
+          toast.error(`Error loading users ${error.message}`);
         })
     }
 

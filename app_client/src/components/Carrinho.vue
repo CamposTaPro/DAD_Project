@@ -20,13 +20,16 @@ const deleteProduct = (product) => {
     products.deleteProduct(product)
 }
 
-const goToPayment = () => {
+const goToPayment = (pointsInputed) => {
     if (products.totalProducts == 0) {
         alert("Não tem produtos no carrinho")
         return;
     }
-    if (userStore.userId != -1 && validatePoints(pointsInputed.value)) {
-        userStore.insertPoints(pointsInputed.value)
+    if (userStore.userId != -1) {
+        if(!validatePoints(pointsInputed)){
+            return;
+        }
+        userStore.insertPoints(pointsInputed)
     }
     router.push({ name: 'Payment' })
 }
@@ -47,6 +50,10 @@ const validatePoints = (pointsInputed) => {
     if(pointsInputed < 0){
         alert("Não pode inserir valores negativos")
         error = false;
+    }
+    if(pointsInputed==0){
+        alert("Nao vai ser aplicado nenhum desconto")
+        return true;
     }
     if (pointsInputed > user.value.points) {
         alert("Não tem pontos suficientes")
@@ -96,14 +103,14 @@ onMounted(() => {
             <div>
                 <p>Pontos Disponiveis: {{ user.points }}</p>
                 <label for="points">Quantidade de pontos que deseja usar</label>
-                <input type="number" id="points" name="points" min="0" max="99999999" step="10" @change="validatePoints(pointsInputed)" v-model="pointsInputed">
+                <input type="number" id="points" name="points" min="0" max="99999999" step="10"  v-model="pointsInputed">
             </div>
         </div>
         <div>
-            <p>Total: {{ products.getPriceAllProducts() }}</p>
+            <p>Total: {{ products.getPriceAllProducts() }}€</p>
         </div>
         <div>
-            <button type="button" class="btn btn-secondary" @click="goToPayment">Criar pedido</button>
+            <button type="button" class="btn btn-secondary" @click="goToPayment(pointsInputed)">Criar pedido</button>
         </div>
     </div>
 

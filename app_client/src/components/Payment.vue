@@ -82,7 +82,7 @@ const createOrder = async () => {
     }
 
     const response = await axiosInjected.post("orders", {
-        ticket_number: products.getTicket(), //VERIFY
+        ticket_number: products.getTicket(), //VERIFY --(mudei o if dentro da funcao de ticket.value == 99 para ticket.value >= 99 so para ter a certeza )
         status: "P",
         customer_id: userId,
         total_price: products.getPriceAllProducts(),
@@ -105,7 +105,7 @@ const createOrder = async () => {
                 order_id: order_id,
                 order_local_number: order_local_number,
                 product_id: product.id,
-                status: product.type != "hot dish" ? "R" : "W", //VERIFY
+                status: product.type != "hot dish" ? "R" : "W", //VERIFY -- (faz sentido assim qualquer pedido que nao seja hot dish fica logo ready)
                 price: product.price,
                 preparation_by: null,
                 notes: product.note,
@@ -144,7 +144,7 @@ const changePoints = async () => {
         points: Math.floor((products.getPriceAllProducts() - userStore.discount) / 10) - userStore.points
     })
     if (response.status == 200) {
-        //TODO: alert ???
+        //TODO: alert ??? nao percebo qual o objetivo deste alert(foi o copilot que escreveu(imagine))
     }
 }
 

@@ -59,7 +59,8 @@ const editProduct = async () => {
     if (response.status == 200) {
         router.push('/producttable')
     } else {
-        //TODO - tratar erro se preciso
+        //TODO - tratar erro se preciso (assim?)
+        toast.error('Product was not created due to unknown server error! Please verifity if the input data is correct.')
     }
 
 }
@@ -79,7 +80,6 @@ watch(photoFile, (photoFile) => {
 })
 
 const validateForm = () => {
-    //TODO - verificar se não falta nenhuma verificação
     if (name.value == '') {
         toast.error('Name is required!')
     }

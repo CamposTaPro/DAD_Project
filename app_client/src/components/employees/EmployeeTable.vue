@@ -77,7 +77,6 @@ const response = await axios.delete(`users/${user.id}`)
 if (response.status == 200){
 
     toast.success('O utilizador '+user.name+' foi apagado!');
-    //TODO refresh table
     socket.emit('deleteUser', user)
 }
 

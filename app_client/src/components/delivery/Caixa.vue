@@ -70,7 +70,7 @@ const EntregarOrder = async (order) => {
         status: 'R'
     });
 
-    //TODO: ver responsta do response -feito???
+    //TODO: ver responsta do response -(feito ???)
     console.log(response.data)
     socket.emit('readyOrder', order, order.customer_id)
     socket.emit('readyOrderPublic', order)
@@ -90,7 +90,7 @@ const OrderEntregue = async (order) => {
         status: 'D'
     });
 
-    //TODO ver resposta do response-feito???
+    //TODO ver resposta do response-(feito???)
     console.log(response.data)
     socket.emit('deliverOrderPublic', order)
 

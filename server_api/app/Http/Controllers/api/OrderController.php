@@ -59,7 +59,7 @@ class OrderController extends Controller
 
     public function store(Request $request)
     {
-        //VERIFY
+        //VERIFY --parece estar certo mas o status nao devia poder ser outro sem ser P?
         $request->validate([
             'ticket_number' => 'required|numeric|min:1|max:99',
             'status' => 'required|in:P',

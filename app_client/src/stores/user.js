@@ -31,17 +31,17 @@ export const useUserStore = defineStore('user', () => {
     const userId = computed(() => {
         return user.value?.id ?? -1
     })
-
+/*
     async function register(credentials) {
         try {
             const response = await axios.post('register', credentials)
-            //TODO tratar resposta
             return true
         } catch (error) {
             //TODO: tratar erro
+
             return false
         }
-    }
+    }*/
     
     async function loadUser () {
         try {
@@ -100,5 +100,5 @@ export const useUserStore = defineStore('user', () => {
         return false
     }
     
-    return { user, userId, userPhotoUrl, login, logout, restoreToken,register, points, insertPoints, discount }
+    return { user, userId, userPhotoUrl, login, logout, restoreToken/*,register*/, points, insertPoints, discount }
 })
