@@ -55,10 +55,11 @@ const refund = (order) => {
         value: Number(value)
     }).then((response) => {
         if (response.status == 201) {
-            //TODO: alert
+            toast.success("Refund done successfully")
+            
         }
     }).catch((error) => {
-        //TODO: alert error
+        toast.error(`Refund not valid - ${error.response.data.message}`)
     })
 
 }
@@ -69,8 +70,8 @@ const EntregarOrder = async (order) => {
         status: 'R'
     });
 
-    //TODO: ver responsta do response
-
+    //TODO: ver responsta do response -(feito ???)
+    console.log(response.data)
     socket.emit('readyOrder', order, order.customer_id)
     socket.emit('readyOrderPublic', order)
 
@@ -89,8 +90,8 @@ const OrderEntregue = async (order) => {
         status: 'D'
     });
 
-    //TODO ver resposta do response
-
+    //TODO ver resposta do response-(feito???)
+    console.log(response.data)
     socket.emit('deliverOrderPublic', order)
 
     orders.value = orders.value.filter((elem) => elem.id != order.id)

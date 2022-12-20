@@ -15,7 +15,7 @@ export const useProductsStore = defineStore("products", () => {
   const paymentReference = ref("");
 
   function getTicket() {
-    if (ticket.value == 99) {
+    if (ticket.value >= 99) {
       ticket.value = 1;
     }
     ticket.value += 1;
@@ -59,7 +59,7 @@ export const useProductsStore = defineStore("products", () => {
   function getPriceAllProducts() {
     let price = 0;
     products.value.forEach((prd) => {
-      price += parseFloat(prd.price); //TODO - verificar se é necessario (* prd.quantity)
+      price += parseFloat(prd.price); 
     });
     return price.toFixed(2);
   }

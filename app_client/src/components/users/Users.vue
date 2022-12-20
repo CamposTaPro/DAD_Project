@@ -3,9 +3,10 @@
   import {useRouter} from 'vue-router'
   import UserTable from "./UserTable.vue"
   import { Bootstrap5Pagination } from 'laravel-vue-pagination';
+  import { useUserStore } from "../../stores/user.js"
 
   const router = useRouter()
-
+const userStore = useUserStore()
   const axios = inject('axios')
 
   const users = ref({})
@@ -45,7 +46,8 @@ toast.success('O utilizador '+user.name+' foi apagado!');
           users.value = response.data
         })
         .catch((error) => {
-          //TODO handle error
+          //TODO handle error(igual ao employees.vue)
+          toast.error(`Error loading users ${error.message}`);
         })
     }
 
@@ -54,6 +56,9 @@ toast.success('O utilizador '+user.name+' foi apagado!');
   }
 
   onMounted (() => {
+      if(userStore.user.type!="EM"){
+    router.push({ name: 'home' })
+  }
     loadUsers()
   })
 </script>

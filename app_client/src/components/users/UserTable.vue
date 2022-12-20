@@ -52,12 +52,20 @@ const canViewUserDetail  = (user) => {
  
   return userStore.user.type == 'EM' && (user.type!='EM' || userStore.user.id == user.id);
 }
+const canViewUserBlockedandDelete  = (user) => {
+  if (!userStore.user) {
+    return false
+  }
+ 
+  return userStore.user.type == 'EM' && (user.type!='EM');
+}
+
 
 const editBlocked = async (user) => {
   const response = await axios.patch(`users/${user.id}/editblocked`)
   if (response.status == 200){
-      //TODO: alert
-      
+  
+      toast.success('O utilizador '+user.name+' foi bloqueado/desbloqueado!');
       user.blocked = !user.blocked
       socket.emit('blockOrUnblockUser', user)
   }
@@ -68,8 +76,6 @@ const deleteUser = async (user) => {
 
   const response = await axios.delete(`users/${user.id}`)
   if (response.status == 200){
-      //TODO: alert
-      //TODO refresh table
       socket.emit('deleteUser', user)
   }
 
@@ -111,7 +117,7 @@ const deleteUser = async (user) => {
         </td>
         <td class="text-end align-middle">
           <div class="d-flex justify-content-end">
-            <button class="btn btn-xs btn-light" @click="editBlocked(user)" v-if="canViewUserDetail(user)">
+            <button class="btn btn-xs btn-light" @click="editBlocked(user)" v-if="canViewUserBlockedandDelete(user)">
               <i v-if="user.blocked == true" class="bi bi-xs bi-lock"></i>
               <i v-else class="bi bi-xs bi-unlock"></i>
             </button>
@@ -119,7 +125,7 @@ const deleteUser = async (user) => {
         </td>
         <td class="text-end align-middle" >
           <div class="d-flex justify-content-end">
-            <button class="btn btn-xs btn-light" @click="deleteUser(user)" v-if="canViewUserDetail(user)">
+            <button class="btn btn-xs btn-light" @click="deleteUser(user)" v-if="canViewUserBlockedandDelete(user)">
               <i class="bi bi-xs bi-trash"></i>
             </button>
           </div>

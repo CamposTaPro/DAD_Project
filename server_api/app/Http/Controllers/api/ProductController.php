@@ -81,6 +81,8 @@ class ProductController extends Controller
             'file' => 'required|image|mimes:jpeg,png,jpg,svg|max:2048',
         ]);
 
+
+
         $product = new Product();
 
         $product->name = $request->name;

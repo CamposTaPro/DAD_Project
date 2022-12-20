@@ -42,7 +42,7 @@ Route::middleware('auth:api')->group(function () {
 
     Route::get('customer/{customer}/orders', [CustomerController::class, 'showOrders']);
 
-    Route::delete('products/{product}', [ProductController::class, 'destroy']); //TODO - para isto já tenho permissão ???
+    Route::delete('products/{product}', [ProductController::class, 'destroy']); //TODO - para isto já tenho permissão ??? (tem alguma coisa a haver com o middleware de autenticação)
 
 });
 Route::get('verify/{user}',[UserController::class,'verifyEmail']);
@@ -55,6 +55,7 @@ Route::get('orders/{status}', [OrderController::class, 'getOrderByStatus']);
 
 Route::post('orderitems', [Order_ItemController::class, 'store']);
 
-Route::get('product/{id}', [ProductController::class, 'index']); //TODO - dá Unauthenticated ao manager estando dentro do middleware
-Route::patch('product/{id}', [ProductController::class, 'update']); //TODO
-Route::post('products', [ProductController::class, 'store']); //TODO
+Route::get('product/{id}', [ProductController::class, 'index']); //TODO - dá Unauthenticated ao manager estando dentro do middleware (tem alguma coisa a haver com o middleware de autenticação)
+Route::patch('product/{id}', [ProductController::class, 'update']); //TODO (tem alguma coisa a haver com o middleware de autenticação)
+Route::post('products', [ProductController::class, 'store']); //TODO (tem alguma coisa a haver com o middleware de autenticação)
+ 

@@ -36,9 +36,9 @@ class Order_ItemController extends Controller
     }
 
     public function updateStatus(Request $request, Order_Item $orderItem){
-        //VERIFY
+        //VERIFY -adicionei ao status o W, pode nems ser preciso mas faz sentido ele poder alterar para qualquer estado
         $request->validate([
-            'status' => 'required|string|in:R,P',
+            'status' => 'required|string|in:R,P,W',
             'preparation_by' => 'required|numeric|min:1',
         ]);
 
@@ -60,7 +60,7 @@ class Order_ItemController extends Controller
     }
 
     public function show_hot_dish(Request $request,Order_Item $order_item){
-        //VERIFY
+        //VERIFY --parece estar certo
         $request->validate([
             'status' => 'required|string|in:W',
             'type' => 'required|string|in:hot dish',
@@ -80,7 +80,7 @@ class Order_ItemController extends Controller
     }
 
     public function show_my_preparation(Request $request,Order_Item $order_item){
-        //VERIFY
+        //VERIFY -- parece estar certo 
         $request->validate([
             'status' => 'required|string|in:P',
             'type' => 'required|string|in:hot dish',

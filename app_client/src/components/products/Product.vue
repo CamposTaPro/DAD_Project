@@ -58,7 +58,6 @@ watch(photoFile, (photoFile) => {
 })
 
 const validateForm = () => {
-    //TODO - verificar se não falta nenhuma verificação
     if (name.value == '') {
         toast.error('Name is required!')
     }

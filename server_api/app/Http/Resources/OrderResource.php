@@ -23,7 +23,7 @@ class OrderResource extends JsonResource
             'total_price' => $this->total_price,
             'date' => $this->date,
             'payment_type' => $this->payment_type,
-            //'delivered_by' => isset($this->delivered_by) ? User::find($this->delivered_by)->name : "",  //TODO - enviamos vazio ou outra coisa?
+            //'delivered_by' => isset($this->delivered_by) ? User::find($this->delivered_by)->name : "",  //TODO - enviamos vazio ou outra coisa?(acho que esta bom assim)
             'delivered_by' => isset(User::find($this->delivered_by)->name) ? User::find($this->delivered_by)->name : ""
         ];
     }

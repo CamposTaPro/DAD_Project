@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted, inject } from "vue";
+import { ref, computed, onMounted, inject, toDisplayString } from "vue";
 import { useRouter } from "vue-router";
 import { useUserStore } from '../../stores/user.js'
 import EmployeeTable from "./EmployeeTable.vue";
@@ -8,7 +8,7 @@ import { Bootstrap5Pagination } from 'laravel-vue-pagination';
 const router = useRouter();
 const userStore = useUserStore()
 const axios = inject("axios");
-
+const toast = inject("toast");
 const users = ref({});
 
 const loadUsers = (view = 1) => {
@@ -21,7 +21,8 @@ const loadUsers = (view = 1) => {
       });
     })
     .catch((error) => {
-      //TODO handle error
+      //TODO handle error -- (deve estar bom)
+      toast.error(`Error loading users ${error.message}`);
     });
 };
 
