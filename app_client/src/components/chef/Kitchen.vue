@@ -10,17 +10,14 @@ const status = ref([])
 const order_item = ref([])
 const userStore = useUserStore()
 
-console.log(userStore.user.id);
-
 const fetchOrders = async () => {
     let response = await axios.get('orderitems_hotdishes', {
         params: {
             status: 'W',
-            type:"hot dish"
+            type: "hot dish"
         }
     })
     order_item.value = response.data
-    console.log(order_item.value);
 
     if (order_item.value) {
         order_item.value.forEach((item) => {
@@ -32,46 +29,49 @@ const fetchOrders = async () => {
     }
 }
 
-async function Comecar(id){
+async function Comecar(id) {
     const response = await axios.patch(`orderitems/${id}/status`, {
         status: 'P',
         preparation_by: userStore.user.id
     });
-    console.log(response.data);
     router.go()
 }
 
 
 const photoFullUrl = (product) => {
-
-    /*return product.photo_url
-        ? `${serverBaseUrl}/storage/products/${product.photo_url}`
-        : `${serverBaseUrl}/storage/products/none.png`                                      estava comentado ate aqui
-    */
     return `${serverBaseUrl}/storage/products/${product}`
 }
 
 
 onMounted(() => {
+    if (userStore.user == null || userStore.user.type == 'C' || userStore.user.type == 'ED') {
+        router.push('/')
+    }
     fetchOrders()
+
 })
 
 </script>
 
 <template>
     <h1>Pratos por preparar:</h1>
-    <ul v-for="item in order_item">
-            <div class="card">
+    <div class="row">
+        <div class="col-sm-4" v-for="item in order_item">
+            <div class="card my-1">
                 <img class="comida" :src="photoFullUrl(item.product[0].photo_url)" />
-                <div class="container">
+                <div class="card-body">
                     <b>{{ item.product[0].name }}</b>
-                    <p>order:{{item.order_id}}</p>
-                    <p v-if="item.note!=null">Nota: {{item.note}}</p>
+                    <p>order:{{ item.order_id }}</p>
+                    <p v-if="item.note != null">Nota: {{ item.note }}</p>
                     <p v-else>Nota: Sem nota</p>
                 </div>
-                <button v-if="userStore.user?.type != 'EM'" @click="Comecar(item.id)">Comecar Preparo</button>
+                <div class="card-footer">
+                    <button type="button" class="btn btn-secondary" v-if="userStore.user?.type != 'EM'"
+                        @click="Comecar(item.id)">Comecar Preparo</button>
+                </div>
             </div>
-    </ul>
+        </div>
+    </div>
 </template>
 
 <style scope>
@@ -93,5 +93,4 @@ ul {
 .card:hover {
     box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
 }
-
 </style>
