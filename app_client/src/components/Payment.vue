@@ -8,6 +8,7 @@ import axios from 'axios'
 const products = useProductsStore()
 const router = useRouter();
 const userStore = useUserStore();
+const toast = inject("toast");
 
 const axiosInjected = inject('axios')
 
@@ -27,47 +28,39 @@ const fetchUser = async () => {
 
 const validateForm = () => {
     if (reference.value == '') {
-        //TODO: alert
-        alert('Reference is required')
+        toast.error('Reference is required')
         return;
     }
     if (type.value == '') {
-        //TODO: alert
-        alert('Type is required')
+        toast.error('Type is required')
         return;
     }
     if (type.value == 'VISA' && isNaN(reference.value)) {
-        //TODO: alert
-        alert("On type 'VISA', Reference must be a number")
+        toast.error("On type 'VISA', Reference must be a number")
         return;
     }
     if (type.value == 'VISA' && reference.value.length != 16) {
-        //TODO: alert
-        alert("On type 'VISA', Reference have 16 numbers")
+        toast.error("On type 'VISA', Reference have 16 numbers")
         return;
     }
     if (type.value == 'VISA' && reference.value[0] == 0) {
-        //TODO: alert
-        alert("On type 'VISA', Reference can't start with '0'")
+        toast.error("On type 'VISA', Reference can't start with '0'")
         return;
     }
     if (type.value == 'PAYPAL' && (!reference.value.includes('@') || !reference.value.includes('.'))) {
-        //TODO: alert
-        alert("On type 'PAYPAL', Reference has to contain the correct format of an email")
+        toast.error("On type 'PAYPAL', Reference has to contain the correct format of an email")
         return;
     }
     if (type.value == 'MBWAY' && reference.value[0] == 0) {
-        alert("On type 'MBWAY', Reference can't start with '0'")
+        toast.error("On type 'MBWAY', Reference can't start with '0'")
         return;
     }
     if (type.value == 'MBWAY' && isNaN(reference.value)) {
-        //TODO: alert
-        alert("On type 'MBWAY', Reference must be a number")
+        toast.error("On type 'MBWAY', Reference must be a number")
         return;
     }
     if (type.value == 'MBWAY' && reference.value.length != 9) {
-        //TODO: alert
-        alert("On type 'MBWAY', Reference have 9 numbers")
+        toast.error("On type 'MBWAY', Reference have 9 numbers")
         return;
     }
 }
@@ -76,7 +69,7 @@ const postOrderItems = async (orderItem) => {
     const response = await axiosInjected.post("orderitems", orderItem);
 
     if (response.status == 200) {
-        //TODO: alert
+        toast.success("Order created successfully")
     }
 }
 
@@ -124,7 +117,7 @@ const createOrder = async () => {
         changePoints();
     }
     products.clearProducts();
-    //TODO: alert
+    //TODO: alert(aqui é preciso??)
     router.push('/')
 }
 
@@ -137,12 +130,12 @@ const verifyPayment = async () => {
         value: Number(value)
     });
     if (response.status == 201) {
-        //TODO: alert
+        toast.success("Payment verified successfully")
         createOrder();
     }
     if (response.status == 422) {
-        //TODO: alert - indicar o motivo do erro
-        alert("Payment not valid")
+        //TODO: alert - indicar o motivo do erro(falta testar)
+        toast.error(`Payment not valid - ${response.data.message}`)
     }
 }
 

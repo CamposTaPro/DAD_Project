@@ -22,7 +22,6 @@ const deleteProduct = (product) => {
 
 const goToPayment = () => {
     if (products.totalProducts == 0) {
-        //TODO: alert
         alert("Não tem produtos no carrinho")
         return;
     }
@@ -44,7 +43,6 @@ const getUser = async () => {
 }
 
 const validatePoints = (pointsInputed) => {
-    //TODO: alert
     let error = true;
     if(pointsInputed < 0){
         alert("Não pode inserir valores negativos")
