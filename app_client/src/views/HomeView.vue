@@ -31,8 +31,6 @@ const fetchOrders = async () => {
 }
 
 socket.on('readyOrderPublic', (orderReady) => {
-  console.log("Recebi do socket")
-  //foreach order
   ordersPreparing.value.forEach((order) => {
     if (orderReady.id == order.id) {
       order.status = 'R'
@@ -43,8 +41,6 @@ socket.on('readyOrderPublic', (orderReady) => {
 })
 
 socket.on('deliverOrderPublic', (orderDelive) => {
-  console.log("Recebi do socket")
-  //foreach order
   ordersReady.value.forEach((order) => {
     if (orderDelive.id == order.id) {
       ordersReady.value = ordersReady.value.filter((elem) => elem.id != order.id)

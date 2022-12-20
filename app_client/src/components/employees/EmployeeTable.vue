@@ -43,7 +43,6 @@ const photoFullUrl = (user) => {
 
 const editClick = (user) => {
   emit("edit", user)
-  console.log( user)
 }
 
 const canViewUserDetail  = (user) => {
@@ -60,8 +59,7 @@ const editBlocked = async (user) => {
   const response = await axios.patch(`users/${user.id}/editblocked`)
   if (response.status == 200){
       //TODO: alert
-      console.log("Employee edit blocked")
-      //TODO refresh table
+      
       user.blocked = !user.blocked
       socket.emit('blockOrUnblockUser', user)
   }

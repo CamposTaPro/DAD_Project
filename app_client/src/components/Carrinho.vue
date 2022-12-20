@@ -27,7 +27,6 @@ const goToPayment = () => {
         return;
     }
     if (userStore.userId != -1 && validatePoints(pointsInputed.value)) {
-        console.log("insert")
         userStore.insertPoints(pointsInputed.value)
     }
     router.push({ name: 'Payment' })

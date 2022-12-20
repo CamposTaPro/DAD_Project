@@ -21,7 +21,6 @@ const fetchOrders = async () => {
         }
     })
     order_item.value = response.data
-    console.log(order_item.value);
 
     if (order_item.value) {
         order_item.value.forEach((item) => {
@@ -39,7 +38,6 @@ async function Terminar(order) {
         preparation_by: userStore.user.id
     });
     socket.emit('readyProduct', order)
-    console.log(response.data);
     router.go()
 }
 

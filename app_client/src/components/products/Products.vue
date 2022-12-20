@@ -3,7 +3,7 @@ import { ref, inject, onMounted, watch, toDisplayString } from 'vue'
 import { useProductsStore } from '@/stores/products.js'
 import { $vfm, VueFinalModal, ModalsContainer } from 'vue-final-modal'
 
-
+//TODO - preciso?????
 defineProps({
     title: {
         type: String,
@@ -11,11 +11,12 @@ defineProps({
     },
 });
 
+
+// ----------- TODO: apagar???? -------------
 const showModal = ref(false);
 const ProductModal = ref(false);
 
 const open = (product, index) => {
-    console.log($vfm.dynamicModals.length);
     showModal.value = true;
     $vfm.show({
         component: VueFinalModal,
@@ -27,11 +28,10 @@ const open = (product, index) => {
 const close = () => {
     showModal.value = false;
 };
-
+// ----------- TODO: apagar???? -------------
 
 
 const carrinho = useProductsStore()
-
 const axios = inject('axios')
 const serverBaseUrl = inject("serverBaseUrl");
 
@@ -57,8 +57,9 @@ const fetchProducts = async () => {
 
 const fetchProductsByType = async (type) => {
     let response = await axios.get(`products/${type}`)
+    //TODO - verificar se o type é valido
+    //TODO - verificar response
     products.value = response.data
-    console.log(products.value)
 }
 
 watch(selectedType, (newType, oldType) => {
@@ -117,12 +118,12 @@ onMounted(() => {
                 <div class="card-footer" style="display:inline;">
                     <button type="button" class="btn btn-primary" @click="addProduct(product)">Adicionar ao
                         carrinho</button>
-                    <!--HERE-->
+                    <!--TODO: apagar????-->
                     <!--Create a modal that shows a product selected-->
                     <button type="button" class="btn btn-primary" @click="open(products, index)">Ver
                         detalhes</button>
                     
-                    <!--HERE-->
+                    <!--TODO: apagar????-->
                 </div>
             </div>
         </div>

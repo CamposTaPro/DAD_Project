@@ -15,13 +15,13 @@ class OrderController extends Controller
     public function getOrderByStatus(string $status)
     {
         if ($status == null) {
-            return response()->json(['message' => 'Status null'], 404);
+            return response()->json(['message' => 'Status null'], 422);
         }
 
         $orders = Order::where('status', $status)->get();
 
         if ($orders->isEmpty()) {
-            return response()->json(['message' => 'No orders found'], 404);
+            return response()->json();
         }
 
         foreach ($orders as $order) {
@@ -42,7 +42,7 @@ class OrderController extends Controller
         $orders = Order::where('status', 'P')->orWhere('status', 'R')->get();
 
         if ($orders->isEmpty()) {
-            return response()->json(['message' => 'No orders found'], 404);
+            return response()->json();
         }
 
         foreach ($orders as $order) {
