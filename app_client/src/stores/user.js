@@ -35,10 +35,10 @@ export const useUserStore = defineStore('user', () => {
     async function register(credentials) {
         try {
             const response = await axios.post('register', credentials)
-            console.log(response.data)
+            //TODO tratar resposta
             return true
         } catch (error) {
-            console.log(error)
+            //TODO: tratar erro
             return false
         }
     }

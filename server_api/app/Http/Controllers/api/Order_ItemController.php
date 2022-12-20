@@ -42,6 +42,10 @@ class Order_ItemController extends Controller
             'preparation_by' => 'required|numeric|min:1',
         ]);
 
+        if ($orderItem == null) {
+            return response()->json(['message' => 'Order item not found'], 404);
+        }
+
         try {
             $orderItem->status = $request->status;
             $orderItem->preparation_by = $request->preparation_by;
@@ -69,7 +73,7 @@ class Order_ItemController extends Controller
         $order_item= Order_ItemResource::collection(Order_Item::where('status', $request->status)->get()->where('product.type', $request->type));
 
         if ($order_item->isEmpty()) {
-            return response()->json(['message' => 'No order items found'], 404);
+            return response()->json();
         }
 
         return response()->json($order_item);
@@ -83,10 +87,14 @@ class Order_ItemController extends Controller
             'preparation_by' => 'required|numeric|min:1',
         ]);
 
+        if ($order_item == null) {
+            return response()->json(['message' => 'Order item not found'], 404);
+        }
+
         $order_item= Order_ItemResource::collection(Order_Item::where('status', $request->status)->get()->where('product.type', $request->type)->where('preparation_by', $request->preparation_by));
 
         if ($order_item->isEmpty()) {
-            return response()->json(['message' => 'No order items found'], 404);
+            return response()->json();
         }
 
         return response()->json($order_item);

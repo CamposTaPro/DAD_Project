@@ -10,7 +10,6 @@ const status = ref([])
 const order_item = ref([])
 const userStore = useUserStore()
 
-console.log(userStore.user.id);
 
 const fetchOrders = async () => {
     let response = await axios.get('orderitems_hotdishes', {
@@ -20,7 +19,6 @@ const fetchOrders = async () => {
         }
     })
     order_item.value = response.data
-    console.log(order_item.value);
 
     if (order_item.value) {
         order_item.value.forEach((item) => {
@@ -37,7 +35,6 @@ async function Comecar(id){
         status: 'P',
         preparation_by: userStore.user.id
     });
-    console.log(response.data);
     router.go()
 }
 

@@ -16,7 +16,7 @@ class ProductController extends Controller
     public function index($id)
     {
         if ($id == null) {
-            return response()->json(['message' => 'Id null'], 404);
+            return response()->json(['message' => 'Id null'], 422);
         }
 
         $product = Product::find($id);
@@ -33,7 +33,7 @@ class ProductController extends Controller
         $products = Product::all();
 
         if ($products->isEmpty()) {
-            return response()->json(['message' => 'No products found'], 404);
+            return response()->json();
         }
 
         return response()->json($products);
@@ -42,13 +42,13 @@ class ProductController extends Controller
     public function getProductByType(string $type)
     {
         if ($type == null) {
-            return response()->json(['message' => 'Type null'], 404);
+            return response()->json(['message' => 'Type null'], 422);
         }
 
         $products = Product::where('type', $type)->get();
 
         if ($products->isEmpty()) {
-            return response()->json(['message' => 'No products found'], 404);
+            return response()->json();
         }
 
         return response()->json($products);
@@ -57,7 +57,7 @@ class ProductController extends Controller
     public function destroy(int $id)
     {
         if ($id == null) {
-            return response()->json(['message' => 'Id null'], 404);
+            return response()->json(['message' => 'Id null'], 422);
         }
 
         $product = Product::find($id);
@@ -118,7 +118,7 @@ class ProductController extends Controller
         ]);
 
         if ($id == null) {
-            return response()->json(['message' => 'Id null'], 404);
+            return response()->json(['message' => 'Id null'], 422);
         }
 
         $product = Product::find($id);

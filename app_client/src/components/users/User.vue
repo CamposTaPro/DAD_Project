@@ -42,7 +42,6 @@
           })
           .catch((error) => {
             response.value = error.response.status
-            console.log(error)
           })
       }
   }

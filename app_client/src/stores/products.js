@@ -13,12 +13,12 @@ export const useProductsStore = defineStore("products", () => {
   const price = ref(0);
   const paymentType = ref("");
   const paymentReference = ref("");
-  
+
   function getTicket() {
-    if (ticket.value == 99){
-      ticket.value = 1
+    if (ticket.value == 99) {
+      ticket.value = 1;
     }
-    ticket.value += 1
+    ticket.value += 1;
     return ticket.value;
   }
 
@@ -35,14 +35,13 @@ export const useProductsStore = defineStore("products", () => {
   }
 
   function insertNoteInProduct(product, note, index) {
-    if ((note == '') || (product == null)){
-      return
+    if (note == "" || product == null) {
+      return;
     }
-    
+
     const j = products.value.findIndex((prd) => prd.id == product.id);
     if (j >= 0) {
       products.value[index].note = note[index];
-      console.log(products.value)
     }
   }
 
@@ -74,6 +73,6 @@ export const useProductsStore = defineStore("products", () => {
     clearProducts,
     getPriceAllProducts,
     insertNoteInProduct,
-    getTicket
+    getTicket,
   };
 });
