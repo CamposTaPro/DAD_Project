@@ -90,7 +90,7 @@ const createOrder = async () => {
     }
 
     const response = await axiosInjected.post("orders", {
-        ticket_number: 99, //TODO
+        ticket_number: products.getTicket(), //VERIFY
         status: "P",
         customer_id: userId,
         total_price: products.getPriceAllProducts(),

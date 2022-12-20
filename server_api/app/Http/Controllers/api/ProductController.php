@@ -15,7 +15,16 @@ class ProductController extends Controller
 
     public function index($id)
     {
+        if ($id == null) {
+            return response()->json(['message' => 'Id null'], 404);
+        }
+
         $product = Product::find($id);
+
+        if ($product == null) {
+            return response()->json(['message' => 'Product not found'], 404);
+        }
+
         return response()->json($product);
     }
 
@@ -23,39 +32,55 @@ class ProductController extends Controller
     {
         $products = Product::all();
 
+        if ($products->isEmpty()) {
+            return response()->json(['message' => 'No products found'], 404);
+        }
+
         return response()->json($products);
     }
 
     public function getProductByType(string $type)
     {
-        $products = Product::where('type', $type)->get();
-        return response()->json($products);
-    }
-
-    public function getProductsByOrderItemStatus(Request $request)
-    {
-
-        $order_items = Order_Item::where('status', $request->order_status)->get();
-
-        $products = array();
-        foreach ($order_items as $order_item) {
-            if (!$order_item->product()->where('type', $request->type)->get()->isEmpty()) {
-                array_push($products, $order_item->product()->where('type', $request->type)->get());
-            }
+        if ($type == null) {
+            return response()->json(['message' => 'Type null'], 404);
         }
+
+        $products = Product::where('type', $type)->get();
+
+        if ($products->isEmpty()) {
+            return response()->json(['message' => 'No products found'], 404);
+        }
+
         return response()->json($products);
     }
+
     public function destroy(int $id)
     {
+        if ($id == null) {
+            return response()->json(['message' => 'Id null'], 404);
+        }
+
         $product = Product::find($id);
+
+        if ($product == null) {
+            return response()->json(['message' => 'Product not found'], 404);
+        }
+
         $product->delete();
         return response()->json($product);
     }
 
     public function store(Request $request)
     {
-        //dd($request->all());
-        //dd($request->file('file'));
+
+        $request->validate([
+            'name' => 'required|max:250',
+            'description' => 'required|max:250',
+            'price' => 'required|min:0',
+            'type' => 'required|string|in:drink,hot dish,dessert,cold dish',
+            'file' => 'required|image|mimes:jpeg,png,jpg,svg|max:2048',
+        ]);
+
         $product = new Product();
 
         $product->name = $request->name;
@@ -70,7 +95,7 @@ class ProductController extends Controller
         return response()->json($product);
     }
 
-    public function gravarFoto($id, $file)
+    /*public function gravarFoto($id, $file)
     {
         $photoPath = 'public/fotos';
 
@@ -80,17 +105,28 @@ class ProductController extends Controller
         File::copy($file, $targetDir . '/' . $newfilename);
         DB::table('products')->where('id', $id)->update(['photo_url' => $newfilename]);
         $this->command->info("Updated Photo of User $id. File $file copied as $newfilename");
-    }
+    }*/
 
     public function update(Request $request, $id)
     {
-        /*$product = Product::find($id);
-        $product->update($request->all());
+        $request->validate([
+            'name' => 'string|max:250',
+            'description' => 'string|max:250',
+            'price' => 'numeric|min:0',
+            'type' => 'string|in:drink,hot dish,dessert,cold dish',
+            'file' => 'image|mimes:jpeg,png,jpg,svg|max:2048',
+        ]);
 
-        return response()->json($product);*/
-
+        if ($id == null) {
+            return response()->json(['message' => 'Id null'], 404);
+        }
 
         $product = Product::find($id);
+
+        if ($product == null) {
+            return response()->json(['message' => 'Product not found'], 404);
+        }
+
         if ($request->name != null) {
             $product->name = $request->name;
         }

@@ -69,7 +69,7 @@ onMounted(() => {
                     <p v-if="item.note!=null">Nota: {{item.note}}</p>
                     <p v-else>Nota: Sem nota</p>
                 </div>
-                <button @click="Comecar(item.id)">Comecar Preparo</button>
+                <button v-if="userStore.user?.type != 'EM'" @click="Comecar(item.id)">Comecar Preparo</button>
             </div>
     </ul>
 </template>

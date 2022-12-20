@@ -11,57 +11,67 @@ const toast = inject('toast')
 const socket = inject('socket')
 
 const fetchOrders = async () => {
+  try {
     let response = await axiosInjected.get('orders/P')
-    ordersPreparing.value = response.data
-     response = await axiosInjected.get('orders/R')
-     ordersReady.value = response.data
+    if (response.status == 200) {
+      ordersPreparing.value = response.data
+    }
+  } catch (error) {
+    toast.error('Não existem orders em espera de momento')
+  }
 
-     console.log(ordersPreparing.value)
-      console.log(ordersReady.value)
+  try {
+    response = await axiosInjected.get('orders/R')
+    if (response.status == 200) {
+      ordersReady.value = response.data
+    }
+  } catch (error) {
+    toast.error('Não existem orders prontas de momento')
+  }
 }
 
 socket.on('readyOrderPublic', (orderReady) => {
-    console.log("Recebi do socket")
-    //foreach order
-    ordersPreparing.value.forEach((order) => {
-      if(orderReady.id == order.id){
-        order.status = 'R'
-        ordersReady.value.push(order)
-        ordersPreparing.value = ordersPreparing.value.filter((elem) => elem.id != order.id)
-      }	
-    })
+  console.log("Recebi do socket")
+  //foreach order
+  ordersPreparing.value.forEach((order) => {
+    if (orderReady.id == order.id) {
+      order.status = 'R'
+      ordersReady.value.push(order)
+      ordersPreparing.value = ordersPreparing.value.filter((elem) => elem.id != order.id)
+    }
+  })
 })
 
 socket.on('deliverOrderPublic', (orderDelive) => {
-    console.log("Recebi do socket")
-    //foreach order
-    ordersReady.value.forEach((order) => {
-      if(orderDelive.id == order.id){
-        ordersReady.value = ordersReady.value.filter((elem) => elem.id != order.id)
-      }	
-    })
+  console.log("Recebi do socket")
+  //foreach order
+  ordersReady.value.forEach((order) => {
+    if (orderDelive.id == order.id) {
+      ordersReady.value = ordersReady.value.filter((elem) => elem.id != order.id)
+    }
+  })
 })
 
 onMounted(() => {
-    fetchOrders()
+  fetchOrders()
 })
 
 </script>
 
 <template>
 
-<div class="modal-body row">
-  <div class="col-md-6">
-    <h2>Pending:</h2>
-  <div v-for="order in ordersPreparing" :key="order.id">
-    <h3>{{order.id}}</h3>
+  <div class="modal-body row">
+    <div class="col-md-6">
+      <h2>Pending:</h2>
+      <div v-for="order in ordersPreparing" :key="order.id">
+        <h3>{{ order.ticket_number }}</h3>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <h2>Ready:</h2>
+      <div v-for="order in ordersReady" :key="order.id">
+        <h3 class="text-success">{{ order.ticket_number }}</h3>
+      </div>
+    </div>
   </div>
-  </div>
-  <div class="col-md-6">
-  <h2>Ready:</h2>
-  <div v-for="order in ordersReady" :key="order.id">
-    <h3  class="text-success" >{{order.id}}</h3>
-  </div>
-  </div>
-</div>
 </template>

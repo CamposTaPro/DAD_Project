@@ -12,13 +12,22 @@ defineProps({
 });
 
 const showModal = ref(false);
-const open = (product) => {
+const ProductModal = ref(false);
+
+const open = (product, index) => {
+    console.log($vfm.dynamicModals.length);
     showModal.value = true;
-    return product;
+    $vfm.show({
+        component: VueFinalModal,
+        props: {
+            product: product[index],
+        },
+    });
 };
 const close = () => {
     showModal.value = false;
 };
+
 
 
 const carrinho = useProductsStore()
@@ -64,9 +73,6 @@ watch(selectedType, (newType, oldType) => {
 
 
 const photoFullUrl = (product) => {
-    /*return product.photo_url
-        ? `${serverBaseUrl}/storage/products/${product.photo_url}`
-        : `${serverBaseUrl}/storage/products/none.png`*/
     return `${serverBaseUrl}/storage/products/${product.photo_url}`
 }
 
@@ -78,10 +84,7 @@ const addProduct = async (product) => {
 
 onMounted(() => {
     fetchProducts()
-    components: {
-        VueFinalModal,
-            ModalsContainer
-    }
+
 })
 
 </script>
@@ -104,33 +107,22 @@ onMounted(() => {
     </div>
 
     <div class="row">
-        <div class="col-sm-4" v-for="product in products" :key="product.id">
+        <div class="col-sm-4" v-for="product, index in products" :key="product.id">
             <div class="card my-1">
                 <img class="card-img-top" style="height: 18rem;object-fit: cover;" :src="photoFullUrl(product)" />
                 <div class="card-body">
                     <h5 src="card-title">{{ product.name }}</h5>
-                    <!--<p> {{ product.type }}</p>-->
                     <p src="card-text">{{ product.price }}€</p>
                 </div>
                 <div class="card-footer" style="display:inline;">
                     <button type="button" class="btn btn-primary" @click="addProduct(product)">Adicionar ao
                         carrinho</button>
+                    <!--HERE-->
+                    <!--Create a modal that shows a product selected-->
+                    <button type="button" class="btn btn-primary" @click="open(products, index)">Ver
+                        detalhes</button>
                     
-                    <v-button type="button" style="width:fit-content;" class="btn btn-primary"
-                        @click="open(product.id)">Detalhes</v-button>
-                    <vue-final-modal v-model="showModal"> 
-                        <div class="col-sm-4" style="display: flex;justify-content: center;align-items: center;">
-                        <div class="card my-1">
-                            <img class="card-img-top" style="height: 18rem;object-fit: cover;"
-                                :src="photoFullUrl(product)" />
-                            <div class="card-body">
-                                <h5 src="card-title">{{ product.name }}</h5>
-                                <!--<p> {{ product.type }}</p>-->
-                                <p src="card-text">{{ product.price }}€</p>
-                            </div>
-                        </div>
-                    </div>
-                    </vue-final-modal>
+                    <!--HERE-->
                 </div>
             </div>
         </div>
@@ -223,6 +215,4 @@ button:active {
     top: 0.5rem;
     right: 0.5rem;
 }
-
-
 </style>

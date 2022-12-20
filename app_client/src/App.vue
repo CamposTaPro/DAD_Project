@@ -111,7 +111,7 @@ socket.on('readyOrder', (order) => {
                 Product
               </router-link>
             </li>
-            <li class="nav-item w-100">
+            <li class="nav-item w-100" v-show="userStore.user?.type != 'EC' && userStore.user?.type != 'ED'">
               <router-link
                 class="nav-link"
                 :class="{ active: $route.name === 'Products' }"
@@ -146,6 +146,13 @@ socket.on('readyOrder', (order) => {
                 @click="clickMenuOption">
                 <i class="bi bi-people"></i>
                 Kitchen
+              </router-link>
+            </li>
+            <li class="nav-item w-100" v-show="userStore.user?.type == 'EC'|| userStore.user?.type == 'EM' ">
+              <router-link class="nav-link" :class="{ active: $route.name === 'FinishDish' }" :to="{ name: 'FinishDish' }"
+                @click="clickMenuOption">
+                <i class="bi bi-people"></i>
+                FinishDish
               </router-link>
             </li>
             <li class="nav-item w-100" v-show="userStore.user?.type == 'ED'||userStore.user?.type == 'EM' ">
