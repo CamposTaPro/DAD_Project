@@ -21,13 +21,31 @@ class UserController extends Controller
 
     public function destroy(int $id)
     {
+        if ($id == null) {
+            return response()->json(['message' => 'Id null'], 422);
+        }
+
         $user = User::find($id);
+
+        if ($user == null) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+
         $user->delete();
         return response()->json($user);
     }
 
     public function verifyEmail(User $user)
     {
+
+        if ($user == null) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+
+        if ($user->email_verified_at != null) {
+            return response()->json(['message' => 'Email already verified'], 409);
+        }
+
         $user->email_verified_at = now();
         $user->save();
         return Redirect::to('http://127.0.0.1:5173/');
@@ -75,14 +93,27 @@ class UserController extends Controller
 
     public function show(User $user)
     {
+        if ($user == null) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+
         return new UserResource($user);
     }
 
     public function update(Request $request, User $user)
     {
+        if ($user == null) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+
         try {
 
             $customer = Customer::where('user_id', $user->id)->first();
+
+            if ($customer == null) {
+                return response()->json(['message' => 'Customer not found'], 404);
+            }
+
             if ($request->has('name')) {
                 $user->name = $request->name;
             }
@@ -114,6 +145,10 @@ class UserController extends Controller
 
     public function update_password(UpdateUserPasswordRequest $request, User $user)
     {
+        if ($user == null) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+
         $user->password = bcrypt($request->validated()['password']);
         $user->save();
         return new UserResource($user);
@@ -146,7 +181,16 @@ class UserController extends Controller
 
     public function updateBlocked($id)
     {
+        if ($id == null) {
+            return response()->json(['message' => 'Id null'], 422);
+        }
+
         $user = User::find($id);
+
+        if ($user == null) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+
         $user->blocked = !$user->blocked;
         $user->save();
         return response()->json([
@@ -157,8 +201,23 @@ class UserController extends Controller
 
     public function updatePoints($id, Request $request)
     {
+
+        if ($id == null) {
+            return response()->json(['message' => 'Id null'], 422);
+        }
+
         $user = User::find($id);
+
+        if ($user == null) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+
         $customer = Customer::where('user_id', $user->id)->first();
+
+        if ($customer == null) {
+            return response()->json(['message' => 'Customer not found'], 404);
+        }
+
         $customer->points = $customer->points + $request->points;
         $customer->save();
         return response()->json([

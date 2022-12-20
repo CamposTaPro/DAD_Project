@@ -44,14 +44,12 @@ async function register(credentials) {
       default_payment_type: credentials.paymentType.toString(),
       default_payment_reference: credentials.default_payment_reference,
     });
-    console.log(response.data);
-    console.log(credentials.paymentType);
+
     toast.success("User " + credentials.name + " has registered sucessfuly.");
     router.push({ name: "Login" });
+
   } catch (error) {
-    console.log(error);
     credentials.password = "";
-    console.log(error.response.data.errors);
 
     if (error.response.data.errors.name) {
       toast.error(error.response.data.errors.name[0]);

@@ -1,7 +1,7 @@
 <script setup>
 import { ref, watch, inject } from 'vue'
 import { useRouter } from "vue-router"
-import axios  from 'axios'
+import axios from 'axios'
 
 const toast = inject("toast")
 
@@ -22,22 +22,20 @@ function readFile(event) {
 
 const createProduct = async () => {
     const productPhoto = file.value?.files[0]
-    if(productPhoto){
+    if (productPhoto) {
         const formData = new FormData()
         formData.append('file', productPhoto)
         formData.append('name', name.value)
         formData.append('type', type.value)
         formData.append('description', description.value)
         formData.append('price', price.value)
-        
-        
-        const response = await axios.post('http://server_api.test/api/products', formData,{
-        headers: {
-            'Content-Type':'multipart/form-data'
-        }
-        })
 
-        console.log(response)
+
+        const response = await axios.post('http://server_api.test/api/products', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        })
 
         if (response.status == 200) {
             toast.success('Product #' + response.data.id + ' was created successfully.')
