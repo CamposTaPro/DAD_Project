@@ -17,7 +17,28 @@ const fetchOrders = async () => {
         params: {
             status: 'P',
             type: "hot dish",
+            
             preparation_by: userStore.user.id
+        }
+    })
+    order_item.value = response.data
+    console.log("estou aqui")
+
+    if (order_item.value) {
+        order_item.value.forEach((item) => {
+
+            if (!status.value.includes(item.status)) {
+                status.value.push(item.status)
+            }
+        })
+    }
+}
+
+const fetchTodosOrders = async () => {
+    let response = await axios.get('orderitems_preparing', {
+        params: {
+            status: 'P',
+            type: "hot dish"
         }
     })
     order_item.value = response.data
@@ -31,6 +52,7 @@ const fetchOrders = async () => {
         })
     }
 }
+
 
 async function Terminar(order) {
     const response = await axios.patch(`orderitems/${order.id}/status`, {
@@ -57,7 +79,13 @@ onMounted(() => {
     if (userStore.user == null || userStore.user.type == 'C' || userStore.user.type == 'ED') {
         router.push('/')
     }
-    fetchOrders()
+    if(userStore.user.type == 'EC'){
+        fetchOrders()
+    }
+    if(userStore.user.type == 'EM'){
+        fetchTodosOrders()
+    }
+    
 
 })
 
@@ -76,8 +104,9 @@ onMounted(() => {
                     <p v-else>Nota: Sem nota</p>
                 </div>
                 <div class="card-footer">
-                    <button type="button" class="btn btn-secondary" v-if="userStore.user?.type != 'EM'"
+                    <button type="button" class="btn btn-primary" style="float:right;" v-if="userStore.user?.type != 'EM'"
                         @click="Terminar(item)">Prato Pronto</button>
+                    <p v-if="userStore.user?.type != 'EC'">Being prepared by: {{ item.preparation_by }}</p>
                 </div>
             </div>
         </div>

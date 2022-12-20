@@ -65,8 +65,8 @@ onMounted(() => {
                     <p v-if="item.note != null">Nota: {{ item.note }}</p>
                     <p v-else>Nota: Sem nota</p>
                 </div>
-                <div class="card-footer">
-                    <button type="button" class="btn btn-secondary" v-if="userStore.user?.type != 'EM'"
+                <div class="card-footer" v-if="userStore.user?.type != 'EM'">
+                    <button type="button" class="btn btn-primary" style="float:right;"
                         @click="Comecar(item.id)">Comecar Preparo</button>
                 </div>
             </div>
