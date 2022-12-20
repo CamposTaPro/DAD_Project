@@ -3,11 +3,12 @@
   import UserDetail from "./UserDetail.vue"
   import { useRouter, onBeforeRouteLeave } from 'vue-router'  
   import Forbidden from '../auth/Forbidden.vue'
-  
+  import { useUserStore } from "../../stores/user.js"
+
   const router = useRouter()  
   const axios = inject('axios')
   const toast = inject('toast')
-
+  const userStore = useUserStore()
   const response = ref('202')
 
   const props = defineProps({
@@ -94,7 +95,12 @@
 
   const cancel = () => {
     originalValueStr = dataAsString()
+    if(userStore.user.type=='EM'){
     router.push({ name: 'Users' })
+  }
+  else{
+    router.push({ name: 'home' })}
+
   }
 
   const dataAsString = () => {
