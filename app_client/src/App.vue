@@ -146,7 +146,7 @@ socket.on('readyOrder', (order) => {
               <router-link class="nav-link" :class="{ active: $route.name === 'FinishDish' }"
                 :to="{ name: 'FinishDish' }" @click="clickMenuOption">
                 <i class="bi bi-people"></i>
-                FinishDish
+                Finish Dish
               </router-link>
             </li>
             <li class="nav-item w-100" v-show="userStore.user?.type == 'ED' || userStore.user?.type == 'EM'">

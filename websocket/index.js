@@ -32,9 +32,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("newOrder", function (order) {
-    socket.in("caixa").emit("newOrder", order);
-    socket.in("admin").emit("newOrder", order);
-    socket.in("chefs").emit("newOrder", order);
+    socket.broadcast.emit('newOrder', order)
   });
 
   socket.on("blockOrUnblockUser", function (user) {
