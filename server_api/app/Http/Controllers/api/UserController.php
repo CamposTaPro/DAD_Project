@@ -41,11 +41,11 @@ class UserController extends Controller
             'nif' => 'required|numeric|unique:customers',
             'phone' => 'required|numeric|unique:customers',
             'default_payment_type' => 'required|string|in:VISA,PAYPAL,MBWAY',
-            'default_payment_reference' =>[Rule::when($request->default_payment_type == 'VISA', 'required|numeric|digits:16','required') , Rule::when($request->default_payment_type == 'PAYPAL', 'required|email','required'),Rule::when($request->default_payment_type == 'MBWAY', 'required|numeric|doesnt_start_with:0|regex:/^([0-9\s\-\+\(\)]*)$/|digits:9', 'required')]
+            'default_payment_reference' => [Rule::when($request->default_payment_type == 'VISA', 'required|numeric|digits:16', 'required'), Rule::when($request->default_payment_type == 'PAYPAL', 'required|email', 'required'), Rule::when($request->default_payment_type == 'MBWAY', 'required|numeric|doesnt_start_with:0|regex:/^([0-9\s\-\+\(\)]*)$/|digits:9', 'required')]
 
-         ]);
+        ]);
 
-        $user= new User();
+        $user = new User();
         $user->name = $request->name;
         $user->email = $request->email;
         $user->password = Hash::make($request->password);
@@ -67,7 +67,6 @@ class UserController extends Controller
             'user' => $user,
             'customer' => $customer
         ], 201);
-
     }
     public function index()
     {
@@ -100,12 +99,12 @@ class UserController extends Controller
                 $customer->default_payment_reference = $request->default_payment_reference;
             }
             $user->save();
-            if($customer){
+            if ($customer) {
                 $customer->save();
             }
 
             return new UserResource($user);
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Error updating user',
                 'error' => $e->getMessage()
@@ -131,8 +130,8 @@ class UserController extends Controller
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required',
             'type' => 'required|string|in:EC,ED',
-         ]);
-        $user= new User();
+        ]);
+        $user = new User();
         $user->name = $request->name;
         $user->email = $request->email;
         $user->password = Hash::make($request->password);
@@ -143,10 +142,10 @@ class UserController extends Controller
             'message' => 'User created successfully',
             'user' => $user
         ], 201);
-
     }
 
-    public function updateBlocked($id){
+    public function updateBlocked($id)
+    {
         $user = User::find($id);
         $user->blocked = !$user->blocked;
         $user->save();
@@ -156,7 +155,8 @@ class UserController extends Controller
         ], 200);
     }
 
-    public function updatePoints($id, Request $request){
+    public function updatePoints($id, Request $request)
+    {
         $user = User::find($id);
         $customer = Customer::where('user_id', $user->id)->first();
         $customer->points = $customer->points + $request->points;

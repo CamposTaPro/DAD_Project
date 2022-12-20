@@ -111,7 +111,7 @@ socket.on('readyOrder', (order) => {
                 Product
               </router-link>
             </li>
-            <li class="nav-item w-100">
+            <li class="nav-item w-100" v-show="userStore.user?.type != 'EC' && userStore.user?.type != 'ED'">
               <router-link
                 class="nav-link"
                 :class="{ active: $route.name === 'Products' }"
@@ -146,6 +146,13 @@ socket.on('readyOrder', (order) => {
                 @click="clickMenuOption">
                 <i class="bi bi-people"></i>
                 Kitchen
+              </router-link>
+            </li>
+            <li class="nav-item w-100" v-show="userStore.user?.type == 'EC'|| userStore.user?.type == 'EM' ">
+              <router-link class="nav-link" :class="{ active: $route.name === 'FinishDish' }" :to="{ name: 'FinishDish' }"
+                @click="clickMenuOption">
+                <i class="bi bi-people"></i>
+                FinishDish
               </router-link>
             </li>
             <li class="nav-item w-100" v-show="userStore.user?.type == 'ED'||userStore.user?.type == 'EM' ">
@@ -208,6 +215,7 @@ socket.on('readyOrder', (order) => {
               </router-link>
             </li> -->
           </ul>
+          
           <div class="d-block d-md-none">
             <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
               <span>User</span>
@@ -278,7 +286,7 @@ socket.on('readyOrder', (order) => {
   padding-top: 1rem;
 }
 .dropdown-item {
-  font-size: 0.875rem;
+  font-size: 80%;
 }
 .btn:focus {
   outline: none;
@@ -287,4 +295,5 @@ socket.on('readyOrder', (order) => {
 #sidebarMenu {
   overflow-y: auto;
 }
+
 </style>

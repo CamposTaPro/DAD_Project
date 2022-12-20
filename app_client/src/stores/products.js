@@ -9,11 +9,18 @@ export const useProductsStore = defineStore("products", () => {
   const router = useRouter();
 
   const products = ref([]);
+  const ticket = ref(0);
   const price = ref(0);
   const paymentType = ref("");
   const paymentReference = ref("");
   
-
+  function getTicket() {
+    if (ticket.value == 99){
+      ticket.value = 1
+    }
+    ticket.value += 1
+    return ticket.value;
+  }
 
   const totalProducts = computed(() => {
     return products.value.length;
@@ -67,5 +74,6 @@ export const useProductsStore = defineStore("products", () => {
     clearProducts,
     getPriceAllProducts,
     insertNoteInProduct,
+    getTicket
   };
 });

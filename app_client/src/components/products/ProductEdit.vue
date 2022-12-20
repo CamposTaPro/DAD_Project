@@ -52,7 +52,7 @@ const editProduct = async () => {
         formData.append('file', productPhoto)
     }
 
-    const response = await axios.post(`http://server_api.test/api/product/${props.id}/update`, formData, {
+    const response = await axios.post(`http://server_api.test/api/product/${props.id}`, formData, {
         headers: {
             'Content-Type': 'multipart/form-data'
         }
