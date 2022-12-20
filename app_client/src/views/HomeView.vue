@@ -10,6 +10,12 @@ const ordersReady = ref([])
 const toast = inject('toast')
 const socket = inject('socket')
 
+socket.on('newOrder', (order) => {
+    if (ordersPreparing.value.some((elem) => elem.id != order.id)) {
+        ordersPreparing.value.push(order)
+    }
+})
+
 const fetchOrders = async () => {
   try {
     let response = await axiosInjected.get('orders/P')

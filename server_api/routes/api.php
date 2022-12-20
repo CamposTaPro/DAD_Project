@@ -32,6 +32,7 @@ Route::middleware('auth:api')->group(function () {
     Route::delete('users/{user}', [UserController::class, 'destroy']);
     Route::post('employee', [UserController::class, 'createEmployee']);
     Route::patch('users/{users}/editpoints', [UserController::class, 'updatePoints']);
+    Route::get('employees', [UserController::class, 'showEmployes']);
 
     Route::get('order/pending', [OrderController::class, 'getOrderPending']);
     Route::patch('orders/{order}/status', [OrderController::class, 'updateStatus']);
