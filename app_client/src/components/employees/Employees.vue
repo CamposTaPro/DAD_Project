@@ -21,13 +21,12 @@ const loadUsers = (view = 1) => {
       });
     })
     .catch((error) => {
-      console.log(error);
+      //TODO handle error
     });
 };
 
 
   const editUser = (user) => {
-    console.log(user)
     router.push({ name: 'User', params: { id: user.id} })
   }
 

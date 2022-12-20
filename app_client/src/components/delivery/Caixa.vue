@@ -17,14 +17,9 @@ const fetchOrders = async () => {
 }
 
 socket.on('readyProduct', (product) => {
-    console.log("Recebi do socker")
-    //foreach order
     orders.value.forEach((order) => {
-        //foreach order itens
         order.order_itens.forEach((orderItem) => {
-            //if order item product id is equal to product id
             if (orderItem.id == product.id) {
-                //change order item status to ready
                 orderItem.status = 'R'
                 toast.success("Produto com o id " + product.id + " esta ready!")
             }
@@ -43,7 +38,6 @@ const CancelarOrder = async (order) => {
         status: 'C'
     });
 
-    console.log(response.data)
     orders.value = orders.value.filter((elem) => elem.id != order.id)
     toast.error("Order com o id " + order.id + " cancelada!")
 
@@ -62,10 +56,9 @@ const refund = (order) => {
     }).then((response) => {
         if (response.status == 201) {
             //TODO: alert
-            console.log("Refund successfully");
         }
     }).catch((error) => {
-        console.log(error.response.data.message)
+        //TODO: alert error
     })
 
 }
@@ -76,13 +69,14 @@ const EntregarOrder = async (order) => {
         status: 'R'
     });
 
+    //TODO: ver responsta do response
+
     socket.emit('readyOrder', order, order.customer_id)
     socket.emit('readyOrderPublic', order)
-    //change array orders order status to ready
+
     orders.value = orders.value.map((elem) => {
         if (elem.id == order.id) {
             elem.status = 'R'
-            console.log(elem)
         }
         return elem
     })
@@ -95,8 +89,10 @@ const OrderEntregue = async (order) => {
         status: 'D'
     });
 
+    //TODO ver resposta do response
+
     socket.emit('deliverOrderPublic', order)
-    console.log(response.data)
+
     orders.value = orders.value.filter((elem) => elem.id != order.id)
     toast.success("Order com o id " + order.id + " foi entregue!")
 

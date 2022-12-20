@@ -74,10 +74,9 @@ const validateForm = () => {
 
 const postOrderItems = async (orderItem) => {
     const response = await axiosInjected.post("orderitems", orderItem);
-    console.log(response.data);
 
     if (response.status == 200) {
-        console.log("deu fixe 2x");
+        //TODO: alert
     }
 }
 
@@ -101,9 +100,7 @@ const createOrder = async () => {
         payment_type: type.value,
         payment_reference: reference.value,
     });
-    console.log(response.data)
     if (response.status == 200) {
-        console.log("deu fixe");
 
         let order_id = response.data.id;
 
@@ -139,9 +136,8 @@ const verifyPayment = async () => {
         reference: reference.value,
         value: Number(value)
     });
-    console.log(response.status)
     if (response.status == 201) {
-        console.log("yau");
+        //TODO: alert
         createOrder();
     }
     if (response.status == 422) {
@@ -154,9 +150,8 @@ const changePoints = async () => {
     const response = axiosInjected.patch(`users/${userStore.userId}/editpoints`, {
         points: Math.floor((products.getPriceAllProducts() - userStore.discount) / 10) - userStore.points
     })
-    console.log(response.data)
     if (response.status == 200) {
-        console.log("deu fixe again");
+        //TODO: alert ???
     }
 }
 

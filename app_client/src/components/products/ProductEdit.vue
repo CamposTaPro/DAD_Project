@@ -34,8 +34,6 @@ const fetchProduct = async () => {
         photoUrl.value = response.data.photo_url
         photoUrl.value = `${serverBaseUrl}/storage/products/${photoUrl.value}`
     }
-
-    console.log(response.data)
 }
 
 const editProduct = async () => {
@@ -57,12 +55,11 @@ const editProduct = async () => {
             'Content-Type': 'multipart/form-data'
         }
     })
-    console.log(response);
+
     if (response.status == 200) {
-        console.log("Deu fixe")
         router.push('/producttable')
     } else {
-        console.log("Deu merda")
+        //TODO - tratar erro se preciso
     }
 
 }

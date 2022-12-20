@@ -20,7 +20,6 @@
 
   socket.on('blockOrUnblockUser', (user) => {
 
-    console.log('cheguei')
     users.value.data.forEach((u) => {
       if (u.id == user.id) {
         u.blocked = user.blocked
@@ -46,12 +45,11 @@ toast.success('O utilizador '+user.name+' foi apagado!');
           users.value = response.data
         })
         .catch((error) => {
-          console.log(error)
+          //TODO handle error
         })
     }
 
   const editUser = (user) => {
-    console.log(user)
     router.push({ name: 'User', params: { id: user.id} })
   }
 
