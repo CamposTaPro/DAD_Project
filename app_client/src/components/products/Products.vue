@@ -2,6 +2,7 @@
 import { ref, inject, onMounted, watch, toDisplayString } from 'vue'
 import { useProductsStore } from '@/stores/products.js'
 import { $vfm, VueFinalModal, ModalsContainer } from 'vue-final-modal'
+import { useUserStore } from "../../stores/user.js"
 
 //TODO - preciso?????
 defineProps({
@@ -13,6 +14,8 @@ defineProps({
 
 
 // ----------- TODO: apagar???? -------------
+
+const userStore = useUserStore()
 const showModal = ref(false);
 const ProductModal = ref(false);
 
@@ -114,6 +117,10 @@ onMounted(() => {
                 <div class="card-body">
                     <h5 src="card-title">{{ product.name }}</h5>
                     <p src="card-text">{{ product.price }}€</p>
+                </div>
+                <div class="card-body" v-if="userStore.user != null && userStore.user.type == 'EM'">
+                    <p src="card-text">Tipo: {{ product.type }}</p>
+                    <p src="card-text">Descricao: {{ product.description }}</p>
                 </div>
                 <div class="card-footer" style="display:inline;">
                     <button type="button" class="btn btn-primary" @click="addProduct(product)">Adicionar ao

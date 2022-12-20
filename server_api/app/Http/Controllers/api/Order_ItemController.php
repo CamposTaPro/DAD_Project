@@ -79,8 +79,28 @@ class Order_ItemController extends Controller
         return response()->json($order_item);
     }
 
+    public function show_preparing(Request $request,Order_Item $order_item){
+        //VERIFY --parece estar certo
+        $request->validate([
+            'status' => 'required|string|in:P',
+            'type' => 'required|string|in:hot dish',
+        ]);
+
+        if ($order_item == null) {
+            return response()->json(['message' => 'Order item not found'], 404);
+        }
+
+        $order_item= Order_ItemResource::collection(Order_Item::where('status', $request->status)->get()->where('product.type', $request->type));
+
+        if ($order_item->isEmpty()) {
+            return response()->json();
+        }
+
+        return response()->json($order_item);
+    }
+
     public function show_my_preparation(Request $request,Order_Item $order_item){
-        //VERIFY -- parece estar certo 
+        //VERIFY -- parece estar certo
         $request->validate([
             'status' => 'required|string|in:P',
             'type' => 'required|string|in:hot dish',
