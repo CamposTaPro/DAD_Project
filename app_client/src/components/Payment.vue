@@ -87,7 +87,7 @@ const createOrder = async () => {
     }
 
     const response = await axiosInjected.post("orders", {
-        ticket_number: products.getTicket(), //VERIFY --(mudei o if dentro da funcao de ticket.value == 99 para ticket.value >= 99 so para ter a certeza )
+        ticket_number: await products.getTicket(), //VERIFY --(mudei o if dentro da funcao de ticket.value == 99 para ticket.value >= 99 so para ter a certeza )
         status: "P",
         customer_id: userId,
         total_price: products.getPriceAllProducts(),

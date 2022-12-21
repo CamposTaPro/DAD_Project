@@ -114,6 +114,13 @@ class OrderController extends Controller
         }
     }
 
+    public function getTicketNumber(){
+
+        $ticket_number = Order::where('date', date('Y-m-d'))->orderBy('ticket_number', 'desc')->first();
+      
+        return response()->json($ticket_number);
+    }
+
     public function getPointsCustomerMonthly(Customer $customer) {
         if ($customer == null) {
             return response()->json(['message' => 'Customer not found'], 404);
