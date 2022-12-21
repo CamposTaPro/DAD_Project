@@ -11,6 +11,13 @@ const order_item = ref([])
 const userStore = useUserStore()
 const socket = inject("socket")
 
+socket.on('preparingHotDish', (order) => {
+fetchOrders()
+})
+
+socket.on('readyProduct', (order) => {
+    order_item.value = order_item.value.filter((item) => item.id != order.id)
+})
 
 const fetchOrders = async () => {
     let response = await axios.get('orderitems_preparationby', {

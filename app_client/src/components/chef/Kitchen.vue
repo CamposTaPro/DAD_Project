@@ -9,6 +9,11 @@ const router = useRouter();
 const status = ref([])
 const order_item = ref([])
 const userStore = useUserStore()
+const socket = inject("socket")
+
+socket.on('newHotDish', (order) => {
+    fetchOrders()
+})
 
 const fetchOrders = async () => {
     let response = await axios.get('orderitems_hotdishes', {
@@ -34,6 +39,7 @@ async function Comecar(id) {
         status: 'P',
         preparation_by: userStore.user.id
     });
+    socket.emit('preparingHotDish', response.data)
     router.go()
 }
 

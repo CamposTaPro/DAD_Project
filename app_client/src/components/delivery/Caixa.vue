@@ -54,7 +54,7 @@ const CancelarOrder = async (order) => {
 
     orders.value = orders.value.filter((elem) => elem.id != order.id)
     toast.error("Order com o id " + order.id + " cancelada!")
-
+    socket.emit('cancelOrder', order, order.customer_id)
     refund(order);
 }
 

@@ -16,6 +16,10 @@ socket.on('newOrder', (order) => {
     }
 })
 
+socket.on('cancelOrder', (order) => {
+    ordersPreparing.value = ordersPreparing.value.filter((elem) => elem.id != order.id)
+})
+
 const fetchOrders = async () => {
   try {
     let response = await axiosInjected.get('orders/P')

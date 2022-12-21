@@ -13,10 +13,20 @@ httpServer.listen(8080, () => {});
 io.on("connection", (socket) => {
   socket.on("newHotDish", (product) => {
     socket.in("chefs").emit("newHotDish", product);
+    socket.in("admin").emit("newHotDish", product);
+
   });
+
+  socket.on("preparingHotDish", (product) => {
+    socket.in("chefs").emit("preparingHotDish", product);
+    socket.in("admin").emit("preparingHotDish", product);
+
+  });
+
 
   socket.on("readyProduct", (product) => {
     socket.in("caixa").emit("readyProduct", product);
+    socket.in("admin").emit("readyProduct", product);
   });
 
   socket.on("readyOrder", function (order, id) {
@@ -35,10 +45,16 @@ io.on("connection", (socket) => {
     socket.broadcast.emit('newOrder', order)
   });
 
+  socket.on("cancelOrder", function (order, id) {
+    socket.broadcast.except(id).emit("cancelOrder", order);
+    socket.in(id).emit("cancelOrder", order);
+  });
+
   socket.on("blockOrUnblockUser", function (user) {
     socket.in("admin").emit("blockOrUnblockUser", user);
   });
 
+  
   socket.on("deleteUser", function (user) {
     socket.in("admin").emit("deleteUser", user);
   });
@@ -60,5 +76,6 @@ io.on("connection", (socket) => {
     socket.leave(user.id);
     socket.leave("chefs");
     socket.leave("caixa");
+    socket.leave("admin");
   });
 });
