@@ -19,7 +19,7 @@ const loadOrders = async () => {
 }
 
 onMounted(()=> {
-    if (userStore.userId == -1 || userStore.userType != "C") {
+    if (userStore.userId == -1 || userStore.user.type != "C") {
         router.push({ name: 'home' })
     }
 
