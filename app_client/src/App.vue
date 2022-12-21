@@ -32,6 +32,10 @@ socket.on('readyOrder', (order) => {
   toast.success("Order com o id " + order.id + " esta pronta para ser entregue!")
 })
 
+socket.on('cancelOrder', (order) => {
+  toast.error("Order com o id " + order.id + " foi cancelada!")
+})
+
 </script>
 
 <template>
