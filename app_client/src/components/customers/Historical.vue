@@ -1,10 +1,12 @@
 <script setup>
 import { ref, inject, onMounted, watch } from 'vue'
 import { useUserStore } from "@/stores/user.js";
+import { useRouter, RouterLink, RouterView } from "vue-router"
 
 //const serverBaseUrl = inject("serverBaseUrl");
 const axios = inject("axios");
 const userStore = useUserStore();
+const router = useRouter();
 
 const orders = ref([]);
 
@@ -17,6 +19,10 @@ const loadOrders = async () => {
 }
 
 onMounted(()=> {
+    if (userStore.userId == -1 || userStore.userType != "C") {
+        router.push({ name: 'home' })
+    }
+
     loadOrders();
 })
 
