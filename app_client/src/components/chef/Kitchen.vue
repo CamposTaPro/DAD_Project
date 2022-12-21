@@ -46,8 +46,9 @@ const photoFullUrl = (product) => {
 onMounted(() => {
     if (userStore.user == null || userStore.user.type == 'C' || userStore.user.type == 'ED') {
         router.push('/')
+    } else {
+        fetchOrders()
     }
-    fetchOrders()
 
 })
 

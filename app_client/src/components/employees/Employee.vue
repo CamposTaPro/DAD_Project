@@ -40,7 +40,7 @@ const createEmployee = async () => {
   }
 };
 onMounted(() => {
-  if (userStore.user.type != "EM") {
+  if (userStore.user == null || userStore.user.type != "EM") {
     router.push({ name: "home" });
   }
 });
@@ -58,21 +58,11 @@ onMounted(() => {
           </div>
           <div class="form-group">
             <label for="description">Email</label>
-            <input
-              type="text"
-              class="form-control"
-              id="email"
-              v-model="email"
-            />
+            <input type="text" class="form-control" id="email" v-model="email" />
           </div>
           <div class="form-group">
             <label for="description">Password</label>
-            <input
-              type="password"
-              class="form-control"
-              id="password"
-              v-model="password"
-            />
+            <input type="password" class="form-control" id="password" v-model="password" />
           </div>
           <br />
           <div>
@@ -86,13 +76,13 @@ onMounted(() => {
           <button type="submit" class="btn btn-primary" @click="createEmployee">
             Submit
           </button>
-          <RouterLink to="/employees" class="btn btn-secondary"
-            >Go Back</RouterLink
-          >
+          <RouterLink to="/employees" class="btn btn-secondary">Go Back</RouterLink>
         </form>
       </div>
     </div>
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+
+</style>

@@ -32,7 +32,7 @@ const loadUsers = (view = 1) => {
   }
 
 onMounted(() => {
-  if(userStore.user.type!="EM"){
+  if(userStore.user == null || userStore.user.type!="EM"){
     router.push({ name: 'home' })
   }
   loadUsers();
