@@ -33,6 +33,7 @@ Route::middleware('auth:api')->group(function () {
     Route::delete('users/{user}', [UserController::class, 'destroy']);
     Route::post('employee', [UserController::class, 'createEmployee']);
     Route::patch('users/{users}/editpoints', [UserController::class, 'updatePoints']);
+    Route::get('employees', [UserController::class, 'showEmployes']);
 
     Route::get('order/pending', [OrderController::class, 'getOrderPending']);
     Route::get('orders/totalmonth', [OrderController::class, 'getOrdersfromMonthly']);
@@ -44,6 +45,7 @@ Route::middleware('auth:api')->group(function () {
     Route::patch('orders/{order}/status', [OrderController::class, 'updateStatus']);
 
     Route::get('orderitems_hotdishes', [Order_ItemController::class, 'show_hot_dish']);
+    Route::get('orderitems_preparing', [Order_ItemController::class, 'show_preparing']);
     Route::get('orderitems_preparationby', [Order_ItemController::class, 'show_my_preparation']);
     Route::patch('orderitems/{order_item}/status', [Order_ItemController::class, 'updateStatus']);
 

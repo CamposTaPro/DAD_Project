@@ -92,6 +92,11 @@ class UserController extends Controller
         return UserResource::collection(User::paginate(20));
     }
 
+    public function showEmployes()
+    {
+        return UserResource::collection(User::where('type','LIKE','EM')->orWhere('type','LIKE','EC')->orWhere('type','LIKE','ED')->paginate(10));
+    }
+
     public function show(User $user)
     {
         if ($user == null) {

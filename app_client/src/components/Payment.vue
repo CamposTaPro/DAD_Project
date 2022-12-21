@@ -14,6 +14,7 @@ const axiosInjected = inject('axios')
 
 const type = ref('');
 const reference = ref('');
+const socket = inject('socket')
 
 
 const fetchUser = async () => {
@@ -69,6 +70,10 @@ const postOrderItems = async (orderItem) => {
     const response = await axiosInjected.post("orderitems", orderItem);
 
     if (response.status == 200) {
+        
+        if(orderItem.status == "W"){
+            socket.emit('newHotDish', {product: orderItem});
+        }
         toast.success("Order created successfully")
     }
 }
@@ -116,6 +121,10 @@ const createOrder = async () => {
     if (userStore.userId != -1){
         changePoints();
     }
+       
+    let order = response.data;
+    order.order_itens = products;
+    socket.emit('newOrder', order);
     products.clearProducts();
     //TODO: alert(aqui é preciso??)
     router.push('/')
