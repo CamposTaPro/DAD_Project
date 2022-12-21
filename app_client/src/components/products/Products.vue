@@ -1,6 +1,7 @@
 <script setup>
 import { ref, inject, onMounted, watch, toDisplayString } from 'vue'
 import { useProductsStore } from '@/stores/products.js'
+import { useRouter } from "vue-router"
 import { $vfm, VueFinalModal, ModalsContainer } from 'vue-final-modal'
 import { useUserStore } from "../../stores/user.js"
 
@@ -13,29 +14,12 @@ defineProps({
 });
 
 
-// ----------- TODO: apagar???? -------------
-const userStore = useUserStore()
-const showModal = ref(false);
-const ProductModal = ref(false);
-
-const open = (product, index) => {
-    showModal.value = true;
-    $vfm.show({
-        component: VueFinalModal,
-        props: {
-            product: product[index],
-        },
-    });
-};
-const close = () => {
-    showModal.value = false;
-};
-// ----------- TODO: apagar???? -------------
-
 
 const carrinho = useProductsStore()
 const axios = inject('axios')
 const serverBaseUrl = inject("serverBaseUrl");
+const router = useRouter()
+const userStore = useUserStore();
 
 const products = ref([])
 const selectedType = ref(null)
@@ -86,8 +70,11 @@ const addProduct = async (product) => {
 
 
 onMounted(() => {
-    fetchProducts()
-
+    if (userStore.user == null || userStore.user.type != 'EM'){
+        router.push('/')
+    } else {
+       fetchProducts()
+    }
 })
 
 </script>
@@ -117,18 +104,13 @@ onMounted(() => {
                     <h5 src="card-title">{{ product.name }}</h5>
                     <p src="card-text">{{ product.price }}€</p>
                 </div>
-                <div class="card-body" v-if="userStore.user != null">
-                    <div v-if="userStore.user.type == 'EM'">
+                <div class="card-body" v-if="userStore.user != null && userStore.user.type == 'EM'">
                     <p src="card-text">Tipo: {{ product.type }}</p>
                     <p src="card-text">Descricao: {{ product.description }}</p>
-                    </div>
                 </div>
                 <div class="card-footer" style="display:inline;">
                     <button type="button" class="btn btn-primary" @click="addProduct(product)">Adicionar ao
                         carrinho</button>
-                    <!--TODO: apagar????-->
-                    <!--Create a modal that shows a product selected-->          
-                    <!--TODO: apagar????-->
                 </div>
             </div>
         </div>

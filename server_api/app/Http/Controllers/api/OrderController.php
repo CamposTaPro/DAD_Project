@@ -3,11 +3,12 @@
 namespace App\Http\Controllers\api;
 
 use App\Models\Order;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use Illuminate\Validation\Rule;
-use App\Models\Order_Item;
 use App\Models\Product;
+use App\Models\Customer;
+use App\Models\Order_Item;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use App\Http\Controllers\Controller;
 
 class OrderController extends Controller
 {
@@ -111,5 +112,147 @@ class OrderController extends Controller
                 'error' => $e->getMessage()
             ], 422);
         }
+    }
+
+    public function getPointsCustomerMonthly(Customer $customer) {
+        if ($customer == null) {
+            return response()->json(['message' => 'Customer not found'], 404);
+        }
+
+        $orders = Order::where('customer_id', $customer->id)->get();
+
+        if ($orders->isEmpty()) {
+            return response()->json();
+        }
+
+        $points_gained = 0;
+        $date = date('Y-m-d');
+        $date = strtotime($date);
+        $date = strtotime("-30 day", $date);
+        $date = date('Y-m-d', $date);
+
+        foreach ($orders as $order) {
+            if ($order->date >= $date) {
+                $points_gained += $order->points_gained;
+            }
+        }
+        return $points_gained;
+    }
+
+    public function getPointsCustomerTotal(Customer $customer){
+        if ($customer == null) {
+            return response()->json(['message' => 'Customer not found'], 404);
+        }
+
+        $orders = Order::where('customer_id', $customer->id)->get();
+
+        if ($orders->isEmpty()) {
+            return response()->json();
+        }
+
+        $points_gained = 0;
+
+        foreach ($orders as $order) {
+            $points_gained += $order->points_gained;
+        }
+        return $points_gained;
+    }
+
+    public function getMoneySpentMonthly(Customer $customer) {
+        if ($customer == null) {
+            return response()->json(['message' => 'Customer not found'], 404);
+        }
+
+        $orders = Order::where('customer_id', $customer->id)->get();
+
+        if ($orders->isEmpty()) {
+            return response()->json();
+        }
+
+        $total_paid = 0;
+        $date = date('Y-m-d');
+        $date = strtotime($date);
+        $date = strtotime("-30 day", $date);
+        $date = date('Y-m-d', $date);
+
+        foreach ($orders as $order) {
+            if ($order->date >= $date) {
+                $total_paid += $order->total_paid;
+            }
+        }
+        return $total_paid;
+    }
+
+    public function getMoneySavedFromPointsMonthly(Customer $customer) {
+        if ($customer == null) {
+            return response()->json(['message' => 'Customer not found'], 404);
+        }
+
+        $orders = Order::where('customer_id', $customer->id)->get();
+
+        if ($orders->isEmpty()) {
+            return response()->json();
+        }
+
+        $total_paid_with_points = 0;
+        $date = date('Y-m-d');
+        $date = strtotime($date);
+        $date = strtotime("-30 day", $date);
+        $date = date('Y-m-d', $date);
+
+        foreach ($orders as $order) {
+            if ($order->date >= $date) {
+                $total_paid_with_points += $order->total_paid_with_points;
+            }
+        }
+        return $total_paid_with_points;
+    }
+
+    public function getOrdersMonthly(Customer $customer){
+        if ($customer == null) {
+            return response()->json(['message' => 'Customer not found'], 404);
+        }
+
+        $orders = Order::where('customer_id', $customer->id)->get();
+
+        if ($orders->isEmpty()) {
+            return response()->json();
+        }
+
+        $date = date('Y-m-d');
+        $date = strtotime($date);
+        $date = strtotime("-30 day", $date);
+        $date = date('Y-m-d', $date);
+
+        $orders_monthly = 0;
+
+        foreach ($orders as $order) {
+            if ($order->date >= $date) {
+                $orders_monthly++;
+            }
+        }
+        return $orders_monthly;
+    }
+
+    public function getOrdersfromMonthly() {
+        $orders = Order::all();
+
+        if ($orders->isEmpty()) {
+            return response()->json();
+        }
+
+        $date = date('Y-m-d');
+        $date = strtotime($date);
+        $date = strtotime("-30 day", $date);
+        $date = date('Y-m-d', $date);
+
+        $orders_monthly = 0;
+
+        foreach ($orders as $order) {
+            if ($order->date >= $date) {
+                $orders_monthly++;
+            }
+        }
+        return $orders_monthly;
     }
 }

@@ -1,9 +1,11 @@
 <script setup>
 import { ref, inject, onMounted, watch } from 'vue'
 import { useUserStore } from "../../stores/user.js"
+import { useRouter, RouterLink, RouterView } from "vue-router"
 import axios from 'axios'
 
 const axiosInjected = inject('axios')
+const router = useRouter();
 
 const orders = ref([])
 const userStore = useUserStore()
@@ -37,6 +39,10 @@ socket.on('readyProduct', (product) => {
 
 
 onMounted(() => {
+    if (userStore.user == null || userStore.user.type == 'C' || userStore.user.type == 'EC') {
+        router.push({ name: 'home' })
+    }
+
     fetchOrders()
 })
 

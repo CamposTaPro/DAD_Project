@@ -46,8 +46,9 @@ const photoFullUrl = (product) => {
 onMounted(() => {
     if (userStore.user == null || userStore.user.type == 'C' || userStore.user.type == 'ED') {
         router.push('/')
+    } else {
+        fetchOrders()
     }
-    fetchOrders()
 
 })
 
@@ -66,8 +67,7 @@ onMounted(() => {
                     <p v-else>Nota: Sem nota</p>
                 </div>
                 <div class="card-footer" v-if="userStore.user?.type != 'EM'">
-                    <button type="button" class="btn btn-primary" style="float:right;"
-                        @click="Comecar(item.id)">Comecar Preparo</button>
+                    <button type="button" class="btn btn-secondary" @click="Comecar(item.id)">Comecar Preparo</button>
                 </div>
             </div>
         </div>

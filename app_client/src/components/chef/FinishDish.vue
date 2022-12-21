@@ -22,7 +22,6 @@ const fetchOrders = async () => {
         }
     })
     order_item.value = response.data
-    console.log("estou aqui")
 
     if (order_item.value) {
         order_item.value.forEach((item) => {
@@ -53,7 +52,6 @@ const fetchTodosOrders = async () => {
     }
 }
 
-
 async function Terminar(order) {
     const response = await axios.patch(`orderitems/${order.id}/status`, {
         status: 'R',
@@ -65,11 +63,6 @@ async function Terminar(order) {
 
 
 const photoFullUrl = (product) => {
-
-    /*return product.photo_url
-        ? `${serverBaseUrl}/storage/products/${product.photo_url}`
-        : `${serverBaseUrl}/storage/products/none.png`                                      estava comentado ate aqui
-    */
     return `${serverBaseUrl}/storage/products/${product}`
 }
 
@@ -78,14 +71,11 @@ const photoFullUrl = (product) => {
 onMounted(() => {
     if (userStore.user == null || userStore.user.type == 'C' || userStore.user.type == 'ED') {
         router.push('/')
-    }
-    if(userStore.user.type == 'EC'){
+    } else if (userStore.user?.type == 'EM') {
+        fetchTodosOrders()
+    } else {
         fetchOrders()
     }
-    if(userStore.user.type == 'EM'){
-        fetchTodosOrders()
-    }
-    
 
 })
 
@@ -103,10 +93,8 @@ onMounted(() => {
                     <p v-if="item.note != null">Nota: {{ item.note }}</p>
                     <p v-else>Nota: Sem nota</p>
                 </div>
-                <div class="card-footer">
-                    <button type="button" class="btn btn-primary" style="float:right;" v-if="userStore.user?.type != 'EM'"
-                        @click="Terminar(item)">Prato Pronto</button>
-                    <p v-if="userStore.user?.type != 'EC'">Being prepared by: {{ item.preparation_by }}</p>
+                <div class="card-footer" v-if="userStore.user?.type != 'EM'">
+                    <button type="button" class="btn btn-secondary" @click="Terminar(item)">Prato Pronto</button>
                 </div>
             </div>
         </div>
