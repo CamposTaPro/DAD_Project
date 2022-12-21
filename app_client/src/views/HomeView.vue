@@ -27,7 +27,7 @@ const fetchOrders = async () => {
       ordersPreparing.value = response.data
     }
   } catch (error) {
-    toast.error('Não existem orders em espera de momento')
+    //toast.error('Não existem orders em espera de momento')
   }
 
   try {
@@ -36,7 +36,7 @@ const fetchOrders = async () => {
       ordersReady.value = response.data
     }
   } catch (error) {
-    toast.error('Não existem orders prontas de momento')
+    //toast.error('Não existem orders prontas de momento')
   }
 }
 

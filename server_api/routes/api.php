@@ -29,14 +29,14 @@ Route::middleware('auth:api')->group(function () {
     Route::patch('users/{user}/password', [UserController::class, 'update_password'])
         ->middleware('can:updatePassword,user');
 
-    Route::get('employees/totalmonth', [UserController::class, 'getTotalEmployeesMonthly']);
+
     Route::delete('users/{user}', [UserController::class, 'destroy']);
     Route::post('employee', [UserController::class, 'createEmployee']);
     Route::patch('users/{users}/editpoints', [UserController::class, 'updatePoints']);
     Route::get('employees', [UserController::class, 'showEmployes']);
 
     Route::get('order/pending', [OrderController::class, 'getOrderPending']);
-    Route::get('orders/totalmonth', [OrderController::class, 'getOrdersfromMonthly']);
+
     Route::get('orders/{customer}/points', [OrderController::class, 'getPointsCustomerMonthly']);
     Route::get('orders/{customer}/pointstotal', [OrderController::class, 'getPointsCustomerTotal']);
     Route::get('orders/{customer}/moneyspentmonth', [OrderController::class, 'getMoneySpentMonthly']);
@@ -50,7 +50,7 @@ Route::middleware('auth:api')->group(function () {
     Route::patch('orderitems/{order_item}/status', [Order_ItemController::class, 'updateStatus']);
 
     Route::get('customer/{customer}/orders', [CustomerController::class, 'showOrders']);
-    Route::get('customers/totalmonth', [CustomerController::class, 'getTotalCustomersMonthly']);
+
 
     Route::delete('products/{product}', [ProductController::class, 'destroy']); //TODO - para isto já tenho permissão ??? (tem alguma coisa a haver com o middleware de autenticação)
 
@@ -70,3 +70,7 @@ Route::patch('product/{id}', [ProductController::class, 'update']); //TODO (tem 
 Route::post('products', [ProductController::class, 'store']); //TODO (tem alguma coisa a haver com o middleware de autenticação)
 
 Route::get('orders-ticket', [OrderController::class, 'getTicketNumber']);
+
+Route::get('orders/totalmonth', [OrderController::class, 'getOrdersfromMonthly']);
+Route::get('employees/totalmonth', [UserController::class, 'getTotalEmployeesMonthly']);
+Route::get('customers/totalmonth', [CustomerController::class, 'getTotalCustomersMonthly']);

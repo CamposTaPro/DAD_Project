@@ -27,7 +27,7 @@ const props = defineProps({
 
 const fetchProduct = async () => {
 
-    const response = await axios.get(`http://server_api.test/api/product/${props.id}`)
+    const response = await axios.get(`http://172.22.21.112/api/product/${props.id}`)
     if (response.status == 200) {
         name.value = response.data.name
         description.value = response.data.description
@@ -52,7 +52,7 @@ const editProduct = async () => {
         formData.append('file', productPhoto)
     }
 
-    const response = await axios.post(`http://server_api.test/api/product/${props.id}`, formData, {
+    const response = await axios.post(`http://172.22.21.112/api/product/${props.id}`, formData, {
         headers: {
             'Content-Type': 'multipart/form-data'
         }

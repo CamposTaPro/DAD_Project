@@ -49,7 +49,7 @@ class UserController extends Controller
 
         $user->email_verified_at = now();
         $user->save();
-        return Redirect::to('http://127.0.0.1:5173/');
+        return Redirect::to('http://172.22.21.112/');
     }
     public function create(Request $request)
     {
@@ -94,7 +94,7 @@ class UserController extends Controller
 
     public function showEmployes()
     {
-        return UserResource::collection(User::where('type','LIKE','EM')->orWhere('type','LIKE','EC')->orWhere('type','LIKE','ED')->paginate(10));
+        return UserResource::collection(User::where('type', 'LIKE', 'EM')->orWhere('type', 'LIKE', 'EC')->orWhere('type', 'LIKE', 'ED')->paginate(10));
     }
 
     public function show(User $user)
@@ -114,10 +114,12 @@ class UserController extends Controller
 
         try {
 
-            $customer = Customer::where('user_id', $user->id)->first();
+            if ($user->type == 'C') {
+                $customer = Customer::where('user_id', $user->id)->first();
 
-            if ($customer == null) {
-                return response()->json(['message' => 'Customer not found'], 404);
+                if ($customer == null) {
+                    return response()->json(['message' => 'Customer not found'], 404);
+                }
             }
 
             if ($request->has('name')) {
@@ -232,7 +234,8 @@ class UserController extends Controller
         ], 200);
     }
 
-    public function getTotalEmployeesMonthly() {
+    public function getTotalEmployeesMonthly()
+    {
         $users = User::where('type', 'EC')->orWhere('type', 'ED')->get();
 
         $total = 0;

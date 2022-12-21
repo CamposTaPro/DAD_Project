@@ -74,7 +74,7 @@ const postOrderItems = async (orderItem) => {
         if(orderItem.status == "W"){
             socket.emit('newHotDish', {product: orderItem});
         }
-        toast.success("Order created successfully")
+        //toast.success("Order created successfully")
     }
 }
 
@@ -124,8 +124,8 @@ const createOrder = async () => {
        
     let order = response.data;
     order.order_itens = products;
-    socket.emit('newOrder', order);
     products.clearProducts();
+    socket.emit('newOrder', order);
     //TODO: alert(aqui é preciso??)
     router.push('/')
 }
@@ -140,6 +140,7 @@ const verifyPayment = async () => {
     });
     if (response.status == 201) {
         toast.success("Payment verified successfully")
+        router.push({ name: "Login" });
         createOrder();
     }
     if (response.status == 422) {
