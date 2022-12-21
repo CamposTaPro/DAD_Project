@@ -1,11 +1,13 @@
 <script setup>
 import { ref, inject, onMounted, watch } from 'vue'
 import { useRouter, RouterLink, RouterView } from "vue-router"
+import { useUserStore } from "@/stores/user.js";
 import axios from 'axios'
 
 //const axios = inject('axios')
 const serverBaseUrl = inject("serverBaseUrl");
 const router = useRouter();
+const userStore = useUserStore();
 
 const name = ref('')
 const description = ref('')
@@ -98,7 +100,11 @@ const validateForm = () => {
 }
 
 onMounted(() => {
-    fetchProduct()
+    if (userStore.user == null || userStore.user.type != 'EM'){
+        router.push('/')
+    }else {
+        fetchProduct()
+    }
 })
 
 </script>

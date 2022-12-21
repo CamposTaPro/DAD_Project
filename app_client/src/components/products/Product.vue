@@ -1,11 +1,13 @@
 <script setup>
-import { ref, watch, inject } from 'vue'
+import { ref, watch, inject, onMounted } from 'vue'
 import { useRouter } from "vue-router"
 import axios from 'axios'
+import { useUserStore } from "@/stores/user.js";
 
 const toast = inject("toast")
 
 const router = useRouter()
+const userStore = useUserStore();
 
 const name = ref('')
 const description = ref('')
@@ -74,6 +76,12 @@ const validateForm = () => {
         toast.error('Price must be greater than 0!')
     }
 }
+
+onMounted(() => {
+    if (userStore.user == null || userStore.user.type != 'EM'){
+        router.push('/')
+    }
+})
 
 </script>
 

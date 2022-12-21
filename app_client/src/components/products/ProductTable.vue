@@ -1,10 +1,12 @@
 <script setup>
 import { ref, inject, onMounted, watch } from 'vue'
 import { useRouter, RouterLink, RouterView } from "vue-router"
+import { useUserStore } from "@/stores/user.js";
 
 const axios = inject('axios')
 const serverBaseUrl = inject("serverBaseUrl");
 const router = useRouter();
+const userStore = useUserStore();
 
 const products = ref([])
 
@@ -30,7 +32,11 @@ const editProduct = (id) => {
 }
 
 onMounted(() => {
-    fetchProducts()
+    if (userStore.user == null || userStore.user.type != 'EM'){
+        router.push('/')
+    } else{
+       fetchProducts()
+    }
 })
 </script>
 
