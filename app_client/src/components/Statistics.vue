@@ -66,9 +66,8 @@ const getOrdersFromThisMonth = async () => {
 }
 
 onMounted(() => {
-    if (userStore.user == null || userStore.user == 'ED' || userStore.user == 'EC') {
-        console.log("aqui")
-        router.push({ name: "home" });
+    if (userStore.user == null || userStore.user.type == 'ED' || userStore.user.type == 'EC') {
+        router.push('/');
     }
 
     userStore.loadUser

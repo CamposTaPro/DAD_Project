@@ -70,9 +70,11 @@ const addProduct = async (product) => {
 
 
 onMounted(() => {
-    
+    if(userStore.user == null || userStore.user.type == 'C' || userStore.user.type == 'EM'){
        fetchProducts()
-    
+    }else{
+        router.push('/')
+    }
 })
 
 </script>
