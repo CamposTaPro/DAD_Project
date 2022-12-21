@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Customer;
 use App\Notifications\Email;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
@@ -224,5 +225,23 @@ class UserController extends Controller
             'message' => 'User points updated successfully',
             'user' => $user
         ], 200);
+    }
+
+    public function getTotalEmployeesMonthly() {
+        $users = User::where('type', 'EC')->orWhere('type', 'ED')->get();
+
+        $total = 0;
+        $date = date('Y-m-d');
+        $date = strtotime($date);
+        $date = strtotime("-30 day", $date);
+        $date = date('Y-m-d', $date);
+
+        foreach ($users as $user) {
+            if ($user->created_at >= $date) {
+                $total++;
+            }
+        }
+
+        return $total;
     }
 }

@@ -21,6 +21,7 @@ import Payment from '../components/Payment.vue'
 import Caixa from '../components/delivery/Caixa.vue'
 import Kitchen from "../components/chef/Kitchen.vue"
 import FinishDish from "../components/chef/FinishDish.vue"
+import Statistics from "../components/Statistics.vue"
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -125,6 +126,11 @@ const router = createRouter({
       path:'/payment',
       name: 'Payment',
       component: Payment
+    },
+    {
+      path:'/statistics',
+      name: 'Statistics',
+      component: Statistics
     }
   ]
 })
