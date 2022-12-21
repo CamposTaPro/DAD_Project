@@ -68,3 +68,5 @@ Route::post('orderitems', [Order_ItemController::class, 'store']);
 Route::get('product/{id}', [ProductController::class, 'index']); //TODO - dá Unauthenticated ao manager estando dentro do middleware (tem alguma coisa a haver com o middleware de autenticação)
 Route::patch('product/{id}', [ProductController::class, 'update']); //TODO (tem alguma coisa a haver com o middleware de autenticação)
 Route::post('products', [ProductController::class, 'store']); //TODO (tem alguma coisa a haver com o middleware de autenticação)
+
+Route::get('orders-ticket', [OrderController::class, 'getTicketNumber']);

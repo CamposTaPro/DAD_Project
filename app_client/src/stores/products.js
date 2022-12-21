@@ -14,7 +14,9 @@ export const useProductsStore = defineStore("products", () => {
   const paymentType = ref("");
   const paymentReference = ref("");
 
-  function getTicket() {
+  async function getTicket() {
+    const response = await axios.get(`orders-ticket`)
+    ticket.value = response.data.ticket_number;
     if (ticket.value >= 99) {
       ticket.value = 1;
     }
