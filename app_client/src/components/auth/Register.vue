@@ -45,7 +45,7 @@ async function register(credentials) {
       default_payment_reference: credentials.default_payment_reference,
     });
 
-    toast.success("User " + credentials.name + " has registered sucessfuly.");
+    //toast.success("User " + credentials.name + " has registered sucessfuly.");
     router.push({ name: "Login" });
 
   } catch (error) {

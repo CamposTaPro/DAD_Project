@@ -15,6 +15,8 @@ const loadOrders = async () => {
 
     if (response.status == 200) {
         orders.value = response.data.data;
+    } else {
+        orders.value = 0;
     }
 }
 

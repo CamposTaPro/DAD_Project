@@ -16,7 +16,7 @@ class CustomerController extends Controller
             return response()->json(['message' => 'Customer not found'], 404);
         }
         if ($customer->order == null){
-            return response()->json(['message' => 'Customer has no orders'], 404);
+            return response()->json();
         }
 
         return OrderResource::collection($customer->order);

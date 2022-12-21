@@ -16,7 +16,7 @@ class Order_ItemController extends Controller
             return response()->json(['message' => 'Order item not found'], 404);
         }
         if ($order_item->product == null) {
-            return response()->json(['message' => 'Product not found'], 404);
+            return response()->json();
         }
 
         return response()->json($order_item->product);
