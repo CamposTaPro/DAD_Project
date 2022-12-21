@@ -126,14 +126,6 @@ socket.on('readyOrder', (order) => {
                 <i class="bi bi-list-check"></i>
                 Carrinho
               </router-link>
-              <!--<router-link
-                class="link-secondary"
-                :to="{ name: 'NewTask' }"
-                aria-label="Add a new task"
-                @click="clickMenuOption"
-              >
-                <i class="bi bi-xs bi-plus-circle"></i>
-              </router-link>-->
             </li>
             <li class="nav-item w-100" v-show="userStore.user?.type == 'EC' || userStore.user?.type == 'EM'">
               <router-link class="nav-link" :class="{ active: $route.name === 'Kitchen' }" :to="{ name: 'Kitchen' }"
@@ -177,33 +169,13 @@ socket.on('readyOrder', (order) => {
                 Historical
               </router-link>
             </li>
-          </ul>
-
-          <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted"
-            v-if="userStore.user">
-            <!-- <router-link
-              class="link-secondary"
-              :to="{ name: 'NewProject' }"
-              aria-label="Add a new project"
-              @click="clickMenuOption"
-            >
-              <i class="bi bi-xs bi-plus-circle"></i>
-            </router-link> -->
-          </h6>
-          <ul class="nav flex-column mb-2">
-            <!-- <li class="nav-item" v-for="prj in projectsStore.myInprogressProjects" :key="prj.id">
-              <router-link
-                class="nav-link w-100 me-3"
-                :class="{
-                  active: $route.name == 'ProjectTasks' && $route.params.id == prj.id,
-                }"
-                :to="{ name: 'ProjectTasks', params: { id: prj.id } }"
-                @click="clickMenuOption"
-              >
-                <i class="bi bi-file-ruled"></i>
-                {{ prj.name }}
+            <li class="nav-item w-100" v-show="userStore.user?.type == 'C' || userStore.user?.type == 'EM'">
+              <router-link class="nav-link" :class="{ active: $route.name === 'Statistics' }"
+                :to="{ name: 'Statistics' }" @click="clickMenuOption">
+                <i class="bi bi-bar-chart-line"></i>
+                Statistics
               </router-link>
-            </li> -->
+            </li>
           </ul>
 
           <div class="d-block d-md-none">
