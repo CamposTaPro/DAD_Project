@@ -106,7 +106,7 @@ class UserController extends Controller
         return new UserResource($user);
     }
 
-    public function update(Request $request, User $user)
+    public function update(Request $request, User $user,Customer $customer)
     {
         if ($user == null) {
             return response()->json(['message' => 'User not found'], 404);
@@ -117,7 +117,7 @@ class UserController extends Controller
             if ($user->type == 'C') {
                 $customer = Customer::where('user_id', $user->id)->first();
 
-                if ($customer == null) {
+                if (empty($customer)) {
                     return response()->json(['message' => 'Customer not found'], 404);
                 }
             }
@@ -138,7 +138,7 @@ class UserController extends Controller
                 $customer->default_payment_reference = $request->default_payment_reference;
             }
             $user->save();
-            if ($customer) {
+            if (empty($customer)) {
                 $customer->save();
             }
 
