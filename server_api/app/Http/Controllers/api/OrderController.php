@@ -115,9 +115,10 @@ class OrderController extends Controller
     }
 
     public function getTicketNumber(){
+        //get most recente ticket_number using created_at
+        $ticket_number = Order::orderBy('created_at', 'desc')->first();
 
-        $ticket_number = Order::where('date', date('Y-m-d'))->orderBy('ticket_number', 'desc')->first();
-      
+
         return response()->json($ticket_number);
     }
 

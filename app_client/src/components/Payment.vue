@@ -70,31 +70,30 @@ const postOrderItems = async (orderItem) => {
     const response = await axiosInjected.post("orderitems", orderItem);
 
     if (response.status == 200) {
-        
-        if(orderItem.status == "W"){
-            socket.emit('newHotDish', {product: orderItem});
-        }
         //toast.success("Order created successfully")
     }
 }
 
 const createOrder = async () => {
     var userId
-    if (userStore.userId == -1){
+    if (userStore.userId == -1) {
         userId = null
     } else {
         userId = userStore.userId
     }
 
+    var ticket_number = await products.getTicket();
+    console.log(ticket_number);
+
     const response = await axiosInjected.post("orders", {
-        ticket_number: await products.getTicket(), //VERIFY --(mudei o if dentro da funcao de ticket.value == 99 para ticket.value >= 99 so para ter a certeza )
+        ticket_number: ticket_number, //VERIFY --(mudei o if dentro da funcao de ticket.value == 99 para ticket.value >= 99 so para ter a certeza )
         status: "P",
         customer_id: userId,
         total_price: products.getPriceAllProducts(),
-        total_paid: userStore.user ? products.getPriceAllProducts() - userStore.discount : products.getPriceAllProducts(), 
-        total_paid_with_points: userStore.user ? userStore.discount : "0.00", 
-        points_gained: userStore.user ? Math.floor((products.getPriceAllProducts() - userStore.discount) / 10) : 0, 
-        points_used_to_pay: userStore.user ? userStore.points : 0, 
+        total_paid: userStore.user ? products.getPriceAllProducts() - userStore.discount : products.getPriceAllProducts(),
+        total_paid_with_points: userStore.user ? userStore.discount : "0.00",
+        points_gained: userStore.user ? Math.floor((products.getPriceAllProducts() - userStore.discount) / 10) : 0,
+        points_used_to_pay: userStore.user ? userStore.points : 0,
         payment_type: type.value,
         payment_reference: reference.value,
     });
@@ -105,7 +104,7 @@ const createOrder = async () => {
         for (var i = 0; i < products.totalProducts; i++) {
             var product = products.products[i];
 
-            var order_local_number = i+1;
+            var order_local_number = i + 1;
             const orderItem = {
                 order_id: order_id,
                 order_local_number: order_local_number,
@@ -115,13 +114,18 @@ const createOrder = async () => {
                 preparation_by: null,
                 notes: product.note,
             }
+
+            if (orderItem.status == "W") {
+                socket.emit('newHotDish', { product: orderItem });
+            }
+
             await postOrderItems(orderItem);
         }
-    } 
-    if (userStore.userId != -1){
+    }
+    if (userStore.userId != -1) {
         changePoints();
     }
-       
+
     let order = response.data;
     order.order_itens = products;
     products.clearProducts();
