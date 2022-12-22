@@ -156,7 +156,7 @@ const OrderEntregue = async (order) => {
                 <!--If all ordersItens are Ready then appear a botton-->
                 <div class="card-footer">
                     <button v-if="order.order_itens.every(elem => elem.status == 'R') && order.status == 'P'"
-                        @click="EntregarOrder(order)" v-show="userStore.user?.type == 'EM'" class="btn btn-primary">Entregar Order!</button>
+                        @click="EntregarOrder(order)" v-show="userStore.user?.type != 'EM'" class="btn btn-primary">Entregar Order!</button>
                     <button v-else-if="order.status == 'R'" @click="OrderEntregue(order)" class="btn btn-success">Order
                         Entregue!</button>
                     <button class="btn btn-danger" @click="CancelarOrder(order)" v-show="userStore.user?.type == 'EM' ">Cancelar</button>

@@ -67,10 +67,12 @@ const validatePoints = (pointsInputed) => {
 }
 
 onMounted(() => {
-    if(userStore.user == null || userStore.user.type == "C"){
-        getUser();
-    }else{
-        router.push({ name: 'home' })
+    if(userStore.user != null){
+        if(userStore.user.type == "C"){
+            getUser();
+        }else {
+            router.push({ name: 'home' })
+        }
     }
 })
 
