@@ -14,7 +14,7 @@
     "laravel-vue-pagination": "^4.0.0",
     "pinia": "^2.0.23",
     "socket.io-client": "^4.5.4",
-    "vue": "^3.2.41",
+    "vue": "^3.3.4",
     "vue-router": "^4.1.5"
   },
   "devDependencies": {
